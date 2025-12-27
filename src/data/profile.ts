@@ -3,7 +3,7 @@ export const profile = {
   nameEn: "Kim So Jeong",
   title: "Fullstack Developer",
   tagline: "하드웨어 데이터를 웹으로 번역하는 개발자",
-  email: "fuso93@yonsei.ac.kr",
+  email: "l89192164@gmail.com",
   phone: "010-5130-2164",
   github: "https://github.com/jammy0903",
   location: "서울시 서대문구",
@@ -14,10 +14,11 @@ WebSocket 배치 처리로 렌더링 부하를 80% 줄이고, 빌드 시간을 2
 };
 
 export const skills = {
-  frontend: ["React", "TypeScript", "Vite", "Zustand", "MUI", "Tailwind CSS"],
-  backend: ["FastAPI", "Node.js", "Express", "SQLite", "InfluxDB", "MQTT"],
-  infra: ["Docker", "Nginx", "TLS/HTTPS", "WebSocket"],
-  tools: ["Figma", "SVN", "Git"],
+  frontend: ["React", "TypeScript", "Vite", "Zustand", "MUI", "Tailwind CSS", "HTML/CSS", "JavaScript"],
+  backend: ["FastAPI", "Node.js", "Express", "SQLite", "InfluxDB", "MQTT", "REST API"],
+  infra: ["Docker", "Nginx", "TLS/HTTPS", "WebSocket", "Linux", "Shell Script", "WSL"],
+  security: ["Reverse Engineering", "x86/x64 Assembly", "Ghidra", "IDA", "Wireshark", "Burp Suite", "웹 취약점 분석", "CVE 분석"],
+  tools: ["Git", "SVN", "Figma", "VS Code", "Notion", "Jira"],
 };
 
 export const experience = {
@@ -83,6 +84,30 @@ export const projects = [
     links: {
       news: "https://www.fpn119.co.kr/243991",
     },
+  },
+  {
+    title: "웹 취약점 CVE 매칭 프로그램",
+    type: "S-개발자 2기 (KISIA)",
+    description: "웹 서비스의 취약점을 스캔하고 CVE 데이터베이스와 매칭하여 보안 위협을 분석하는 프로그램 개발.",
+    techStack: ["Python", "CVE Database", "웹 취약점 분석", "Burp Suite"],
+    highlights: [
+      "CVE 데이터베이스 연동 및 자동 매칭",
+      "웹 취약점 스캐닝 자동화",
+      "보안 리포트 생성 기능",
+    ],
+    links: {},
+  },
+  {
+    title: "메신저 아티팩트 분석 도구",
+    type: "화이트햇스쿨 1기 (KITRI)",
+    description: "디지털 포렌식 관점에서 메신저 애플리케이션의 아티팩트를 분석하고 데이터를 추출하는 도구 개발.",
+    techStack: ["Python", "SQLite", "Reverse Engineering", "Digital Forensics"],
+    highlights: [
+      "메신저 DB 구조 역공학 분석",
+      "삭제된 메시지 복구 기능",
+      "타임라인 기반 데이터 시각화",
+    ],
+    links: {},
   },
   {
     title: "COSLAB - C & OS 학습 플랫폼",

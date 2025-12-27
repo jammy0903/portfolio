@@ -1,73 +1,85 @@
-# React + TypeScript + Vite
+# 김소정 포트폴리오
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+개인 포트폴리오 웹사이트입니다.
 
-Currently, two official plugins are available:
+🔗 **Live Demo**: [Vercel에서 확인](https://portfolio-jammy0903.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 기술 스택
 
-## React Compiler
+| 분류 | 기술 |
+|------|------|
+| Framework | React 19, TypeScript |
+| Build Tool | Vite 7 |
+| Styling | Tailwind CSS 4 |
+| Routing | React Router DOM 7 |
+| Deployment | Vercel |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 프로젝트 구조
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── components/     # 공통 컴포넌트 (Navbar 등)
+├── data/           # 프로필, 경력, 프로젝트 데이터
+├── pages/          # 페이지 컴포넌트
+│   ├── Home.tsx       # 메인 페이지
+│   ├── About.tsx      # 소개 (기술 스택)
+│   ├── Experience.tsx # 경력 사항
+│   ├── Projects.tsx   # 프로젝트 목록
+│   └── Contact.tsx    # 연락처
+└── App.tsx         # 라우팅 설정
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 로컬 실행 방법
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# 의존성 설치
+npm install
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 개발 서버 실행 (http://localhost:5173)
+npm run dev
+
+# 프로덕션 빌드
+npm run build
+
+# 빌드 결과물 미리보기
+npm run preview
 ```
+
+## 주요 기능
+
+- **반응형 디자인**: 모바일/데스크톱 최적화
+- **다크 테마**: 어두운 배경의 모던한 UI
+- **SPA 라우팅**: React Router를 활용한 페이지 전환
+- **타입 안정성**: TypeScript로 타입 체크
+
+## 데이터 수정
+
+`src/data/profile.ts` 파일에서 프로필 정보를 수정할 수 있습니다:
+
+```typescript
+export const profile = {
+  name: "이름",
+  title: "직함",
+  email: "이메일",
+  // ...
+};
+
+export const skills = { /* 기술 스택 */ };
+export const experience = { /* 경력 */ };
+export const projects = [ /* 프로젝트 목록 */ ];
+export const education = [ /* 학력 */ ];
+```
+
+## 배포
+
+Vercel에 연결되어 `main` 브랜치에 push하면 자동 배포됩니다.
+
+```bash
+git add .
+git commit -m "Update portfolio"
+git push origin main
+```
+
+---
+
+© 2025 김소정. All rights reserved.
