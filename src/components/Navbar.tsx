@@ -22,7 +22,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center" style={{ gap: '2rem' }}>
             {navItems.map((item) => (
               <Link
                 key={item.path}

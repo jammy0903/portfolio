@@ -1,38 +1,44 @@
 import { experience, education } from "../data/profile";
 
 export default function Experience() {
+  const cardStyle = {
+    backgroundColor: 'rgba(30, 41, 59, 0.5)',
+    borderRadius: '1rem',
+    padding: '2rem',
+  };
+
   return (
-    <div className="min-h-screen py-20 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div style={{ minHeight: '100vh', paddingTop: '5rem', paddingBottom: '5rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
+      <div style={{ maxWidth: '56rem', margin: '0 auto' }}>
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-white mb-4">Experience</h1>
-          <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+          <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: 'white', marginBottom: '1rem' }}>Experience</h1>
+          <div style={{ width: '5rem', height: '4px', backgroundColor: '#3b82f6', margin: '0 auto' }}></div>
         </div>
 
         {/* Work Experience */}
-        <div className="mb-16">
-          <div className="bg-slate-800/50 rounded-2xl p-8">
+        <div style={{ marginBottom: '4rem' }}>
+          <div style={cardStyle}>
             {/* Company Header */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', gap: '1rem' }}>
               <div>
-                <h2 className="text-2xl font-bold text-white">{experience.company}</h2>
-                <p className="text-slate-400">{experience.companyDesc}</p>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', marginBottom: '0.25rem' }}>{experience.company}</h2>
+                <p style={{ color: '#94a3b8' }}>{experience.companyDesc}</p>
               </div>
-              <div className="mt-2 md:mt-0 md:text-right">
-                <p className="text-blue-400 font-medium">{experience.position}</p>
-                <p className="text-slate-500">{experience.period} ({experience.duration})</p>
+              <div style={{ textAlign: 'right' }}>
+                <p style={{ color: '#60a5fa', fontWeight: '500' }}>{experience.position}</p>
+                <p style={{ color: '#64748b' }}>{experience.period} ({experience.duration})</p>
               </div>
             </div>
 
             {/* Project Info */}
-            <div className="bg-slate-900/50 rounded-xl p-6 mb-6">
-              <h3 className="text-lg font-semibold text-white mb-2">{experience.project}</h3>
-              <p className="text-slate-400 mb-4">{experience.role}</p>
-              <p className="text-slate-500 text-sm">{experience.scale}</p>
-              <div className="flex flex-wrap gap-2 mt-4">
+            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.5)', borderRadius: '0.75rem', padding: '1.5rem', marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'white', marginBottom: '0.5rem' }}>{experience.project}</h3>
+              <p style={{ color: '#94a3b8', marginBottom: '1rem' }}>{experience.role}</p>
+              <p style={{ color: '#64748b', fontSize: '0.875rem' }}>{experience.scale}</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '1rem' }}>
                 {experience.techStack.map((tech) => (
-                  <span key={tech} className="px-2 py-1 bg-slate-700 text-slate-300 rounded text-xs">
+                  <span key={tech} style={{ padding: '0.25rem 0.5rem', backgroundColor: '#334155', color: '#cbd5e1', borderRadius: '0.25rem', fontSize: '0.75rem' }}>
                     {tech}
                   </span>
                 ))}
@@ -40,20 +46,20 @@ export default function Experience() {
             </div>
 
             {/* Achievements */}
-            <h3 className="text-lg font-semibold text-white mb-4">주요 성과</h3>
-            <div className="space-y-6">
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'white', marginBottom: '1rem' }}>주요 성과</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {experience.achievements.map((achievement, index) => (
-                <div key={index} className="border-l-2 border-blue-500 pl-4">
-                  <h4 className="text-white font-medium mb-2">{achievement.title}</h4>
-                  <div className="space-y-1 text-sm">
-                    <p className="text-slate-400">
-                      <span className="text-slate-500">문제:</span> {achievement.problem}
+                <div key={index} style={{ borderLeft: '2px solid #3b82f6', paddingLeft: '1rem' }}>
+                  <h4 style={{ color: 'white', fontWeight: '500', marginBottom: '0.5rem' }}>{achievement.title}</h4>
+                  <div style={{ fontSize: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <p style={{ color: '#94a3b8' }}>
+                      <span style={{ color: '#64748b' }}>문제:</span> {achievement.problem}
                     </p>
-                    <p className="text-slate-400">
-                      <span className="text-slate-500">해결:</span> {achievement.solution}
+                    <p style={{ color: '#94a3b8' }}>
+                      <span style={{ color: '#64748b' }}>해결:</span> {achievement.solution}
                     </p>
-                    <p className="text-green-400">
-                      <span className="text-slate-500">결과:</span> {achievement.result}
+                    <p style={{ color: '#4ade80' }}>
+                      <span style={{ color: '#64748b' }}>결과:</span> {achievement.result}
                     </p>
                   </div>
                 </div>
@@ -61,18 +67,18 @@ export default function Experience() {
             </div>
 
             {/* News */}
-            <div className="mt-8 pt-6 border-t border-slate-700">
-              <h4 className="text-sm uppercase tracking-wider text-slate-500 mb-3">언론 보도</h4>
-              <div className="flex flex-wrap gap-3">
+            <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #334155' }}>
+              <h4 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#64748b', marginBottom: '0.75rem' }}>언론 보도</h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
                 {experience.news.map((news) => (
                   <a
                     key={news.title}
                     href={news.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-sm transition-colors"
+                    style={{ padding: '0.5rem 1rem', backgroundColor: '#334155', color: '#cbd5e1', borderRadius: '0.5rem', fontSize: '0.875rem', textDecoration: 'none' }}
                   >
-                    📰 {news.title}
+                    {news.title}
                   </a>
                 ))}
               </div>
@@ -82,18 +88,18 @@ export default function Experience() {
 
         {/* Education */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-6">Education & Training</h2>
-          <div className="space-y-4">
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', marginBottom: '1.5rem' }}>Education & Training</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {education.map((edu, index) => (
-              <div key={index} className="bg-slate-800/50 rounded-xl p-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div key={index} style={{ ...cardStyle, padding: '1.5rem' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">{edu.school}</h3>
-                    <p className="text-slate-400">{edu.major}</p>
+                    <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'white', marginBottom: '0.25rem' }}>{edu.school}</h3>
+                    <p style={{ color: '#94a3b8' }}>{edu.major}</p>
                   </div>
-                  <div className="mt-2 md:mt-0 md:text-right">
-                    <p className="text-slate-500">{edu.period}</p>
-                    <span className="inline-block px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-sm">
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ color: '#64748b', marginBottom: '0.25rem' }}>{edu.period}</p>
+                    <span style={{ display: 'inline-block', padding: '0.125rem 0.5rem', backgroundColor: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', borderRadius: '0.25rem', fontSize: '0.875rem' }}>
                       {edu.status}
                     </span>
                   </div>
