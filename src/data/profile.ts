@@ -71,18 +71,18 @@ export const experience = {
 
 export const projects = [
   {
-    title: "아크차단기 실시간 모니터링 대시보드",
-    type: "회사 프로젝트",
-    description: "470대 IoT 차단기의 실시간 상태를 모니터링하는 B2B 대시보드. 누전, 아크, 과전류, 온도, 전력량 감지 및 카카오톡 알림 연동.",
-    techStack: ["React", "FastAPI", "WebSocket", "Docker", "Nginx", "InfluxDB"],
+    title: "CodeInsight - 코딩교육 시각화 플랫폼",
+    type: "사이드 프로젝트 (진행 중)",
+    description: "웹에서 C 코드를 실행하고, 메모리(힙/스택/포인터)를 시각화하며, AI 튜터가 OS 개념을 설명해주는 인터랙티브 학습 환경.",
+    techStack: ["React", "TypeScript", "Zustand", "Node.js", "Express", "Docker", "Firebase"],
     highlights: [
-      "WebSocket 배치 매니저로 렌더링 부하 80% 감소",
-      "우선순위 큐 기반 장애 알림 즉시 전송",
-      "CRA→Vite 전환으로 빌드 12배 개선",
-      "고객사 재계약 성사에 기여",
+      "Docker 샌드박스에서 안전하게 C 코드 컴파일/실행",
+      "힙/스택/포인터 교육용 시각화",
+      "FCFS, Round Robin, LRU 등 OS 알고리즘 시뮬레이션",
+      "AI 튜터 대화형 설명",
     ],
     links: {
-      news: "https://www.fpn119.co.kr/243991",
+      github: "https://github.com/jammy0903/C-OSINE",
     },
   },
   {
@@ -108,21 +108,6 @@ export const projects = [
       "타임라인 기반 데이터 시각화",
     ],
     links: {},
-  },
-  {
-    title: "COSLAB - C & OS 학습 플랫폼",
-    type: "사이드 프로젝트 (진행 중)",
-    description: "웹에서 C 코드를 실행하고, 메모리(힙/스택/포인터)를 시각화하며, AI 튜터가 OS 개념을 설명해주는 인터랙티브 학습 환경.",
-    techStack: ["React", "TypeScript", "Zustand", "Node.js", "Express", "Docker", "Firebase"],
-    highlights: [
-      "Docker 샌드박스에서 안전하게 C 코드 컴파일/실행",
-      "힙/스택/포인터 교육용 시각화",
-      "FCFS, Round Robin, LRU 등 OS 알고리즘 시뮬레이션",
-      "AI 튜터 대화형 설명",
-    ],
-    links: {
-      github: "https://github.com/jammy0903/C-OSINE",
-    },
   },
 ];
 
