@@ -1,4 +1,4 @@
-import { profile, skills } from "../data/profile";
+import { profile, skills, education } from "../data/profile";
 
 export default function About() {
   const cardStyle = {
@@ -107,6 +107,29 @@ export default function About() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Education & Training */}
+        <div style={{ marginTop: '2rem' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', marginBottom: '1.5rem' }}>Education & Training</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {education.map((edu, index) => (
+              <div key={index} style={{ ...cardStyle }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'white', marginBottom: '0.25rem' }}>{edu.school}</h3>
+                    <p style={{ color: '#94a3b8' }}>{edu.major}</p>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ color: '#64748b', marginBottom: '0.25rem' }}>{edu.period}</p>
+                    <span style={{ display: 'inline-block', padding: '0.125rem 0.5rem', backgroundColor: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', borderRadius: '0.25rem', fontSize: '0.875rem' }}>
+                      {edu.status}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
