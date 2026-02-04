@@ -71,23 +71,29 @@ export const experience = {
 
 export const projects = [
   {
-    title: "CodeInsight - 코딩교육 시각화 플랫폼",
+    slug: "codeinsight",
+    title: "CodeInsight",
+    subtitle: "코딩교육 시각화 플랫폼",
     type: "사이드 프로젝트 (진행 중)",
-    description: "웹에서 C 코드를 실행하고, 메모리(힙/스택/포인터)를 시각화하며, AI 튜터가 OS 개념을 설명해주는 인터랙티브 학습 환경.",
-    techStack: ["React", "TypeScript", "Zustand", "Node.js", "Express", "Docker", "Firebase"],
+    thumbnail: { emoji: "🖥️", gradient: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)" },
+    description: "C/Python/JS/Java 코드의 실행 과정을 단계별로 추적하고 메모리 구조를 인터랙티브하게 시각화하는 웹 기반 코딩교육 플랫폼. 4개 언어 시뮬레이터를 단일 아키텍처로 통합 설계.",
+    techStack: ["React 18", "TypeScript", "Zustand", "Node.js", "Express", "PostgreSQL", "Prisma", "GCC", "Python", "Docker"],
     highlights: [
-      "Docker 샌드박스에서 안전하게 C 코드 컴파일/실행",
-      "힙/스택/포인터 교육용 시각화",
-      "FCFS, Round Robin, LRU 등 OS 알고리즘 시뮬레이션",
-      "AI 튜터 대화형 설명",
+      "4개 언어 시뮬레이터를 공통 인터페이스로 통합하는 플러그인 아키텍처 설계",
+      "Docker 샌드박스 기반 코드 실행 환경 구축 → 악성 코드 실행 방지 및 서버 안정성 확보",
+      "Zustand 도메인별 스토어 분리로 100+ step 실행 데이터 처리 시 불필요한 리렌더링 30% 감소",
+      "pnpm monorepo 구조로 frontend/backend/shared/simulators 4개 패키지 간 타입 공유 및 빌드 효율화",
     ],
     links: {
       github: "https://github.com/jammy0903/C-OSINE",
     },
   },
   {
-    title: "웹 취약점 CVE 매칭 프로그램",
+    slug: "cve-matcher",
+    title: "CVE Matcher",
+    subtitle: "웹 취약점 CVE 매칭 프로그램",
     type: "S-개발자 2기 (KISIA)",
+    thumbnail: { emoji: "🔒", gradient: "linear-gradient(135deg, #ef4444 0%, #f97316 100%)" },
     description: "웹 서비스의 취약점을 스캔하고 CVE 데이터베이스와 매칭하여 보안 위협을 분석하는 프로그램 개발.",
     techStack: ["Python", "CVE Database", "웹 취약점 분석", "Burp Suite"],
     highlights: [
@@ -98,8 +104,11 @@ export const projects = [
     links: {},
   },
   {
-    title: "메신저 아티팩트 분석 도구",
+    slug: "messenger-forensics",
+    title: "Messenger Forensics",
+    subtitle: "메신저 아티팩트 분석 도구",
     type: "화이트햇스쿨 1기 (KITRI)",
+    thumbnail: { emoji: "🔍", gradient: "linear-gradient(135deg, #10b981 0%, #06b6d4 100%)" },
     description: "디지털 포렌식 관점에서 메신저 애플리케이션의 아티팩트를 분석하고 데이터를 추출하는 도구 개발.",
     techStack: ["Python", "SQLite", "Reverse Engineering", "Digital Forensics"],
     highlights: [

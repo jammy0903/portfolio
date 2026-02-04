@@ -34,12 +34,12 @@
 packages/frontend/src/features/simulator/
 ├── engine/
 │   ├── types.ts          — SimulatorEvent (기존 7 + 신규 5 타입)
-│   ├── EventBus.ts       — Zustand 기반 Pub/Sub 허브
+│   ├── EventBus.ts       — plain class singleton Pub/Sub 허브
 │   └── index.ts
 ├── modules/
 │   ├── types.ts          — VisualizationModule 인터페이스
 │   ├── ModuleRegistry.ts — 모듈 등록/조회 싱글턴
-│   ├── ModuleRenderer.tsx— 프로파일 기반 동적 렌더링
+│   ├── ModuleRenderer.tsx— 프로파일 기반 동적 렌더링 (useEffect + cleanup)
 │   └── index.ts
 ├── profiles/
 │   ├── types.ts          — LanguageProfile, VariableModel
@@ -62,28 +62,44 @@ visualizers/java/types.ts.del
 ```
 - `java/index.tsx`에서 관련 export 제거
 
+### 7. Phase 1 구현 완료 ✅
+call-stack 모듈 포팅 + 코드 리뷰:
+```
+modules/call-stack/
+├── CallStackModule.tsx  — subscribes=['frame','variable'], init/onEvent/render/reset/replayTo/destroy
+├── CallStackView.tsx    — 다크테마 콜스택 시각화, Framer Motion 애니메이션
+├── store.ts             — Zustand 내부 스토어 (frames[], frameCounter)
+└── index.ts
+modules/register.ts      — registerAllModules() 진입점
+```
+
+### 8. 코드 리뷰 (memory-leak-detector) 완료 ✅
+13개 이슈 발견 → 10개 수정, 3개 허용:
+| # | 심각도 | 이슈 | 상태 |
+|---|--------|------|------|
+| 1 | CRITICAL | ModuleRenderer useMemo side effects | ✅ useEffect로 이동 |
+| 2 | CRITICAL | Component called as function | ✅ JSX + .tsx 리네임 |
+| 3 | CRITICAL | Mutable Map/Set in Zustand EventBus | ✅ plain class 전면 재작성 |
+| 4 | WARNING | Stale eventBus closure | ✅ eventBus 직접 import |
+| 5 | WARNING | Module-level frameCounter | ✅ Zustand 상태 내부로 이동 |
+| 6 | WARNING | ModuleRegistry singleton retention | ⏭️ static lookup이라 적절 |
+| 7 | WARNING | Missing module.destroy on unmount | ✅ cleanup에 추가 |
+| 8 | WARNING | clearAll destroys others' subs | ✅ clearAll 제거 |
+| 9 | WARNING | No try/catch in emit | ✅ try/catch 추가 |
+| 10 | WARNING | Set mutation during iteration | ✅ Array.from snapshot |
+| 11 | WARNING | useEventBus without selector | ✅ Zustand 제거 |
+| 12 | INFO | Plain object singleton fragile | ⏭️ this 바인딩 안정적 |
+| 13 | INFO | replayTo N set() calls | ⏭️ React 18+ 자동 배칭 |
+
+TypeScript 체크: **0 에러** ✅
+
 ---
 
 ## 앞으로 할 작업
 
-### Phase 1: call-stack 모듈 포팅
-```
-목표: 모듈 시스템 동작 검증
+### ~~Phase 1: call-stack 모듈 포팅~~ ✅ 완료
 
-할 일:
-1. modules/call-stack/CallStackModule.ts 생성
-   - subscribes: ['frame']
-   - Zustand 내부 스토어로 프레임 상태 관리
-   - onEvent()에서 frame:push/pop 처리
-2. modules/call-stack/CallStackView.tsx 생성
-   - 기존 shared/CallStackView.tsx 코드 활용
-   - 모듈 내부 스토어에서 상태 읽기
-3. ModuleRegistry에 call-stack 등록
-4. 테스트: C 프로파일로 ModuleRenderer에서 call-stack 렌더링 확인
-5. 기존 VisualizerPanel과 나란히 동작 확인 (기존 기능 유지)
-```
-
-### Phase 2: C 시각화 모듈화
+### Phase 2: C 시각화 모듈화 ← 현재
 ```
 목표: CMemoryView.tsx (606줄) 분해
 
