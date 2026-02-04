@@ -4,9 +4,8 @@ import { Link, useLocation } from "react-router-dom";
 const navItems = [
   { path: "/", label: "Home" },
   { path: "/about", label: "About" },
-  { path: "/experience", label: "Experience" },
-  { path: "/projects", label: "Projects" },
-  { path: "/contact", label: "Contact" },
+  { path: "/experience", label: "경력" },
+  { path: "/projects", label: "프로젝트" },
 ];
 
 export default function Navbar() {

@@ -55,9 +55,9 @@ export default function Projects() {
                         GitHub
                       </a>
                     )}
-                    {project.links.news && (
+                    {(project.links as Record<string, string>).news && (
                       <a
-                        href={project.links.news}
+                        href={(project.links as Record<string, string>).news}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={buttonStyle}
