@@ -23,11 +23,11 @@ export const skills = {
 
 export const experience = {
   company: "(주)아이앤씨테크놀로지",
-  companyDesc: "스마트그리드(AMI) 및 IoT용 핵심 통신 반도체 팹리스 기업",
+  companyDesc: "IoT 아크차단기 및 통신 반도체 팹리스 기업",
   position: "연구원 (웹 개발)",
   period: "2025.04 - 현재",
   duration: "8개월",
-  project: "스마트그리드 IoT 모니터링 대시보드",
+  project: "아크차단기 IoT 모니터링 대시보드",
   role: "사내 유일 웹 개발자로서 레거시 시스템 분석부터 리팩토링, 신규 기능 개발, 배포까지 전 과정 1인 담당",
   scale: "470대 차단기 실시간 모니터링, 다수 고객사 대상 B2B 서비스",
   techStack: ["React(Vite)", "FastAPI", "SQLite", "InfluxDB", "WebSocket", "MQTT", "Docker", "Nginx"],
