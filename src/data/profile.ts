@@ -124,6 +124,12 @@ export const projects = [
     links: {
       notion: "https://brindle-tractor-059.notion.site/1aa09ddb2b7a8046a283ffee5215efb4",
     },
+    images: [
+      { src: "/images/messenger/3.png", caption: "아티팩트 분석 경로 및 DB Browser 분석" },
+      { src: "/images/messenger/4.png", caption: "KakaoTalk DB Column 분석 및 메모리 메시지 추출 프로세스" },
+      { src: "/images/messenger/5.png", caption: "메모리 구조 유추 및 메시지 전송부 분석" },
+      { src: "/images/messenger/6.png", caption: "메시지 삭제 프로세스 분석 및 Frida API 후킹" },
+    ],
   },
   {
     slug: "malware-analysis",
