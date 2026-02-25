@@ -93,56 +93,114 @@ modules/register.ts      — registerAllModules() 진입점
 
 TypeScript 체크: **0 에러** ✅
 
+### 9. Phase 2 구현 완료 ✅
+CMemoryView (606줄) → 3개 모듈 분해:
+```
+modules/shared/
+├── types.ts              — MemoryBlock, StackRegisters, SegmentType (CMemoryView 호환)
+├── MemoryBlockRow.tsx    — 공유 블록 렌더링 (포인터 타입 감지: function/double/single)
+└── index.ts
+
+modules/stack-frame/
+├── store.ts              — Zustand: blocks[], registers, changedNames
+├── StackFrameView.tsx    — RSP/RBP 배지 + 블록 목록
+├── StackFrameModule.tsx  — subscribes: [variable, pointer, highlight]
+└── index.ts
+
+modules/heap-memory/
+├── store.ts              — Zustand: blocks[], changedAddresses
+├── HeapMemoryView.tsx    — malloc 블록 목록
+├── HeapMemoryModule.tsx  — subscribes: [heap, highlight]
+└── index.ts
+
+modules/pointer-graph/
+├── store.ts              — Zustand: relations[] (source→targetAddress)
+├── PointerGraphView.tsx  — 포인터 관계 텍스트 시각화
+├── PointerGraphModule.tsx— subscribes: [pointer]
+└── index.ts
+```
+- 이중 경로: 이벤트 기반(onEvent) + 스냅샷 호환(setSnapshot)
+- register.ts에 3개 모듈 등록 완료
+- 기존 CMemoryView/VisualizerPanel **변경 없음** (기존 기능 유지)
+- TypeScript 체크: **0 에러** ✅
+
+### 10. 코드 리뷰 2차 수정 완료 ✅
+| # | 파일 | 수정 |
+|---|------|------|
+| 1 | `call-stack/store.ts` | `varType` → `varType ?? 'unknown'` fallback |
+| 2 | `pointer-graph/store.ts` | `recentlyDereferenced` 이벤트마다 전체 클리어 |
+| 3 | `call-stack/store.ts` | frame pop: `filter(name)` → `findLastIndex` 재귀 안전 |
+| 4 | `call-stack/store.ts` | variable 프레임 탐색: `findIndex` → `findLastIndex` |
+
+### 11. Phase 3 구현 완료 ✅
+Python name-binding + object-heap 모듈:
+```
+modules/name-binding/
+├── store.ts              — Zustand: NameBinding[](name+scope+objectId)
+├── NameBindingView.tsx   — 스코프별 그룹핑, 포스트잇 스타일 이름 태그
+├── NameBindingModule.tsx — subscribes: [binding]
+└── index.ts
+
+modules/object-heap/     (Python+Java+JS 공유)
+├── store.ts              — Zustand: HeapObject[](id+type+value+mutable)
+├── ObjectHeapView.tsx    — 타입별 색상(mutable=초록, immutable=보라) + 이모지
+├── ObjectHeapModule.tsx  — subscribes: [object]
+└── index.ts
+```
+- setSnapshot으로 pythonMemoryState.names/objects 호환
+- register.ts에 2개 모듈 등록 완료
+
+**테스트 결과:**
+- Frontend: `tsc --noEmit` **0 에러** ✅
+- Frontend: `vite build` **성공** (16.57s) ✅
+- Backend: **129/145 passed** ✅ (실패 16건은 JS 시뮬레이터 기존 이슈, 변경과 무관)
+- Shared: `tsc --noEmit` **0 에러** ✅
+
+### 12. Phase 4 프론트엔드 모듈 구현 완료 ✅
+Java + JS 프론트엔드 시각화 모듈:
+
+**Java**: 새 모듈 불필요
+- stack-frame (Phase 2) + object-heap (Phase 3) + call-stack (Phase 1) 이미 등록됨
+- `profiles/java.ts`에서 [stack-frame, object-heap, call-stack] 선언 완료
+
+**JS scope-chain 모듈 신규 구현**:
+```
+modules/scope-chain/
+├── store.ts              — Zustand: ScopeEntry[](name+scopeType+parentScope+variables+isActive)
+│                           scope enter/exit LIFO, variable declare→활성 스코프, setSnapshot
+├── ScopeChainView.tsx    — 중첩 스코프 박스(들여쓰기), 타입별 색상
+│                           (global=gray, function=blue, block=purple, module=amber, class=green)
+├── ScopeChainModule.tsx  — subscribes: [scope, variable]
+└── index.ts
+```
+- register.ts에 ScopeChainModule import + 등록 완료
+- `profiles/javascript.ts`에서 [scope-chain, object-heap, call-stack] 선언 완료
+
+**테스트 결과:**
+- Frontend: `tsc --noEmit` **0 에러** ✅
+- Frontend: `vite build` **성공** (40.89s) ✅
+- Backend: **129/145 passed** ✅ (실패 16건은 JS 시뮬레이터 기존 이슈, 변경과 무관)
+- Shared: `tsc --noEmit` **0 에러** ✅
+
 ---
 
 ## 앞으로 할 작업
 
 ### ~~Phase 1: call-stack 모듈 포팅~~ ✅ 완료
 
-### Phase 2: C 시각화 모듈화 ← 현재
-```
-목표: CMemoryView.tsx (606줄) 분해
+### ~~Phase 2: C 시각화 모듈화~~ ✅ 완료
 
+### ~~Phase 3: Python 모듈 구현~~ ✅ 완료
+
+### ~~Phase 4: Java + JS 모듈 구현 (프론트엔드)~~ ✅ 완료
+
+### Phase 4 잔여: 백엔드 작업
+```
 할 일:
-1. CMemoryView에서 스택 영역 → modules/stack-frame/StackFrameModule 추출
-2. CMemoryView에서 힙 영역 → modules/heap-memory/HeapMemoryModule 추출
-3. CMemoryView에서 포인터 → modules/pointer-graph/PointerGraphModule 추출
-4. C 프로파일: 4개 모듈 (stack-frame + heap-memory + call-stack + pointer-graph)
-5. VisualizerPanel의 case 'c'를 ModuleRenderer로 교체
-6. playgroundStore에서 registers를 stack-frame 모듈 내부 상태로 이동
-7. shellStore 생성 (공통 상태만)
-```
-
-### Phase 3: Python 모듈 구현
-```
-목표: Python 플레이스홀더 → 실제 시각화
-
-할 일:
-1. modules/name-binding/NameBindingModule 신규 구현
-   - BindingEvent 처리 (bind/rebind/unbind)
-   - 이름 → 객체 화살표 시각화
-2. modules/object-heap/ObjectHeapModule 신규 구현
-   - ObjectEvent 처리 (create/update/destroy)
-   - 힙 위 객체 카드 시각화
-3. packages/shared에 BindingEvent, ObjectEvent Zod 스키마 추가
-4. 백엔드: python-normalizer 작성 (FlowStep → SimulatorEvent[])
-5. Python 프로파일: name-binding + object-heap + call-stack
-6. VisualizerPanel의 Python 플레이스홀더 제거
-```
-
-### Phase 4: Java + JS 모듈 구현
-```
-목표: 4개 언어 모두 모듈 시스템으로 작동
-
-할 일:
-1. stack-frame 모듈에 Java 모드 추가 (primitive는 스택 직접, object는 참조)
-2. modules/scope-chain/ScopeChainModule 신규 구현 (JS)
-   - ScopeEvent 처리 (enter/exit)
-   - 중첩 스코프 박스 + 클로저 캡처 시각화
-3. object-heap 모듈에 Java/JS 모드 추가
-4. 백엔드: java-normalizer, js-normalizer 작성
-5. packages/shared에 ScopeEvent, GCEvent, AsyncEvent Zod 스키마 추가
-6. 모든 언어 프로파일 검증
+1. 백엔드: java-normalizer 작성 (FlowStep → SimulatorEvent[])
+2. 백엔드: js-normalizer 작성 (FlowStep → SimulatorEvent[])
+3. packages/shared에 ScopeEvent, GCEvent, AsyncEvent Zod 스키마 추가
+4. 모든 언어 프로파일 E2E 검증
 ```
 
 ### Phase 5: 클린업

@@ -9,9 +9,9 @@ export default function Projects() {
       <div style={{ maxWidth: '56rem', margin: '0 auto' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: 'white', marginBottom: '1rem' }}>프로젝트</h1>
-          <p style={{ color: '#94a3b8', fontSize: '1.125rem', marginBottom: '1rem' }}>클릭하여 상세 내용을 확인하세요</p>
-          <div style={{ width: '5rem', height: '4px', backgroundColor: '#3b82f6', margin: '0 auto' }}></div>
+          <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>프로젝트</h1>
+          <p style={{ color: '#78716c', fontSize: '1.125rem', marginBottom: '1rem' }}>클릭하여 상세 내용을 확인하세요</p>
+          <div style={{ width: '5rem', height: '4px', backgroundColor: '#e891b9', margin: '0 auto' }}></div>
         </div>
 
         {/* Gallery Grid */}
@@ -25,21 +25,22 @@ export default function Projects() {
               key={project.slug}
               onClick={() => navigate(`/projects/${project.slug}`)}
               style={{
-                backgroundColor: 'rgba(30, 41, 59, 0.5)',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 borderRadius: '1rem',
                 overflow: 'hidden',
                 cursor: 'pointer',
                 transition: 'transform 0.2s, box-shadow 0.2s',
                 border: '1px solid transparent',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.3)';
-                e.currentTarget.style.borderColor = '#3b82f6';
+                e.currentTarget.style.boxShadow = '0 12px 24px rgba(212, 120, 156, 0.1)';
+                e.currentTarget.style.borderColor = '#f0c6d8';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)';
                 e.currentTarget.style.borderColor = 'transparent';
               }}
             >
@@ -59,18 +60,18 @@ export default function Projects() {
                 <span style={{
                   display: 'inline-block',
                   padding: '0.2rem 0.6rem',
-                  backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                  color: '#60a5fa',
+                  backgroundColor: 'rgba(212, 120, 156, 0.08)',
+                  color: '#d4789c',
                   borderRadius: '0.25rem',
                   fontSize: '0.75rem',
                   marginBottom: '0.5rem',
                 }}>
                   {project.type}
                 </span>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', marginBottom: '0.25rem' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#334155', marginBottom: '0.25rem' }}>
                   {project.title}
                 </h2>
-                <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
+                <p style={{ color: '#78716c', fontSize: '0.875rem' }}>
                   {project.subtitle}
                 </p>
               </div>

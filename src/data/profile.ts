@@ -74,14 +74,14 @@ export const projects = [
     slug: "codeinsight",
     title: "CodeInsight",
     subtitle: "코딩교육 시각화 플랫폼",
-    type: "사이드 프로젝트 (진행 중)",
+    type: "오픈소스 사이드 프로젝트",
     thumbnail: { emoji: "🖥️", gradient: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)" },
     description: "C/Python/JS/Java 코드의 실행 과정을 단계별로 추적하고 메모리 구조를 인터랙티브하게 시각화하는 웹 기반 코딩교육 플랫폼. 4개 언어 시뮬레이터를 단일 아키텍처로 통합 설계.",
     techStack: ["React 18", "TypeScript", "Zustand", "Node.js", "Express", "PostgreSQL", "Prisma", "GCC", "Python", "Docker"],
     highlights: [
       "4개 언어 시뮬레이터를 공통 인터페이스로 통합하는 플러그인 아키텍처 설계",
       "Docker 샌드박스 기반 코드 실행 환경 구축 → 악성 코드 실행 방지 및 서버 안정성 확보",
-      "Zustand 도메인별 스토어 분리로 100+ step 실행 데이터 처리 시 불필요한 리렌더링 30% 감소",
+      "500+ 커밋 1인 개발 프로젝트를 MIT 라이선스로 오픈소스 공개 — 공개 전 보안 감사 및 커뮤니티 인프라 구축",
       "pnpm monorepo 구조로 frontend/backend/shared/simulators 4개 패키지 간 타입 공유 및 빌드 효율화",
     ],
     links: {

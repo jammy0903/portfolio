@@ -13,10 +13,10 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-sm border-b border-slate-800">
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm" style={{ backgroundColor: 'rgba(254, 247, 250, 0.92)', borderBottom: '1px solid #fce4ec' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="text-xl font-bold text-blue-400">
+          <Link to="/" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#d4789c', textDecoration: 'none' }}>
             SJ.Kim
           </Link>
 
@@ -26,11 +26,13 @@ export default function Navbar() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`text-sm font-medium transition-colors ${
-                  location.pathname === item.path
-                    ? "text-blue-400"
-                    : "text-slate-300 hover:text-white"
-                }`}
+                style={{
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  color: location.pathname === item.path ? '#d4789c' : '#78716c',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s',
+                }}
               >
                 {item.label}
               </Link>
@@ -40,7 +42,8 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-slate-300 hover:text-white"
+            style={{ padding: '0.5rem', color: '#78716c', background: 'none', border: 'none', cursor: 'pointer' }}
+            className="md:hidden"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isOpen ? (
@@ -55,18 +58,23 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-slate-900 border-b border-slate-800">
+        <div className="md:hidden" style={{ backgroundColor: '#fef7fa', borderBottom: '1px solid #fce4ec' }}>
           <div className="px-4 py-2 space-y-1">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={() => setIsOpen(false)}
-                className={`block px-3 py-2 rounded-md text-base font-medium ${
-                  location.pathname === item.path
-                    ? "text-blue-400 bg-slate-800"
-                    : "text-slate-300 hover:text-white hover:bg-slate-800"
-                }`}
+                style={{
+                  display: 'block',
+                  padding: '0.5rem 0.75rem',
+                  borderRadius: '0.375rem',
+                  fontSize: '1rem',
+                  fontWeight: '500',
+                  color: location.pathname === item.path ? '#d4789c' : '#78716c',
+                  backgroundColor: location.pathname === item.path ? 'rgba(212, 120, 156, 0.06)' : 'transparent',
+                  textDecoration: 'none',
+                }}
               >
                 {item.label}
               </Link>

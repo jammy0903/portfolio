@@ -4,9 +4,10 @@ export default function CodeInsightDetail() {
   const navigate = useNavigate();
 
   const cardStyle = {
-    backgroundColor: 'rgba(30, 41, 59, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderRadius: '1rem',
     padding: '2rem',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
   };
 
   const techStack = [
@@ -14,7 +15,7 @@ export default function CodeInsightDetail() {
     { area: 'Backend', techs: ['Node.js', 'Express', 'Prisma'], reason: '4개 시뮬레이터 프로세스 비동기 관리' },
     { area: 'Database', techs: ['PostgreSQL'], reason: '사용자별 코드 제출/실행 이력 관리' },
     { area: 'Simulators', techs: ['GCC', 'Python sys.settrace', 'Node.js VM', 'Java JDI'], reason: '언어별 실제 컴파일러/인터프리터 연동' },
-    { area: 'Infra', techs: ['Docker', 'pnpm monorepo'], reason: '안전한 샌드박스 실행 + 4개 패키지 효율적 관리' },
+    { area: 'Infra', techs: ['Docker', 'pnpm monorepo', 'MIT License'], reason: '안전한 샌드박스 실행 + 4개 패키지 효율적 관리 + 오픈소스 공개' },
   ];
 
   const features = [
@@ -41,6 +42,7 @@ export default function CodeInsightDetail() {
     'Docker 샌드박스 기반 코드 실행 환경 구축 → 악성 코드 실행 방지 및 서버 안정성 확보',
     'Zustand 도메인별 스토어 분리로 100+ step 실행 데이터 처리 시 불필요한 리렌더링 30% 감소',
     'pnpm monorepo(frontend/backend/shared/simulators) 구조로 4개 패키지 간 타입 공유 및 빌드 효율화',
+    '500+ 커밋 1인 개발 프로젝트를 MIT 라이선스로 오픈소스 공개 — 보안 감사 및 커뮤니티 인프라 구축 완료',
   ];
 
   const troubleshooting = [
@@ -71,7 +73,7 @@ export default function CodeInsightDetail() {
         <button
           onClick={() => navigate('/projects')}
           style={{
-            color: '#94a3b8', fontSize: '0.875rem', background: 'none', border: 'none',
+            color: '#78716c', fontSize: '0.875rem', background: 'none', border: 'none',
             cursor: 'pointer', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem',
           }}
         >
@@ -80,21 +82,21 @@ export default function CodeInsightDetail() {
 
         {/* Header */}
         <div style={{ marginBottom: '3rem' }}>
-          <span style={{ display: 'inline-block', padding: '0.25rem 0.75rem', backgroundColor: 'rgba(59, 130, 246, 0.2)', color: '#60a5fa', borderRadius: '9999px', fontSize: '0.875rem', marginBottom: '1rem' }}>
-            사이드 프로젝트 (진행 중)
+          <span style={{ display: 'inline-block', padding: '0.25rem 0.75rem', backgroundColor: 'rgba(212, 120, 156, 0.08)', color: '#d4789c', borderRadius: '9999px', fontSize: '0.875rem', marginBottom: '1rem' }}>
+            오픈소스 사이드 프로젝트
           </span>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: 'white', marginBottom: '0.5rem' }}>CodeInsight</h1>
-          <p style={{ fontSize: '1.25rem', color: '#60a5fa', marginBottom: '1.5rem' }}>코딩교육 시각화 플랫폼</p>
-          <p style={{ color: '#cbd5e1', lineHeight: '1.8', fontSize: '1.05rem' }}>
+          <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#334155', marginBottom: '0.5rem' }}>CodeInsight</h1>
+          <p style={{ fontSize: '1.25rem', color: '#d4789c', marginBottom: '1.5rem' }}>코딩교육 시각화 플랫폼</p>
+          <p style={{ color: '#64748b', lineHeight: '1.8', fontSize: '1.05rem' }}>
             C/Python/JS/Java 코드의 실행 과정을 단계별로 추적하고 메모리 구조를 인터랙티브하게 시각화하는 웹 기반 코딩교육 플랫폼.
             4개 언어 시뮬레이터를 단일 아키텍처로 통합 설계.
           </p>
         </div>
 
         {/* Motivation */}
-        <div style={{ ...cardStyle, marginBottom: '2rem', borderLeft: '4px solid #3b82f6' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', marginBottom: '1rem' }}>개발 동기</h2>
-          <p style={{ color: '#cbd5e1', lineHeight: '1.8' }}>
+        <div style={{ ...cardStyle, marginBottom: '2rem', borderLeft: '4px solid #e891b9' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>개발 동기</h2>
+          <p style={{ color: '#64748b', lineHeight: '1.8' }}>
             C 프로그래밍 학습 시 Stack/Heap/포인터 등 메모리 구조를 직관적으로 이해할 수 있는 교육 도구가 부재.
             기존 도구(Python Tutor 등)는 C 언어 지원이 제한적이고, 실제 GCC 컴파일 환경과 괴리가 존재하는 문제를 해결하기 위해 개발.
           </p>
@@ -117,20 +119,20 @@ export default function CodeInsightDetail() {
 
         {/* Tech Stack */}
         <div style={{ ...cardStyle, marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', marginBottom: '1.5rem' }}>기술 스택</h2>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1.5rem' }}>기술 스택</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {techStack.map((row) => (
               <div key={row.area} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                <span style={{ minWidth: '80px', color: '#60a5fa', fontWeight: '600', fontSize: '0.875rem', paddingTop: '0.25rem' }}>{row.area}</span>
+                <span style={{ minWidth: '80px', color: '#d4789c', fontWeight: '600', fontSize: '0.875rem', paddingTop: '0.25rem' }}>{row.area}</span>
                 <div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.25rem' }}>
                     {row.techs.map((tech) => (
-                      <span key={tech} style={{ padding: '0.25rem 0.75rem', backgroundColor: '#334155', color: '#cbd5e1', borderRadius: '0.5rem', fontSize: '0.8rem' }}>
+                      <span key={tech} style={{ padding: '0.25rem 0.75rem', backgroundColor: 'rgba(254, 242, 248, 0.8)', color: '#64748b', borderRadius: '0.5rem', fontSize: '0.8rem' }}>
                         {tech}
                       </span>
                     ))}
                   </div>
-                  <p style={{ color: '#64748b', fontSize: '0.8rem' }}>{row.reason}</p>
+                  <p style={{ color: '#a8a29e', fontSize: '0.8rem' }}>{row.reason}</p>
                 </div>
               </div>
             ))}
@@ -139,12 +141,12 @@ export default function CodeInsightDetail() {
 
         {/* Features */}
         <div style={{ marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', marginBottom: '1.5rem' }}>주요 기능</h2>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1.5rem' }}>주요 기능</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
             {features.map((feature) => (
               <div key={feature.title} style={cardStyle}>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: '600', color: '#60a5fa', marginBottom: '0.75rem' }}>{feature.title}</h3>
-                <p style={{ color: '#94a3b8', fontSize: '0.9rem', lineHeight: '1.7' }}>{feature.description}</p>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: '600', color: '#d4789c', marginBottom: '0.75rem' }}>{feature.title}</h3>
+                <p style={{ color: '#78716c', fontSize: '0.9rem', lineHeight: '1.7' }}>{feature.description}</p>
               </div>
             ))}
           </div>
@@ -152,12 +154,33 @@ export default function CodeInsightDetail() {
 
         {/* Achievements */}
         <div style={{ ...cardStyle, marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', marginBottom: '1.5rem' }}>주요 성과</h2>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1.5rem' }}>주요 성과</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {achievements.map((achievement, idx) => (
               <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <span style={{ color: '#4ade80', marginTop: '0.125rem', flexShrink: 0 }}>✓</span>
-                <span style={{ color: '#cbd5e1', lineHeight: '1.6' }}>{achievement}</span>
+                <span style={{ color: '#16a34a', marginTop: '0.125rem', flexShrink: 0 }}>✓</span>
+                <span style={{ color: '#64748b', lineHeight: '1.6' }}>{achievement}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Open Source */}
+        <div style={{ ...cardStyle, marginBottom: '2rem', borderLeft: '4px solid #16a34a' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>오픈소스 공개</h2>
+          <p style={{ color: '#64748b', lineHeight: '1.8', marginBottom: '1.25rem' }}>
+            개인 프로젝트 단계를 넘어 MIT 라이선스로 오픈소스 전환.
+            단순히 코드를 공개하는 것이 아니라, 외부 개발자가 기여할 수 있는 환경을 설계했습니다.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {[
+              { label: '보안 감사', detail: '샌드박스 탈출 취약점 패치, 하드코딩된 크레덴셜 제거, git history 민감정보 정리' },
+              { label: '기여 가이드', detail: '개발 환경 셋업, 코드 컨벤션, 커밋 규칙, 프로젝트 아키텍처 문서화' },
+              { label: '커뮤니티 표준', detail: 'Contributor Covenant 기반 Code of Conduct, Bug Report / Feature Request / PR 템플릿' },
+            ].map((item) => (
+              <div key={item.label} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <span style={{ color: '#16a34a', minWidth: '80px', fontWeight: '600', fontSize: '0.875rem', paddingTop: '0.125rem' }}>{item.label}</span>
+                <span style={{ color: '#78716c', fontSize: '0.9rem', lineHeight: '1.6' }}>{item.detail}</span>
               </div>
             ))}
           </div>
@@ -165,15 +188,15 @@ export default function CodeInsightDetail() {
 
         {/* Troubleshooting */}
         <div style={{ marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', marginBottom: '1.5rem' }}>트러블 슈팅</h2>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1.5rem' }}>트러블 슈팅</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {troubleshooting.map((item, idx) => (
               <div key={idx} style={{ ...cardStyle, borderLeft: '3px solid #f59e0b' }}>
-                <h3 style={{ color: '#fbbf24', fontWeight: '600', marginBottom: '0.75rem' }}>{item.problem}</h3>
+                <h3 style={{ color: '#d97706', fontWeight: '600', marginBottom: '0.75rem' }}>{item.problem}</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem' }}>
-                  <p style={{ color: '#94a3b8' }}><span style={{ color: '#64748b' }}>원인:</span> {item.cause}</p>
-                  <p style={{ color: '#94a3b8' }}><span style={{ color: '#64748b' }}>해결:</span> {item.solution}</p>
-                  <p style={{ color: '#4ade80' }}><span style={{ color: '#64748b' }}>결과:</span> {item.result}</p>
+                  <p style={{ color: '#78716c' }}><span style={{ color: '#a8a29e' }}>원인:</span> {item.cause}</p>
+                  <p style={{ color: '#78716c' }}><span style={{ color: '#a8a29e' }}>해결:</span> {item.solution}</p>
+                  <p style={{ color: '#16a34a' }}><span style={{ color: '#a8a29e' }}>결과:</span> {item.result}</p>
                 </div>
               </div>
             ))}
