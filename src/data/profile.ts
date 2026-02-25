@@ -62,6 +62,48 @@ export const experience = {
       solution: "Figma 와이어프레임 제작, 사용자 관점 정보 구조 재설계",
       result: "고객사 재계약 성사, 영업팀 '계약 8할이 대시보드' 평가",
     },
+    {
+      title: "MQTT 실시간 데이터 파이프라인 설계",
+      problem: "470대 IoT 장비의 MQTT 메시지를 프론트엔드까지 효율적으로 전달해야 하는 구조적 과제",
+      solution: "MQTT → mqtt_processor(op코드 분기) → batch_manager(배치) → ws_connecter(구독 필터링) 4단계 파이프라인 설계, fault 즉시 처리 / data 배치 처리 우선순위 분기",
+      result: "장애 알림 즉시 전달 보장, 구독 기반 필터링으로 불필요한 네트워크 전송 제거",
+    },
+    {
+      title: "카카오톡 실시간 장애 알림 시스템",
+      problem: "아크 fault 발생 시 담당자가 대시보드 미접속 상태면 장애 인지 불가",
+      solution: "fault 이벤트 감지 즉시 카카오톡 알림 자동 발송, B2B 고객사별 알림 수신자 관리 페이지 구현",
+      result: "장애 인지 시간 대폭 단축, 고객사 현장 대응 속도 향상",
+    },
+    {
+      title: "디바이스 상태 머신 (인메모리 관리)",
+      problem: "470대 장비 상태를 매번 DB 조회 시 지연 발생, 타임아웃 장비 판별 어려움",
+      solution: "Python 딕셔너리 기반 인메모리 상태 머신 구현, 5분 무응답 시 자동 disconnected 처리, threading.Lock 동시성 보장",
+      result: "DB 조회 없이 나노초 단위 상태 조회, 오프라인 장비 즉시 식별",
+    },
+    {
+      title: "Dual DB 아키텍처 설계 (SQLite + InfluxDB)",
+      problem: "관계형 메타데이터와 시계열 센서 데이터의 특성이 달라 단일 DB로 처리 비효율",
+      solution: "SQLite(사용자·장비 메타데이터) + InfluxDB(전류·전압·온도 시계열 데이터) 이원화, asyncio.gather로 병렬 조회 후 병합",
+      result: "대시보드 초기 로딩 최적화, 데이터 특성에 맞는 최적 저장·조회 구현",
+    },
+    {
+      title: "4단계 RBAC 권한 시스템",
+      problem: "B2B 서비스 특성상 고객사별 장비 접근 제어 및 역할별 권한 분리 필요",
+      solution: "Root/Admin/User/Guest 4단계 역할 기반 접근 제어 설계, 소유권 기반 리소스 접근 제어, 프론트·백엔드 양쪽 일관된 권한 체크",
+      result: "고객사 간 데이터 격리 보장, B2B 멀티테넌시 지원",
+    },
+    {
+      title: "ML 아크 분석 모듈 및 데이터 스키마 확장 설계",
+      problem: "하드웨어 버전 업그레이드(V2→V3)로 샘플 수 변경(30→60개) 및 신규 전력 필드 추가 대응 필요",
+      solution: "하드웨어 버전 자동 감지 로직, InfluxDB bucket 분리(운영용/ML용), 버전별 가변 스키마 설계",
+      result: "기존 대시보드 영향 없이 V3 데이터 수용, ML 학습용 데이터 파이프라인 구축",
+    },
+    {
+      title: "프론트엔드 안정성 고도화",
+      problem: "대시보드 24/7 운영 시 메모리 누수, API 중복 호출, WebSocket 연결 끊김 등 안정성 이슈",
+      solution: "인메모리 캐시(TTL 10분, FIFO), AbortController 기반 요청 중복 방지, WebSocket 지수 백오프 재연결(2s→4s→8s), Intersection Observer 지연 로딩",
+      result: "24/7 무중단 운영 안정성 확보, 메모리 사용량 안정화",
+    },
   ],
   news: [
     { title: "전기신문", url: "https://www.electimes.com/news/articleView.html?idxno=362889" },
