@@ -102,6 +102,17 @@ export const projects = [
       "AI 기반 취약점 점검 보고서 자동 생성 — 취약점 설명 및 대응 방안 포함",
       "AWS VPC 기반 Public/Private Subnet 분리 아키텍처 설계 및 Docker 컨테이너 배포",
     ],
+    images: [
+      { src: "/images/cve-matcher/1_architecture.png", caption: "AWS VPC 아키텍처 구성도" },
+      { src: "/images/cve-matcher/2_system_ia.png", caption: "시스템 구성도 IA" },
+      { src: "/images/cve-matcher/3_system_ia2.png", caption: "메인 페이지 및 CVE 매칭 UI" },
+      { src: "/images/cve-matcher/4_system_ia3.png", caption: "서브도메인 하위 페이지 추출 로그" },
+      { src: "/images/cve-matcher/5_subdomain_log.png", caption: "사용자 관리 및 계정 생성" },
+      { src: "/images/cve-matcher/6_user_create.png", caption: "개인정보 이용약관 동의 및 검사 시작" },
+      { src: "/images/cve-matcher/7_terms.png", caption: "지난 검사 기록창" },
+      { src: "/images/cve-matcher/8_history.png", caption: "취약점 점검 결과 보고서" },
+      { src: "/images/cve-matcher/9_report.png", caption: "서브도메인 크롤링 및 CVE 검사 결과 GUI" },
+    ],
     links: {
       github: "https://github.com/jammy0903/sub_crawler",
       notion: "https://brindle-tractor-059.notion.site/CVE-17b09ddb2b7a818a94c7c3a853905f90",
@@ -162,6 +173,14 @@ export const projects = [
       "Spring Boot 기반 백엔드 개발 및 MariaDB 서버 연동·관리",
       "WebSocket 기반 실시간 채팅 기능 구현",
       "시스템 아키텍처 설계 및 문서 작성",
+    ],
+    images: [
+      { src: "/images/donghang/1.png", caption: "프로그램 개발 환경" },
+      { src: "/images/donghang/2.png", caption: "동행 모집 등록 및 참가 흐름" },
+      { src: "/images/donghang/3.png", caption: "동행 승인·채팅 및 지역별 채팅방" },
+      { src: "/images/donghang/4.png", caption: "카카오맵 기반 여행 경로 및 맛집 탐색" },
+      { src: "/images/donghang/5.png", caption: "부적절한 유저 신고 기능" },
+      { src: "/images/donghang/6.png", caption: "강원 SW페스티벌 입상" },
     ],
     links: {
       notion: "https://brindle-tractor-059.notion.site/1aa09ddb2b7a807f98bcf3e3221fbcb9",
