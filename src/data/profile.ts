@@ -118,6 +118,22 @@ export const projects = [
     ],
     links: {},
   },
+  {
+    slug: "malware-analysis",
+    title: "문서형 악성코드 분석",
+    subtitle: "Yara 기반 문서형 악성코드 탐지 시스템",
+    type: "KUCIS (대학정보보호동아리)",
+    thumbnail: { emoji: "🛡️", gradient: "linear-gradient(135deg, #dc2626 0%, #7c3aed 100%)" },
+    description: "KUCIS 지원 사업 팀 프로젝트로 참여하여 악성코드 분석과 탐지 시스템 개발을 담당. 코로나19 이후 급증한 문서형 악성코드를 탐지하기 위한 Python/Yara 기반 분석 시스템으로, 매크로 악성코드, CVE 취약점 익스플로잇, 정보탈취 악성코드(Loki Bot, AgentTesla)를 통합 탐지.",
+    techStack: ["Python", "Yara", "Ghidra", "dnSpy", "Cuckoo Sandbox", "x64dbg", "officeparser"],
+    highlights: [
+      "매크로 기반 악성코드 탐지 — URLDownloadToFileA, WScript.Shell 등 주요 API 호출 패턴 Yara 룰 개발",
+      "CVE-2017-0199 · CVE-2017-11882 · CVE-2018-0802 문서 편집 프로그램 취약점 통합 탐지 규칙 구현",
+      "Loki Bot · AgentTesla 정보탈취 악성코드 역공학 분석 — Ghidra · dnSpy · Cuckoo Sandbox 활용",
+      "매크로 탐지 · 취약점 탐지 · 악성 파일 탐지 3가지 모듈을 통합 관리하는 시스템 설계",
+    ],
+    links: {},
+  },
 ];
 
 export const education = [
