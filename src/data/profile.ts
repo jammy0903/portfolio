@@ -115,19 +115,20 @@ export const projects = [
   {
     slug: "codeinsight",
     title: "CodeInsight",
-    subtitle: "코딩교육 시각화 플랫폼",
+    subtitle: "코드 실행 시각화 학습 플랫폼",
     type: "오픈소스 사이드 프로젝트",
     thumbnail: { emoji: "🖥️", gradient: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)" },
-    description: "C/Python/JS/Java 코드의 실행 과정을 단계별로 추적하고 메모리 구조를 인터랙티브하게 시각화하는 웹 기반 코딩교육 플랫폼. 4개 언어 시뮬레이터를 단일 아키텍처로 통합 설계.",
-    techStack: ["React 18", "TypeScript", "Zustand", "Node.js", "Express", "PostgreSQL", "Prisma", "GCC", "Python", "Docker"],
+    description: "C/Python/JavaScript/Java 4개 언어의 코드 실행 과정을 메모리 레벨에서 단계별 시각화하는 인터랙티브 학습 플랫폼. 각 언어의 디버거를 직접 구현(GDB/Python tracer/AST 기반/JDI)하고 서로 다른 메모리 모델을 단일 시각화 스키마로 통합 설계. 2개월, 74,700줄, 커밋 386회. Web + PWA + Android(테스트) 배포.",
+    techStack: ["React 19", "TypeScript", "Vite", "TailwindCSS", "Zustand", "Node.js", "Fastify", "PostgreSQL", "Prisma", "CodeMirror 6", "Framer Motion", "Capacitor", "Docker", "pnpm monorepo"],
     highlights: [
-      "4개 언어 시뮬레이터를 공통 인터페이스로 통합하는 플러그인 아키텍처 설계",
-      "Docker 샌드박스 기반 코드 실행 환경 구축 → 악성 코드 실행 방지 및 서버 안정성 확보",
-      "500+ 커밋 1인 개발 프로젝트를 MIT 라이선스로 오픈소스 공개 — 공개 전 보안 감사 및 커뮤니티 인프라 구축",
-      "pnpm monorepo 구조로 frontend/backend/shared/simulators 4개 패키지 간 타입 공유 및 빌드 효율화",
+      "4개 언어 디버거 직접 구현 — C(GDB), Python(커스텀 트레이서), JavaScript(AST 기반 코드 변환), Java(JDI) — 기존 라이브러리 미사용",
+      "언어별로 완전히 다른 메모리 모델(스택/힙/참조/JVM)을 단일 시각화 포맷으로 정규화하는 파이프라인 설계",
+      "Express → Fastify, Monaco → CodeMirror 6, SQLite → PostgreSQL 마이그레이션 3건 동시 진행 — 서비스 중단 없이 완료",
+      "LessonPage(1042→276줄), MemoryPanel(1057→57줄) 등 7단계 체계적 리팩토링으로 총 3,500줄 이상 분해",
     ],
     links: {
-      github: "https://github.com/jammy0903/C-OSINE",
+      live: "https://codeinsight.online/",
+      github: "https://github.com/jammy0903/CodeInsight",
     },
   },
   {

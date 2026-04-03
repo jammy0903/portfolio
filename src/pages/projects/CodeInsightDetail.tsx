@@ -11,58 +11,60 @@ export default function CodeInsightDetail() {
   };
 
   const techStack = [
-    { area: 'Frontend', techs: ['React 18', 'TypeScript', 'Zustand'], reason: '대규모 실행 데이터(100+ step) 상태 관리 최적화' },
-    { area: 'Backend', techs: ['Node.js', 'Express', 'Prisma'], reason: '4개 시뮬레이터 프로세스 비동기 관리' },
-    { area: 'Database', techs: ['PostgreSQL'], reason: '사용자별 코드 제출/실행 이력 관리' },
-    { area: 'Simulators', techs: ['GCC', 'Python sys.settrace', 'Node.js VM', 'Java JDI'], reason: '언어별 실제 컴파일러/인터프리터 연동' },
-    { area: 'Infra', techs: ['Docker', 'pnpm monorepo', 'MIT License'], reason: '안전한 샌드박스 실행 + 4개 패키지 효율적 관리 + 오픈소스 공개' },
+    { area: 'Frontend', techs: ['React 19', 'TypeScript', 'Vite', 'TailwindCSS', 'Zustand', 'CodeMirror 6', 'Framer Motion'], reason: '100+ step 실행 데이터 상태 관리 + 모바일 번들 최적화(Monaco→CodeMirror 6)' },
+    { area: 'Backend', techs: ['Node.js', 'Fastify', 'Prisma', 'Zod'], reason: 'Express 대비 고성능 + 4개 시뮬레이터 프로세스 비동기 관리' },
+    { area: 'Database', techs: ['PostgreSQL (Neon)'], reason: '프로덕션 동시 접속 지원 (SQLite → PostgreSQL 마이그레이션)' },
+    { area: 'Simulators', techs: ['GDB (C)', 'Python 커스텀 트레이서', 'AST 기반 JS 변환', 'Java JDI + 커스텀 JAR'], reason: '각 언어 디버거 직접 구현 — 기존 라이브러리 미사용' },
+    { area: 'Mobile', techs: ['Capacitor', 'Fastlane'], reason: 'Web → Android/iOS 크로스플랫폼 + 자동 배포' },
+    { area: 'Infra', techs: ['Docker 멀티스테이지', 'Nginx', 'Render/Railway', 'pnpm monorepo'], reason: 'Node 20 + Python 3 + JDK 17 + GCC/GDB 통합 이미지 (4단계 멀티스테이지 빌드)' },
   ];
 
   const features = [
     {
-      title: '단계별 코드 실행 추적',
-      description: '코드 실행을 한 줄 단위로 추적하며, 각 step에서의 변수 상태·호출 스택·메모리 변화를 실시간 동기화하여 시각화',
+      title: '메모리 레벨 시각화 (4개 언어)',
+      description: 'C는 스택/힙/포인터, Python은 names/objects 참조 모델, JavaScript는 스코프 체인/이벤트 루프, Java는 JVM 메모리 모델 — 언어별 특성에 맞게 각각 렌더링',
     },
     {
-      title: '메모리 구조 시각화',
-      description: 'Stack/Heap/Data 영역을 인터랙티브 다이어그램으로 표현하고, 포인터 참조 관계까지 시각화하여 추상적 개념의 직관적 이해 지원',
+      title: 'Lesson 모드 + Playground 모드',
+      description: 'Lesson 모드: AI가 작성하고 사람이 검수한 원리 설명과 함께 사전 스크립트 기반 단계별 학습. Playground 모드: 직접 코드를 작성하고 실시간 시뮬레이터로 실행',
     },
     {
-      title: '다중 언어 시뮬레이터 통합 아키텍처',
-      description: 'C(GCC subprocess), Python(sys.settrace), JavaScript(Node.js VM), Java(JDI) 4개 언어의 실행 엔진을 공통 인터페이스로 추상화. 언어 추가 시 시뮬레이터 모듈만 구현하면 되는 확장 가능한 플러그인 구조 설계',
+      title: '학습 기록 기반 AI 분석',
+      description: '학습 진도, 완료 기록, 스트릭을 추적하고 공부한 기록을 바탕으로 AI가 학습 패턴을 분석. 퀴즈(O/X, 객관식)로 이해도 확인',
     },
     {
-      title: '통합 학습 환경 (Playground)',
-      description: '코드 에디터 + 실행 제어 + 시각화 패널을 단일 화면에 통합. 코드 수정 즉시 실행 결과를 확인할 수 있는 인터랙티브 학습 루프 구현',
+      title: '크로스플랫폼 배포',
+      description: 'Web + PWA + Android(Capacitor) 지원. 한국어/영어/중국어 3개 국어, Google/GitHub/Kakao 소셜 로그인. Fastlane 자동 배포 파이프라인',
     },
   ];
 
   const achievements = [
-    '4개 언어 시뮬레이터를 공통 인터페이스로 통합하는 플러그인 아키텍처 설계 → 신규 언어 추가 시 개발 비용 최소화',
-    'Docker 샌드박스 기반 코드 실행 환경 구축 → 악성 코드 실행 방지 및 서버 안정성 확보',
-    'Zustand 도메인별 스토어 분리로 100+ step 실행 데이터 처리 시 불필요한 리렌더링 30% 감소',
-    'pnpm monorepo(frontend/backend/shared/simulators) 구조로 4개 패키지 간 타입 공유 및 빌드 효율화',
-    '500+ 커밋 1인 개발 프로젝트를 MIT 라이선스로 오픈소스 공개 — 보안 감사 및 커뮤니티 인프라 구축 완료',
+    '2개월간 1인 풀스택 개발 — TypeScript 517개 파일, 74,700줄, 커밋 386회. 프론트엔드/백엔드/시뮬레이터 4개/모바일/인프라 전체',
+    '4개 언어 디버거 에이전트 직접 구현 — C(GDB), Python(커스텀 트레이서), JavaScript(AST 기반), Java(JDI + 커스텀 JAR) — 완전히 다른 메모리 모델을 단일 시각화 포맷으로 정규화',
+    'LessonPage(1042→276줄), MemoryPanel(1057→57줄), simulator.ts(516→4줄 re-export) 등 7단계 리팩토링 — 총 3,500줄 이상 분해',
+    'Express→Fastify, Monaco→CodeMirror 6, SQLite→PostgreSQL 마이그레이션 3건 동시 진행 — 서비스 중단 없이 완료',
+    'TypeScript strict 모드 — any 타입 전면 제거 (8차에 걸친 체계적 정리)',
+    'Web + PWA + Android 크로스플랫폼 배포. MIT 라이선스 오픈소스 공개',
   ];
 
   const troubleshooting = [
     {
-      problem: '대량 실행 데이터(100+ step) 로드 시 UI 프리징',
-      cause: '매 step마다 전체 상태 리렌더링 발생',
-      solution: 'Zustand 스토어 도메인별 분리 + selector 최적화',
-      result: '렌더링 횟수 30% 감소',
+      problem: 'C 포인터 시각화 화살표가 잘못된 위치에 렌더링',
+      cause: 'Framer Motion layout 애니메이션이 CSS transform 적용 → getBoundingClientRect() 좌표계 왜곡',
+      solution: 'requestAnimationFrame → double rAF 시도 후 최종적으로 조상 체인 전체의 CSS transform 역산 적용',
+      result: '브라우저 렌더링 파이프라인과 애니메이션 라이브러리 내부 동작 이해 기반으로 해결',
     },
     {
-      problem: 'GCC 서브프로세스 비정상 종료 시 좀비 프로세스',
-      cause: '타임아웃 없이 프로세스 생성',
-      solution: '프로세스 타임아웃(5초) + 강제 종료 메커니즘 도입',
-      result: '서버 메모리 안정화',
+      problem: 'Docker 멀티런타임 이미지 빌드 10회+ 연속 실패',
+      cause: 'Node.js + Python + JDK + GCC/GDB 4개 런타임을 단일 이미지에 통합 시 COPY 경로 오류, shared 패키지 빌드 순서, Prisma 클라이언트 생성 타이밍 충돌',
+      solution: '4단계 멀티스테이지 빌드 설계 (base → dependencies → builder → production), JDK vs JRE 선택, Java 에이전트 JAR 복사 순서 정리',
+      result: 'Node 20 + Python 3 + JDK 17 + GCC/GDB 통합 프로덕션 이미지 완성',
     },
     {
-      problem: '시뮬레이터별 출력 포맷 불일치',
-      cause: '4개 언어 각각 다른 데이터 구조 반환',
-      solution: '공통 ExecutionStep 인터페이스 정의 + 어댑터 패턴 적용',
-      result: '프론트엔드 코드 통일',
+      problem: 'JavaScript 시뮬레이터 — 클래스, 클로저, async/await 시각화 불가',
+      cause: '기존 라인 단위 디버깅 방식으로는 복잡한 구문의 스코프 추적 한계',
+      solution: 'AST(추상 구문 트리) 기반 코드 변환으로 전면 재작성 — 블록 레벨 변수 감지, MAX_STEPS 기반 무한 루프 감지, 구조화된 힙 참조 파싱',
+      result: '클래스/클로저/async 포함 복잡한 JavaScript 구문 정확 시각화',
     },
   ];
 
@@ -86,10 +88,11 @@ export default function CodeInsightDetail() {
             오픈소스 사이드 프로젝트
           </span>
           <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#334155', marginBottom: '0.5rem' }}>CodeInsight</h1>
-          <p style={{ fontSize: '1.25rem', color: '#d4789c', marginBottom: '1.5rem' }}>코딩교육 시각화 플랫폼</p>
+          <p style={{ fontSize: '1.25rem', color: '#d4789c', marginBottom: '1.5rem' }}>코드 실행 시각화 학습 플랫폼</p>
           <p style={{ color: '#64748b', lineHeight: '1.8', fontSize: '1.05rem' }}>
-            C/Python/JS/Java 코드의 실행 과정을 단계별로 추적하고 메모리 구조를 인터랙티브하게 시각화하는 웹 기반 코딩교육 플랫폼.
-            4개 언어 시뮬레이터를 단일 아키텍처로 통합 설계.
+            C/Python/JavaScript/Java 4개 언어의 코드 실행 과정을 메모리 레벨에서 단계별로 시각화하는 인터랙티브 학습 플랫폼.
+            각 언어의 디버거를 직접 구현하고, 언어별로 완전히 다른 메모리 모델을 단일 시각화 스키마로 정규화하는 파이프라인을 설계했습니다.
+            2개월 · 74,700줄 · 커밋 386회 · Web + Android(테스트) 배포.
           </p>
         </div>
 
@@ -97,15 +100,25 @@ export default function CodeInsightDetail() {
         <div style={{ ...cardStyle, marginBottom: '2rem', borderLeft: '4px solid #e891b9' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>개발 동기</h2>
           <p style={{ color: '#64748b', lineHeight: '1.8' }}>
-            C 프로그래밍 학습 시 Stack/Heap/포인터 등 메모리 구조를 직관적으로 이해할 수 있는 교육 도구가 부재.
-            기존 도구(Python Tutor 등)는 C 언어 지원이 제한적이고, 실제 GCC 컴파일 환경과 괴리가 존재하는 문제를 해결하기 위해 개발.
+            직관적으로 이해가 안 되면 앞으로 못 나아가는 학습 스타일 때문에 시작한 프로젝트.
+            C 포인터, Java 힙, JavaScript 클로저 — 개념을 외워서 넘어가는 게 안 되고 눈으로 보고 납득이 돼야 했습니다.
+            Python Tutor 같은 기존 도구는 단일 언어만 지원했고, 제가 막힌 언어들을 커버하지 못했습니다.
+            AI 시대일수록 "동작하는 코드"보다 "이해한 코드"가 중요하다는 믿음으로 직접 만들었습니다.
           </p>
         </div>
 
         {/* Links */}
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
           <a
-            href="https://github.com/jammy0903/C-OSINE"
+            href="https://codeinsight.online/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ padding: '0.75rem 1.5rem', backgroundColor: '#3b82f6', color: 'white', borderRadius: '0.5rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+          >
+            🌐 Live Demo
+          </a>
+          <a
+            href="https://github.com/jammy0903/CodeInsight"
             target="_blank"
             rel="noopener noreferrer"
             style={{ padding: '0.75rem 1.5rem', backgroundColor: '#334155', color: 'white', borderRadius: '0.5rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
