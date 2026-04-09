@@ -65,6 +65,24 @@ export default function Contact() {
             </div>
           </a>
 
+          {/* Blog */}
+          <a
+            href={profile.blog}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'block', backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '0.75rem', padding: '1.5rem', textDecoration: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ width: '3rem', height: '3rem', backgroundColor: 'rgba(59, 130, 246, 0.08)', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>
+                ✍️
+              </div>
+              <div>
+                <p style={{ color: '#a8a29e', fontSize: '0.875rem', margin: 0 }}>Blog</p>
+                <p style={{ color: '#334155', fontWeight: '500', margin: 0 }}>jammy0903.github.io</p>
+              </div>
+            </div>
+          </a>
+
           {/* Location */}
           <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '0.75rem', padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

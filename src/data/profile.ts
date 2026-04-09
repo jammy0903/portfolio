@@ -6,6 +6,7 @@ export const profile = {
   email: "l89192164@gmail.com",
   phone: "010-5130-2164",
   github: "https://github.com/jammy0903",
+  blog: "https://jammy0903.github.io",
   location: "서울시 서대문구",
 
   summary: `470대 IoT 디바이스의 실시간 데이터를 처리하는 모니터링 대시보드를 1인 개발한 풀스택 개발자입니다.
@@ -31,6 +32,7 @@ export const experience = {
   role: "사내 유일 웹 개발자로서 레거시 시스템 분석부터 리팩토링, 신규 기능 개발, 배포까지 전 과정 1인 담당",
   scale: "470대 차단기 실시간 모니터링, 다수 고객사 대상 B2B 서비스",
   techStack: ["React(Vite)", "FastAPI", "SQLite", "InfluxDB", "WebSocket", "MQTT", "Docker", "Nginx"],
+  notion: "https://www.notion.so/IoT-Dashboard-3284d6f08f2d80e587ebe11fd728fe72",
   achievements: [
     {
       title: "실시간 데이터 처리 최적화",
@@ -99,6 +101,18 @@ export const experience = {
       result: "기존 대시보드 영향 없이 V3 데이터 수용, ML 학습용 데이터 파이프라인 구축",
     },
     {
+      title: "devType 기반 모델 자동감지 시스템",
+      problem: "V3 하드웨어 도입을 앞두고 게이트웨이별 모델 식별이 필요했으나, 펌웨어팀 문서에 식별 필드가 명시되지 않아 어떤 키를 봐야 할지 불명확",
+      solution: "운영 InfluxDB unregistered_bucket의 raw payload를 직접 분석해 펌웨어가 보내는 식별 필드가 `devType`임을 확정. MQTT payload + 게이트웨이 prefix(EFPS/IGWP) 조합으로 자동 분류하는 `infer_modeltype()` 함수 신설. 실데이터 검증으로 IGWP 펌웨어가 devType 20·30·32 3종 빌드 변형이 있음을 발견해 화이트리스트 확장",
+      result: "55대 게이트웨이 100% 자동 분류 (rd 8대 + x20_x70 47대), 미등록 게이트웨이도 등록 전 단계에서 모델 사전 식별 가능, V3 도입 시 신규 prefix만 추가하면 즉시 확장",
+    },
+    {
+      title: "분석 페이지 전면 재구성 (1,700줄 → 120줄 + 8 컴포넌트)",
+      problem: "아크 이벤트 중심으로 만들어진 5탭 구조의 1,700줄 단일 파일 분석 페이지가 사용자 의도(전기 건강 모니터링)와 불일치하고 유지보수 불가능 상태",
+      solution: "5탭→3탭(현황/문제장비/장비상세) IA 전면 재설계, 1,700줄 단일 파일을 ~120줄 컨테이너 + 하위 컴포넌트 8개로 분리. Tier 2 건강 지표 3종(추세 기울기·자기편차·fleet편차)을 백엔드에 추가하고 Tier 1 경고 장비 대상으로만 적용, InfluxDB 쿼리에 인메모리 캐싱(30s~300s) 도입",
+      result: "응답시간 3초 이하로 개선, 단일 파일 1,700줄 → 컴포넌트 평균 150줄로 유지보수성 확보, 사용자 관점 IA로 비즈니스 가치 정렬",
+    },
+    {
       title: "프론트엔드 안정성 고도화",
       problem: "대시보드 24/7 운영 시 메모리 누수, API 중복 호출, WebSocket 연결 끊김 등 안정성 이슈",
       solution: "인메모리 캐시(TTL 10분, FIFO), AbortController 기반 요청 중복 방지, WebSocket 지수 백오프 재연결(2s→4s→8s), Intersection Observer 지연 로딩",
@@ -112,6 +126,27 @@ export const experience = {
 };
 
 export const projects = [
+  {
+    slug: "multibucket-architecture",
+    title: "InfluxDB 멀티버킷 라우팅 아키텍처",
+    subtitle: "V3 하드웨어 도입 대비 5단계 점진적 마이그레이션 (Case Study)",
+    type: "IoT 대시보드 — 아키텍처 작업",
+    thumbnail: { emoji: "🗂️", gradient: "linear-gradient(135deg, #0369A1 0%, #8B5CF6 100%)" },
+    description: "기존 단일 InfluxDB 버킷(arcBucket)에 V1(RD)·V2(x20·x70)·V3(x83·x90, 도입 예정) 데이터가 혼재되는 구조에서, 모델별 버킷 분리가 가능한 라우팅 아키텍처로 점진적으로 전환한 작업. 운영 무중단·롤백 가능성·기존 코드 영향 최소화를 모두 지키기 위해 5단계 Phase로 쪼개 진행. 라우팅 비활성 상태로 골격을 먼저 깔고, read 경로 25곳을 단일 진입점으로 통합한 뒤, 미등록 게이트웨이 raw payload 보존 → 모델 관리 UI 신설 → 쓰기 경로 라우팅 활성화 순서로 마이그레이션. ModelRegistry 테이블, BucketResolver, GW.model_id 컬럼·백필, devType 자동감지까지 한 묶음으로 설계.",
+    techStack: ["Python", "FastAPI", "InfluxDB", "SQLAlchemy", "SQLite", "Alembic-style migration", "MQTT", "Docker", "React"],
+    highlights: [
+      "Phase 0~4 점진적 마이그레이션 — 컬럼 추가(라우팅 비활성) → read 통합 → 미등록 보존 → 관리 UI → 쓰기 라우팅 순으로 5단계 분해, 각 단계 독립 롤백 가능",
+      "read 쿼리 25곳을 `_resolve_bucket()` 단일 진입점으로 통합 — 후속 라우팅 변경 시 25곳 산탄총 수정을 한 곳 변경으로 축소",
+      "미등록 게이트웨이 raw payload를 unregistered_bucket에 보존 — 펌웨어 식별 필드 분석의 데이터 기반이 됨 (devType 발견의 단초)",
+      "ModelRegistry UNIQUE 제약 제거(Option 1 확정) — 여러 모델이 같은 버킷 공유 가능한 유연한 스키마로 변경, V3 도입 시 신규 row만 추가하면 즉시 분리 시작",
+      "GW.model_id FK 컬럼 신설 + 55대 백필 + arcBucket_v4 → arcBucket 리네임 통일 — 운영 다운타임 윈도우 사전 공지, 백업/롤백 절차 명문화",
+      "재개 트리거 T1~T5 명문화 + `INFLUX_ROUTING_ENABLED` env var로 코드 경로 워밍업 — 운영 영향 0인 상태로 라우팅 코드 검증",
+      "Notion 변경관리(CHG) 문서 + 다이어그램 4종(타임라인/데이터 흐름/백필 분포/배포 시퀀스) + 7장 공식 보고서(docx) 산출",
+    ],
+    links: {
+      notion: "https://www.notion.so/11f78be8bd2d48479516e9348ea2771b?v=61bbb701fdf64a7291b4388dfdebdd22",
+    },
+  },
   {
     slug: "codeinsight",
     title: "CodeInsight",
