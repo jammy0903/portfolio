@@ -5,6 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>정보처리기사 실기 2단원 프로그래밍·자료구조·알고리즘</title>
   <link rel="stylesheet" href="./memory-frame.css">
+  <style>
+    .mg { border:1.5px solid rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; margin-bottom:14px; }
+    .mg:last-child { margin-bottom:0; }
+    .mg-hd { padding:7px 14px; font-size:0.71rem; font-weight:700; }
+    .mg-hd.blue   { background:#dbeafe; color:#1d4ed8; }
+    .mg-hd.green  { background:#d1fae5; color:#065f46; }
+    .mg-hd.amber  { background:#fef3c7; color:#92400e; }
+    .mg-hd.violet { background:#ede9fe; color:#5b21b6; }
+    .mg-bd { display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:10px; padding:12px; background:#f8fafc; }
+    .mg-bd.c2 { grid-template-columns:repeat(2,1fr); }
+    .mg-bd.c3 { grid-template-columns:repeat(3,1fr); }
+    .mi { background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; font-size:0.72rem; }
+    .mi strong { display:block; font-size:0.73rem; margin-bottom:4px; color:#1e293b; }
+    .mi p { margin:0; color:#475569; line-height:1.6; }
+    /* 비트 연산 전용 */
+    .bit-tbl { width:100%; border-collapse:collapse; font-size:0.72rem; }
+    .bit-tbl th { background:#dbeafe; color:#1d4ed8; font-weight:700; padding:6px 10px; text-align:center; border-bottom:2px solid #bfdbfe; }
+    .bit-tbl td { padding:6px 10px; border-bottom:1px solid #f1f5f9; color:#334155; text-align:center; vertical-align:middle; font-family:monospace; }
+    .bit-tbl tr:last-child td { border-bottom:none; }
+    .bit-tbl td.desc { text-align:left; font-family:inherit; color:#475569; }
+    .bit-ex { background:#1e293b; color:#e2e8f0; border-radius:8px; padding:12px 16px; font-family:monospace; font-size:0.75rem; line-height:1.9; margin:0; overflow-x:auto; }
+    .bit-ex .op { color:#60a5fa; font-weight:700; }
+    .bit-ex .result { color:#34d399; font-weight:700; }
+    .bit-ex .comment { color:#94a3b8; }
+    .bit-section { font-size:0.72rem; font-weight:700; color:#1d4ed8; background:#eff6ff; border-left:3px solid #3b82f6; padding:5px 10px; margin:14px 0 0; border-radius:0 4px 4px 0; }
+  </style>
 </head>
 <body>
   <main class="shell">
@@ -27,61 +53,166 @@
 
     <section class="frame-grid two-up">
 
-      <article id="c-lang" class="card card--blue">
+      <article id="c-lang" class="card card--blue" style="grid-column:1/-1;">
         <header class="card-head">
-          <h2>1. C 언어 핵심</h2>
-          <p>포인터·배열·함수·자료형</p>
+          <h2>1. 비트 연산 (Bitwise Operation)</h2>
+          <p>연산자 6종 · 진리표 · 실제 계산 예시 · 시험 활용 패턴</p>
         </header>
         <div class="card-body">
-          <div class="split-box">
-            <section class="subpanel">
-              <h4>기본 자료형</h4>
-              <ul class="bullet-list">
-                <li><strong>char</strong> — 1바이트 문자</li>
-                <li><strong>int</strong> — 4바이트 정수</li>
-                <li><strong>float</strong> — 4바이트 실수</li>
-                <li><strong>double</strong> — 8바이트 실수</li>
-                <li><strong>long</strong> — 4~8바이트 정수</li>
-              </ul>
-            </section>
-            <section class="subpanel">
-              <h4>포인터 핵심</h4>
-              <ul class="bullet-list">
-                <li><strong>&변수</strong> — 변수의 주소</li>
-                <li><strong>*포인터</strong> — 포인터가 가리키는 값</li>
-                <li>int *p = &a; → *p는 a의 값</li>
-                <li>배열명은 첫 번째 원소 주소</li>
-                <li>포인터 연산: p+1은 sizeof(int)만큼 이동</li>
-              </ul>
-            </section>
+
+          <!-- 연산자 종류 -->
+          <div class="mg">
+            <div class="mg-hd blue">비트 연산자 6종 — 기호 + 의미 암기</div>
+            <div style="padding:10px 12px; background:#f8fafc;">
+              <table class="bit-tbl">
+                <thead><tr><th>연산자</th><th>이름</th><th>규칙</th><th class="desc">의미 · 특징</th></tr></thead>
+                <tbody>
+                  <tr style="background:#eff6ff"><td><b>&amp;</b></td><td>AND</td><td>둘 다 1 → 1</td><td class="desc">두 비트 모두 1일 때만 1. <b>비트 마스킹</b>에 사용.</td></tr>
+                  <tr><td><b>|</b></td><td>OR</td><td>하나라도 1 → 1</td><td class="desc">하나만 1이어도 1. <b>비트 설정</b>에 사용.</td></tr>
+                  <tr style="background:#eff6ff"><td><b>^</b></td><td>XOR</td><td>다르면 1, 같으면 0</td><td class="desc">배타적 OR. 같은 값 두 번 XOR하면 원래 값 복원.</td></tr>
+                  <tr><td><b>~</b></td><td>NOT</td><td>0→1, 1→0</td><td class="desc">모든 비트 반전. <b>1의 보수</b>. ~n = -(n+1).</td></tr>
+                  <tr style="background:#eff6ff"><td><b>&lt;&lt;</b></td><td>Left Shift</td><td>왼쪽으로 n칸 이동</td><td class="desc">빈 자리는 0으로 채움. <b>× 2ⁿ</b> 효과.</td></tr>
+                  <tr><td><b>&gt;&gt;</b></td><td>Right Shift</td><td>오른쪽으로 n칸 이동</td><td class="desc">빈 자리는 부호비트로 채움(산술). <b>÷ 2ⁿ</b> 효과.</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip blue"><strong>printf 형식</strong><span>%d 정수, %f 실수, %c 문자, %s 문자열</span></div>
-            <div class="mini-chip blue"><strong>증감 연산</strong><span>++i(선증가) vs i++(후증가). 식 결과 다름</span></div>
-            <div class="mini-chip blue"><strong>비트 연산</strong><span>&(AND) |(OR) ^(XOR) ~(NOT) &lt;&lt;&gt;&gt;(이동)</span></div>
+          <!-- 진리표 + 계산 예시 가로 배치 -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+            <!-- 진리표 -->
+            <div class="mg" style="margin-bottom:0;">
+              <div class="mg-hd blue">AND · OR · XOR · NOT 진리표</div>
+              <div style="padding:10px 12px; background:#f8fafc;">
+                <table class="bit-tbl">
+                  <thead><tr><th>A</th><th>B</th><th>A &amp; B</th><th>A | B</th><th>A ^ B</th><th>~A</th></tr></thead>
+                  <tbody>
+                    <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                    <tr style="background:#eff6ff"><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                    <tr style="background:#eff6ff"><td>1</td><td>1</td><td style="color:#2563eb; font-weight:700;">1</td><td style="color:#2563eb; font-weight:700;">1</td><td>0</td><td>0</td></tr>
+                  </tbody>
+                </table>
+                <div style="margin-top:8px; font-size:0.7rem; color:#475569; line-height:1.7;">
+                  <b>AND:</b> 둘 다 1일 때만 1 &nbsp;|&nbsp; <b>OR:</b> 하나라도 1이면 1<br>
+                  <b>XOR:</b> 다를 때 1, 같을 때 0 &nbsp;|&nbsp; <b>NOT:</b> 반대
+                </div>
+              </div>
+            </div>
+
+            <!-- 계산 예시 -->
+            <div class="mg" style="margin-bottom:0;">
+              <div class="mg-hd blue">실제 계산 예시 — 5 와 3으로 전부 풀기</div>
+              <div style="padding:10px 12px; background:#f8fafc;">
+                <pre class="bit-ex">5 = <span class="op">0101</span>  (이진수)
+3 = <span class="op">0011</span>  (이진수)
+
+5 <span class="op">&amp;</span> 3 → 0101
+        0011
+        ────
+        <span class="result">0001 = 1</span>   <span class="comment">// AND: 둘 다 1인 자리만</span>
+
+5 <span class="op">|</span> 3 → 0101
+        0011
+        ────
+        <span class="result">0111 = 7</span>   <span class="comment">// OR: 하나라도 1인 자리</span>
+
+5 <span class="op">^</span> 3 → 0101
+        0011
+        ────
+        <span class="result">0110 = 6</span>   <span class="comment">// XOR: 다른 자리만 1</span>
+
+<span class="op">~</span>5    → 00000101
+        ────────
+        <span class="result">11111010 = -6</span> <span class="comment">// NOT: 전체 반전, -(5+1)</span></pre>
+              </div>
+            </div>
           </div>
 
-          <div class="split-box" style="margin-top:14px;">
-            <section class="subpanel">
-              <h4>제어문 주의</h4>
-              <ul class="bullet-list">
-                <li>switch-case: break 없으면 다음 case 실행</li>
-                <li>for(;;) = 무한루프</li>
-                <li>do-while: 최소 1회 실행</li>
-              </ul>
-            </section>
-            <section class="subpanel">
-              <h4>함수 / 재귀</h4>
-              <ul class="bullet-list">
-                <li>값 전달(Call by Value): 원본 불변</li>
-                <li>참조 전달(Call by Reference): 포인터로 원본 변경</li>
-                <li>재귀: 자기 자신 호출 (팩토리얼·피보나치)</li>
-              </ul>
-            </section>
+          <!-- 시프트 예시 -->
+          <div class="mg" style="margin-top:14px;">
+            <div class="mg-hd blue">Shift 연산 예시 — 곱나누기로 이해</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:12px; background:#f8fafc;">
+              <div>
+                <div style="font-size:0.71rem; font-weight:700; color:#1d4ed8; margin-bottom:6px;">Left Shift (&lt;&lt;) — × 2ⁿ</div>
+                <pre class="bit-ex">5 <span class="op">&lt;&lt;</span> 1 :
+  00000<span class="op">101</span>
+→ 0000<span class="op">101</span>0  <span class="comment">// 왼쪽 이동, 오른쪽 0 채움</span>
+= <span class="result">10</span>  <span class="comment">// 5 × 2¹ = 10</span>
+
+5 <span class="op">&lt;&lt;</span> 2 :
+  000000<span class="op">101</span>
+→ 00000<span class="op">101</span>00
+= <span class="result">20</span>  <span class="comment">// 5 × 2² = 20</span>
+
+<span class="comment">// 규칙: n &lt;&lt; k = n × 2ᵏ</span></pre>
+              </div>
+              <div>
+                <div style="font-size:0.71rem; font-weight:700; color:#1d4ed8; margin-bottom:6px;">Right Shift (&gt;&gt;) — ÷ 2ⁿ (버림)</div>
+                <pre class="bit-ex">20 <span class="op">&gt;&gt;</span> 1 :
+  0001<span class="op">0100</span>
+→  000<span class="op">0101</span>0  <span class="comment">// 오른쪽 이동</span>
+= <span class="result">10</span>  <span class="comment">// 20 ÷ 2¹ = 10</span>
+
+7 <span class="op">&gt;&gt;</span> 1 :
+  0000<span class="op">0111</span>
+→  0000<span class="op">011</span>  <span class="comment">// 1 버림</span>
+= <span class="result">3</span>   <span class="comment">// 7 ÷ 2 = 3 (소수점 버림)</span>
+
+<span class="comment">// 규칙: n &gt;&gt; k = n ÷ 2ᵏ (정수 버림)</span></pre>
+              </div>
+            </div>
           </div>
 
-          <div class="card-note">시험 코드 독해 순서: ① main() 찾기 ② 변수 초기값 확인 ③ 반복문 조건 추적 ④ 연산 순서 (증감 주의) ⑤ printf 출력 확인.</div>
+          <!-- 활용 패턴 -->
+          <div class="mg">
+            <div class="mg-hd blue">시험 빈출 활용 패턴 — 코드 독해 시 즉시 인식</div>
+            <div class="mg-bd c3">
+              <div class="mi">
+                <strong>짝수·홀수 판별</strong>
+                <pre class="bit-ex" style="margin-top:6px; font-size:0.7rem;">n <span class="op">&amp;</span> 1
+<span class="result">0</span> → 짝수 (마지막 비트 0)
+<span class="result">1</span> → 홀수 (마지막 비트 1)
+
+예: 6 &amp; 1 = 0110 &amp; 0001
+         = <span class="result">0000 = 0 → 짝수</span>
+    7 &amp; 1 = 0111 &amp; 0001
+         = <span class="result">0001 = 1 → 홀수</span></pre>
+              </div>
+              <div class="mi">
+                <strong>k번째 비트 확인·설정·제거</strong>
+                <pre class="bit-ex" style="margin-top:6px; font-size:0.7rem;"><span class="comment">// k번째 비트 확인 (0부터)</span>
+n <span class="op">&amp;</span> (1 <span class="op">&lt;&lt;</span> k)
+→ 0이면 꺼짐, 0아니면 켜짐
+
+<span class="comment">// k번째 비트 켜기(1로)</span>
+n <span class="op">|</span> (1 <span class="op">&lt;&lt;</span> k)
+
+<span class="comment">// k번째 비트 끄기(0으로)</span>
+n <span class="op">&amp;</span> <span class="op">~</span>(1 <span class="op">&lt;&lt;</span> k)</pre>
+              </div>
+              <div class="mi">
+                <strong>XOR 특성 활용</strong>
+                <pre class="bit-ex" style="margin-top:6px; font-size:0.7rem;"><span class="comment">// 같은 수 XOR = 0</span>
+a <span class="op">^</span> a = <span class="result">0</span>
+
+<span class="comment">// 0과 XOR = 자기 자신</span>
+a <span class="op">^</span> 0 = <span class="result">a</span>
+
+<span class="comment">// 두 번 XOR = 복원</span>
+(a <span class="op">^</span> b) <span class="op">^</span> b = <span class="result">a</span>
+
+<span class="comment">// 스왑 (임시변수 없이)</span>
+a = a<span class="op">^</span>b; b = a<span class="op">^</span>b; a = a<span class="op">^</span>b;</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-note">
+            <b>시험 출력 추적 팁:</b> 비트 연산 문제는 10진수를 2진수로 바꿔 세로로 쓰고 한 자리씩 계산. &nbsp;
+            <b>우선순위:</b> ~ (높음) → &lt;&lt; &gt;&gt; → &amp; → ^ → | (낮음). 괄호로 명확히 표현된 경우가 많음.
+          </div>
         </div>
       </article>
 
@@ -262,45 +393,21 @@
         </div>
       </article>
 
-      <article id="testing" class="card card--blue" style="grid-column: 1 / -1;">
+      <article class="card card--blue" style="grid-column:1/-1;">
         <header class="card-head">
           <h2>7. 소프트웨어 테스트</h2>
-          <p>화이트박스 / 블랙박스 / 테스트 유형</p>
+          <p>별도 페이지로 분리됨 — 아래 링크에서 전체 내용 확인</p>
         </header>
         <div class="card-body">
-          <div class="split-box">
-            <section class="subpanel">
-              <h4>화이트박스 테스트 (내부 구조 기반)</h4>
-              <ul class="bullet-list">
-                <li><strong>구문 커버리지</strong> — 모든 문장 실행</li>
-                <li><strong>결정 커버리지</strong> — 각 분기 T/F 실행</li>
-                <li><strong>조건 커버리지</strong> — 각 조건 T/F 실행</li>
-                <li><strong>경로 커버리지</strong> — 모든 경로 실행</li>
-                <li><strong>기초 경로 검사</strong> — 사이클로매틱 수</li>
-              </ul>
-            </section>
-            <section class="subpanel">
-              <h4>블랙박스 테스트 (기능 명세 기반)</h4>
-              <ul class="bullet-list">
-                <li><strong>동치 분할</strong> — 유사 입력 그룹화</li>
-                <li><strong>경계값 분석</strong> — 경계 근처 값 테스트</li>
-                <li><strong>원인-결과 그래프</strong> — 입력·출력 관계</li>
-                <li><strong>오류 예측</strong> — 경험 기반 예측</li>
-                <li><strong>비교 테스트</strong> — 여러 버전 비교</li>
-              </ul>
-            </section>
+          <div style="text-align:center; padding:20px 0;">
+            <a href="./정보처리기사_실기_SW테스트_암기프레임.html"
+               style="display:inline-block; background:#2563eb; color:#fff; font-weight:700; font-size:0.9rem; padding:12px 28px; border-radius:8px; text-decoration:none;">
+              소프트웨어 테스트 전체 페이지 열기 →
+            </a>
+            <p style="margin-top:12px; font-size:0.75rem; color:#64748b;">
+              원칙 7가지 · 화이트/블랙박스 · 커버리지 6종 · 레벨(단위→통합→시스템→인수) · 통합 방식(스텁/드라이버) · 사이클로매틱 · 결함 용어
+            </p>
           </div>
-
-          <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip blue"><strong>단위 테스트</strong><span>개별 모듈·함수 테스트</span></div>
-            <div class="mini-chip blue"><strong>통합 테스트</strong><span>모듈 연결 후 인터페이스 테스트</span></div>
-            <div class="mini-chip blue"><strong>시스템 테스트</strong><span>전체 시스템 기능·성능 검증</span></div>
-            <div class="mini-chip blue"><strong>인수 테스트</strong><span>사용자 요구사항 충족 여부 확인</span></div>
-            <div class="mini-chip blue"><strong>회귀 테스트</strong><span>수정 후 기존 기능 이상 없는지 재확인</span></div>
-            <div class="mini-chip blue"><strong>사이클로매틱 복잡도</strong><span>V(G) = E - N + 2 (E=간선, N=노드)</span></div>
-          </div>
-
-          <div class="card-note">테스트 순서: 단위 → 통합 → 시스템 → 인수. 화이트박스 = 소스 코드 봄 / 블랙박스 = 소스 코드 안 봄. 사이클로매틱 복잡도 공식: V(G) = 간선 수 - 노드 수 + 2.</div>
         </div>
       </article>
 

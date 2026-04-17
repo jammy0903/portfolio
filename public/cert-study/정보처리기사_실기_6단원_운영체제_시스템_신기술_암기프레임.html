@@ -5,6 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>정보처리기사 실기 6단원 운영체제 / 시스템 / 신기술 암기 프레임</title>
   <link rel="stylesheet" href="./memory-frame.css">
+  <style>
+    .mg { border:1.5px solid rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; margin-bottom:14px; }
+    .mg:last-child { margin-bottom:0; }
+    .mg-hd { padding:7px 14px; font-size:0.71rem; font-weight:700; }
+    .mg-hd.violet { background:#ede9fe; color:#5b21b6; }
+    .mg-hd.rose   { background:#ffe4e6; color:#9f1239; }
+    .mg-hd.steel  { background:#e2e8f0; color:#334155; }
+    .mg-hd.green  { background:#d1fae5; color:#065f46; }
+    .mg-hd.amber  { background:#fef3c7; color:#92400e; }
+    .mg-hd.blue   { background:#dbeafe; color:#1d4ed8; }
+    .mg-bd { display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:10px; padding:12px; background:#f8fafc; }
+    .mg-bd.c2 { grid-template-columns:repeat(2,1fr); }
+    .mg-bd.c3 { grid-template-columns:repeat(3,1fr); }
+    .mg-bd.c4 { grid-template-columns:repeat(4,1fr); }
+    .mi { background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px; font-size:0.72rem; }
+    .mi strong { display:block; font-size:0.73rem; margin-bottom:4px; color:#1e293b; }
+    .mi p { margin:0; color:#475569; line-height:1.6; }
+    .mi ul { margin:4px 0 0; padding-left:1.1em; color:#475569; line-height:1.75; }
+    .dtbl { width:100%; border-collapse:collapse; font-size:0.72rem; }
+    .dtbl th { background:#f1f5f9; color:#334155; font-weight:700; padding:6px 10px; text-align:left; border-bottom:2px solid #e2e8f0; }
+    .dtbl td { padding:6px 10px; border-bottom:1px solid #f1f5f9; color:#475569; vertical-align:top; }
+    .dtbl tr:last-child td { border-bottom:none; }
+  </style>
 </head>
 <body>
   <main class="shell">
@@ -249,75 +272,223 @@
         </div>
       </article>
 
-      <article id="hadoop" class="card card--violet">
+      <article id="hadoop" class="card card--violet" style="grid-column:1/-1;">
         <header class="card-head">
-          <h3>7. 하둡 / 빅데이터 저장소</h3>
-          <p>수집 → 저장 → 처리 → 분석 흐름</p>
+          <h3>7. 빅데이터 / 하둡 / 저장소</h3>
+          <p>빅데이터 개념 → 수집 → 저장·처리 → 분석 저장소 흐름</p>
         </header>
         <div class="card-body">
-          <div class="chip-grid two-col">
-            <div class="mini-chip violet"><strong>ETL</strong><span>Extract(추출)·Transform(변환)·Load(적재)</span></div>
-            <div class="mini-chip violet"><strong>Flume</strong><span>로그 수집·집계·이동</span></div>
-            <div class="mini-chip violet"><strong>Sqoop</strong><span>관계형 DB ↔ 하둡 데이터 이동</span></div>
-            <div class="mini-chip violet"><strong>Scrapy</strong><span>웹 크롤링 수집 프레임워크</span></div>
+
+          <div class="mg">
+            <div class="mg-hd violet">빅데이터 개념 — 3V / 5V + 데이터 유형</div>
+            <div class="mg-bd c2">
+              <div class="mi">
+                <strong>빅데이터 특성 (3V → 5V)</strong>
+                <ul>
+                  <li><b>Volume (양)</b> — 방대한 데이터 규모</li>
+                  <li><b>Velocity (속도)</b> — 빠른 생성·처리 속도</li>
+                  <li><b>Variety (다양성)</b> — 정형·비정형 다양한 형태</li>
+                  <li><b>Veracity (정확성)</b> — 데이터 신뢰·품질</li>
+                  <li><b>Value (가치)</b> — 분석을 통한 비즈니스 가치</li>
+                </ul>
+              </div>
+              <div class="mi">
+                <strong>데이터 유형 3종 — 빈출</strong>
+                <ul>
+                  <li><b>정형 데이터</b> — 고정 스키마. 행·열 구조. RDB 테이블, CSV.</li>
+                  <li><b>반정형 데이터</b> — 스키마 내포. XML, JSON, HTML.</li>
+                  <li><b>비정형 데이터</b> — 구조 없음. 텍스트, 이미지, 동영상, SNS.</li>
+                </ul>
+              </div>
+            </div>
           </div>
 
-          <div class="chip-grid two-col" style="margin-top:14px;">
-            <div class="mini-chip violet"><strong>HDFS</strong><span>하둡 분산 파일 시스템</span></div>
-            <div class="mini-chip violet"><strong>MapReduce</strong><span>Map(분산 처리) + Reduce(집계) 병렬 처리</span></div>
+          <div class="mg">
+            <div class="mg-hd violet">수집 → 저장·처리 도구</div>
+            <div class="mg-bd c2">
+              <div class="mi">
+                <strong>수집 도구</strong>
+                <ul>
+                  <li><b>Flume</b> — 로그 데이터 수집·집계·이동</li>
+                  <li><b>Sqoop</b> — 관계형 DB ↔ 하둡 데이터 이동</li>
+                  <li><b>Scrapy</b> — 웹 크롤링 수집 프레임워크</li>
+                  <li><b>Kafka</b> — 실시간 스트리밍 메시지 큐</li>
+                  <li><b>ETL</b> — Extract(추출)·Transform(변환)·Load(적재)</li>
+                </ul>
+              </div>
+              <div class="mi">
+                <strong>저장·처리 도구</strong>
+                <ul>
+                  <li><b>HDFS</b> — 하둡 분산 파일 시스템. 대용량 분산 저장.</li>
+                  <li><b>MapReduce</b> — Map(분산처리) + Reduce(집계). 병렬 처리.</li>
+                  <li><b>Spark</b> — 인메모리 처리. MapReduce보다 빠름.</li>
+                  <li><b>Hive</b> — HDFS 위 SQL 유사 질의(HiveQL).</li>
+                  <li><b>Pig</b> — 하둡 데이터 흐름 스크립팅 언어.</li>
+                </ul>
+              </div>
+            </div>
           </div>
 
-          <div class="chip-grid two-col" style="margin-top:14px;">
-            <div class="mini-chip violet"><strong>데이터 웨어하우스</strong><span>전사 통합 분석 저장소</span></div>
-            <div class="mini-chip violet"><strong>데이터마트</strong><span>부서·주제별 소규모 저장소</span></div>
-            <div class="mini-chip violet"><strong>OLAP</strong><span>다차원 대화형 분석</span></div>
-            <div class="mini-chip violet"><strong>3V</strong><span>Volume(양)·Velocity(속도)·Variety(다양성)</span></div>
+          <div class="mg">
+            <div class="mg-hd violet">분석 저장소 — DW vs DM vs Data Lake 비교 (빈출)</div>
+            <div style="padding:10px 12px; background:#f8fafc;">
+              <table class="dtbl">
+                <thead><tr><th>구분</th><th>데이터 웨어하우스 (DW)</th><th>데이터마트 (DM)</th><th>데이터 레이크</th></tr></thead>
+                <tbody>
+                  <tr style="background:#ede9fe;"><td><b>범위</b></td><td>전사(기업 전체) 통합</td><td>부서·주제별 소규모</td><td>전사 원시 데이터</td></tr>
+                  <tr><td><b>데이터</b></td><td>정제·가공된 데이터</td><td>DW의 부분집합</td><td>원시 데이터 그대로</td></tr>
+                  <tr style="background:#ede9fe;"><td><b>스키마</b></td><td>스키마 먼저 정의</td><td>스키마 먼저 정의</td><td>스키마 없음(나중에)</td></tr>
+                  <tr><td><b>사용자</b></td><td>경영진·분석가</td><td>특정 부서 담당자</td><td>데이터 과학자</td></tr>
+                  <tr style="background:#ede9fe;"><td><b>목적</b></td><td>BI·전략적 의사결정</td><td>부서별 빠른 분석</td><td>탐색적 분석·ML</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div class="card-note">빅데이터 흐름: 수집(Flume·Sqoop·Scrapy) → HDFS 저장 → MapReduce 처리 → DW/DM/OLAP 분석.</div>
+          <div class="mg">
+            <div class="mg-hd violet">OLAP — 다차원 분석 연산</div>
+            <div class="mg-bd c3">
+              <div class="mi"><strong>Roll-up (롤업)</strong><p>세부 → 요약. 일별→월별→연별 집계. <b>상위 레벨로 올라감.</b></p></div>
+              <div class="mi"><strong>Drill-down (드릴다운)</strong><p>요약 → 세부. 연별→월별→일별. <b>하위 레벨로 내려감.</b></p></div>
+              <div class="mi"><strong>Slice (슬라이스)</strong><p>하나의 차원을 특정 값으로 <b>자름</b>. 예: 2024년도만 추출.</p></div>
+              <div class="mi"><strong>Dice (다이스)</strong><p>여러 차원에서 <b>부분 큐브</b> 추출. 조건 복수 적용.</p></div>
+              <div class="mi"><strong>Pivot (피벗)</strong><p>행·열 <b>축 회전</b>. 데이터 뷰 전환.</p></div>
+            </div>
+          </div>
+
+          <div class="card-note">빅데이터 흐름: <b>수집</b>(Flume·Sqoop·Kafka) → <b>저장</b>(HDFS) → <b>처리</b>(MapReduce·Spark) → <b>분석</b>(DW/DM/DataLake → OLAP).</div>
         </div>
       </article>
 
       <article id="nosql" class="card card--rose">
         <header class="card-head">
           <h3>8. NoSQL</h3>
-          <p>비관계형 DB — 저장 형태로 유형 외우기</p>
+          <p>비관계형 DB — 유형 4종 + RDBMS 비교</p>
         </header>
         <div class="card-body">
-          <div class="chip-grid two-col">
-            <div class="mini-chip rose"><strong>Key-Value Store</strong><span>키/값 쌍 저장. Redis, DynamoDB</span></div>
-            <div class="mini-chip rose"><strong>Document Store</strong><span>JSON/XML 문서. MongoDB, CouchDB</span></div>
-            <div class="mini-chip rose"><strong>Column-Family Store</strong><span>열 단위 저장. Cassandra, HBase</span></div>
-            <div class="mini-chip rose"><strong>Graph DB</strong><span>노드·엣지 관계. Neo4j</span></div>
+
+          <div class="mg">
+            <div class="mg-hd rose">NoSQL vs RDBMS 비교</div>
+            <div style="padding:10px 12px; background:#f8fafc;">
+              <table class="dtbl">
+                <thead><tr><th>구분</th><th>RDBMS</th><th>NoSQL</th></tr></thead>
+                <tbody>
+                  <tr style="background:#ffe4e6;"><td><b>스키마</b></td><td>고정 스키마 (테이블)</td><td>유동적 스키마</td></tr>
+                  <tr><td><b>확장</b></td><td>수직 확장 (Scale-up)</td><td>수평 확장 (Scale-out)</td></tr>
+                  <tr style="background:#ffe4e6;"><td><b>일관성</b></td><td>ACID 보장</td><td>BASE 모델 (최종 일관성)</td></tr>
+                  <tr><td><b>적합</b></td><td>정형 데이터, 트랜잭션</td><td>대용량·비정형, 빠른 쓰기</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div class="card-note">NoSQL 특징: 고정 스키마 없음 / 수평 확장 용이 / 대용량 처리. 외우는 순서: <strong>키값 / 문서 / 열 / 그래프</strong>. 저장 형태 설명 → 유형 이름 바로 연결.</div>
+          <div class="mg">
+            <div class="mg-hd rose">NoSQL 유형 4종 — 저장 형태로 암기</div>
+            <div class="mg-bd c2">
+              <div class="mi"><strong>Key-Value Store</strong><p>키/값 쌍으로 저장. 가장 단순. 캐싱·세션 저장에 적합.<br><b>Redis, DynamoDB, Memcached</b></p></div>
+              <div class="mi"><strong>Document Store</strong><p>JSON·XML 형태의 문서로 저장. 스키마 자유롭게 변경 가능.<br><b>MongoDB, CouchDB</b></p></div>
+              <div class="mi"><strong>Column-Family Store</strong><p>열(Column) 단위로 저장. 대용량 읽기에 유리. 분석용.<br><b>Cassandra, HBase</b></p></div>
+              <div class="mi"><strong>Graph DB</strong><p>노드(개체)·엣지(관계)·속성으로 저장. 관계 분석에 특화.<br><b>Neo4j</b></p></div>
+            </div>
+          </div>
+
+          <div class="card-note"><b>BASE 모델:</b> Basically Available(기본 가용) · Soft-state(일시 불일치 허용) · Eventually Consistent(최종 일관성). ACID와 반대 개념.</div>
         </div>
       </article>
 
-      <article id="mining" class="card card--steel">
+      <article id="mining" class="card card--steel" style="grid-column:1/-1;">
         <header class="card-head">
-          <h3>9. 데이터마이닝 / 데이터 용어</h3>
-          <p>패턴 추출 기법 + 데이터 관련 개념</p>
+          <h3>9. 데이터마이닝 / 데이터 용어 사전</h3>
+          <p>마이닝 기법 + 빈출 데이터 용어 완전 정리 — 정의 그대로 답이 되는 파트</p>
         </header>
         <div class="card-body">
-          <div class="chip-grid three-col">
-            <div class="mini-chip steel"><strong>분류 규칙</strong><span>미리 정한 범주로 분류</span></div>
-            <div class="mini-chip steel"><strong>연관 규칙</strong><span>함께 발생하는 패턴 (장바구니 분석)</span></div>
-            <div class="mini-chip steel"><strong>연속 데이터 규칙</strong><span>시간 순서 패턴</span></div>
-            <div class="mini-chip steel"><strong>군집화 규칙</strong><span>유사한 데이터 그룹화</span></div>
-            <div class="mini-chip steel"><strong>텍스트마이닝</strong><span>비정형 텍스트에서 패턴 추출</span></div>
-            <div class="mini-chip steel"><strong>웹마이닝</strong><span>웹 로그·구조·콘텐츠 분석</span></div>
+
+          <div class="mg">
+            <div class="mg-hd steel">데이터마이닝 기법 — 대용량 데이터에서 패턴 추출</div>
+            <div class="mg-bd c3">
+              <div class="mi"><strong>분류 (Classification)</strong><p>미리 정한 범주로 데이터 분류. 의사결정나무, 나이브베이즈.</p></div>
+              <div class="mi"><strong>연관 (Association)</strong><p>함께 발생하는 항목 간 규칙 발견. <b>장바구니 분석</b> (맥주→기저귀).</p></div>
+              <div class="mi"><strong>연속(순서) 패턴</strong><p>시간 순서에 따른 패턴 발견. 구매 후 행동 예측.</p></div>
+              <div class="mi"><strong>군집화 (Clustering)</strong><p>유사한 데이터끼리 그룹화. 레이블 없는 비지도 학습.</p></div>
+              <div class="mi"><strong>텍스트마이닝</strong><p>비정형 텍스트에서 의미·패턴 추출. 감성 분석, 키워드 추출.</p></div>
+              <div class="mi"><strong>웹마이닝</strong><p>웹 로그·구조·콘텐츠 분석. 클릭 패턴, 페이지 중요도.</p></div>
+            </div>
           </div>
 
-          <div class="chip-grid two-col" style="margin-top:14px;">
-            <div class="mini-chip steel"><strong>메타데이터</strong><span>데이터에 대한 데이터 (구조·의미 설명)</span></div>
-            <div class="mini-chip steel"><strong>다크데이터</strong><span>수집됐지만 분석·활용 안 된 데이터</span></div>
-            <div class="mini-chip steel"><strong>디지털아카이빙</strong><span>디지털 콘텐츠 장기 보존</span></div>
-            <div class="mini-chip steel"><strong>마이데이터</strong><span>본인 데이터 주권 보장 서비스</span></div>
+          <div class="mg">
+            <div class="mg-hd steel">핵심 데이터 용어 — 정의 통째로 암기 (빈출)</div>
+            <div style="padding:10px 12px; background:#f8fafc;">
+              <table class="dtbl">
+                <thead><tr><th>용어</th><th>정의 (시험 답안)</th><th>암기 포인트</th></tr></thead>
+                <tbody>
+                  <tr style="background:#f1f5f9;">
+                    <td><b>다크데이터</b><br><small>Dark Data</small></td>
+                    <td>수집·저장됐지만 <b>분석·활용되지 않고 방치</b>된 데이터</td>
+                    <td>어둠 속에 묻혀있는 데이터. 저장 비용만 발생.</td>
+                  </tr>
+                  <tr>
+                    <td><b>메타데이터</b><br><small>Metadata</small></td>
+                    <td><b>데이터에 대한 데이터</b>. 데이터의 구조·의미·관리 정보</td>
+                    <td>"데이터의 데이터" 그대로 답.</td>
+                  </tr>
+                  <tr style="background:#f1f5f9;">
+                    <td><b>데이터 레이크</b><br><small>Data Lake</small></td>
+                    <td>정형·비정형 <b>원시 데이터를 형식 구분 없이</b> 대규모로 저장</td>
+                    <td>가공 없이 그대로. 나중에 필요할 때 꺼냄.</td>
+                  </tr>
+                  <tr>
+                    <td><b>마이데이터</b><br><small>MyData</small></td>
+                    <td>개인이 자신의 데이터를 직접 관리·활용하는 <b>데이터 주권</b> 서비스</td>
+                    <td>내 데이터는 내가 통제. 금융·의료 마이데이터.</td>
+                  </tr>
+                  <tr style="background:#f1f5f9;">
+                    <td><b>오픈 데이터</b></td>
+                    <td>누구나 자유롭게 <b>접근·활용·재배포</b> 가능한 공개 데이터</td>
+                    <td>공공데이터포털(data.go.kr) 등.</td>
+                  </tr>
+                  <tr>
+                    <td><b>디지털 트윈</b><br><small>Digital Twin</small></td>
+                    <td>현실 세계 객체·시스템을 <b>가상으로 복제</b>한 디지털 모델</td>
+                    <td>공장·도시를 가상으로 만들어 시뮬레이션.</td>
+                  </tr>
+                  <tr style="background:#f1f5f9;">
+                    <td><b>디지털 아카이빙</b></td>
+                    <td>디지털 콘텐츠를 <b>장기 보존</b>하기 위해 관리·저장하는 활동</td>
+                    <td>아카이브 = 기록 보관소.</td>
+                  </tr>
+                  <tr>
+                    <td><b>데이터 리터러시</b></td>
+                    <td>데이터를 <b>읽고 이해하며 활용</b>할 수 있는 능력</td>
+                    <td>리터러시 = 문해력. 데이터 문해력.</td>
+                  </tr>
+                  <tr style="background:#f1f5f9;">
+                    <td><b>스몰데이터</b></td>
+                    <td>개인·소규모 단위에서 생성·활용되는 <b>소량의 의미 있는</b> 데이터</td>
+                    <td>빅데이터 반대. 개인 맞춤화에 활용.</td>
+                  </tr>
+                  <tr>
+                    <td><b>MDM</b><br><small>Master Data Mgmt</small></td>
+                    <td>기업 내 <b>핵심 데이터(마스터 데이터)를 통합·표준화</b>하여 관리</td>
+                    <td>고객·상품 정보 일관성 유지.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div class="card-note">데이터 용어는 뜻이 거의 그대로 답입니다. "데이터에 대한 데이터" = 메타데이터, "수집만 되고 방치" = 다크데이터로 짧은 정의를 통째로 외우세요.</div>
+          <div class="mg">
+            <div class="mg-hd steel">AI / 머신러닝 신기술 용어</div>
+            <div class="mg-bd c3">
+              <div class="mi"><strong>머신러닝 (ML)</strong><p>데이터로 스스로 <b>학습</b>하여 예측·분류하는 AI 기법. 지도·비지도·강화 학습.</p></div>
+              <div class="mi"><strong>딥러닝 (Deep Learning)</strong><p>다층 신경망(인공신경망)을 이용한 머신러닝. 이미지·음성 인식 특화.</p></div>
+              <div class="mi"><strong>자연어 처리 (NLP)</strong><p>인간 언어를 컴퓨터가 이해·생성. 번역·챗봇·감성분석.</p></div>
+              <div class="mi"><strong>디지털 트랜스포메이션</strong><p>디지털 기술로 기업 비즈니스 모델·프로세스를 <b>근본적으로 변환</b>.</p></div>
+              <div class="mi"><strong>XAI (설명 가능 AI)</strong><p>AI 의사결정 과정을 <b>인간이 이해할 수 있게</b> 설명하는 기법.</p></div>
+              <div class="mi"><strong>온디바이스 AI</strong><p>클라우드 없이 <b>기기 자체에서</b> AI 처리. 개인정보 보호·저지연.</p></div>
+            </div>
+          </div>
+
+          <div class="card-note">시험 출제 패턴: "다음 설명이 맞는 용어는?" → 다크데이터(수집 후 방치), 메타데이터(데이터의 데이터), 디지털트윈(현실 복제 가상모델) — <b>정의 한 문장 그대로 암기.</b></div>
         </div>
       </article>
 

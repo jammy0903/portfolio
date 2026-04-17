@@ -416,61 +416,372 @@
       <!-- ⑦ UML -->
       <article id="uml" class="card card--violet" style="grid-column:1/-1;">
         <header class="card-head">
-          <h2>7. UML 다이어그램</h2>
-          <p>구조(정적) vs 행위(동적) 분류 + 클래스 다이어그램 관계 표기법</p>
+          <h2>7. UML (Unified Modeling Language)</h2>
+          <p>특징 4가지 · 구성요소 3가지 · 다이어그램 분류 · 클래스 관계 6종 · 접근제어자 · 유스케이스 · 시퀀스</p>
         </header>
         <div class="card-body">
+
+          <!-- ① UML 특징 -->
           <div class="mg">
-            <div class="mg-hd violet">다이어그램 분류</div>
-            <div class="mg-bd c2">
+            <div class="mg-hd violet">① UML 특징 4가지 — 암기</div>
+            <div class="mg-bd" style="grid-template-columns:repeat(4,1fr);">
+              <div class="mi" style="text-align:center;">
+                <div style="font-size:1.5rem; margin-bottom:4px;">👁️</div>
+                <strong>가시화 언어</strong>
+                <p>SW 구조를 <b>시각적 그림</b>으로 표현. 이해 용이.</p>
+              </div>
+              <div class="mi" style="text-align:center;">
+                <div style="font-size:1.5rem; margin-bottom:4px;">🔨</div>
+                <strong>구축 언어</strong>
+                <p>실제 구현에 사용 가능. <b>코드 생성 지원.</b></p>
+              </div>
+              <div class="mi" style="text-align:center;">
+                <div style="font-size:1.5rem; margin-bottom:4px;">📐</div>
+                <strong>명세화 언어</strong>
+                <p>정확하고 <b>완전한 모델 명세</b>. 모호함 없음.</p>
+              </div>
+              <div class="mi" style="text-align:center;">
+                <div style="font-size:1.5rem; margin-bottom:4px;">📄</div>
+                <strong>문서화 언어</strong>
+                <p>시스템 산출물을 <b>표준 문서</b>로 표현.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ② UML 구성요소 -->
+          <div class="mg">
+            <div class="mg-hd violet">② UML 구성요소 3가지 — 사물 · 관계 · 다이어그램</div>
+            <div class="mg-bd c3">
               <div class="mi">
-                <strong>구조 다이어그램 (정적 — 시스템 구조)</strong>
-                <ul>
-                  <li><b>클래스 다이어그램</b> — 클래스·속성·메서드·관계 <span class="badge">빈출</span></li>
-                  <li><b>객체 다이어그램</b> — 특정 시점 인스턴스 상태</li>
-                  <li><b>컴포넌트 다이어그램</b> — 컴포넌트 구조·인터페이스</li>
-                  <li><b>배포 다이어그램</b> — 하드웨어 노드 배치</li>
-                  <li><b>패키지 다이어그램</b> — 패키지 간 의존 관계</li>
+                <strong>사물 (Things)</strong>
+                <p>모델의 <b>기본 단위</b>. 추상적 개념.</p>
+                <ul style="font-size:0.71rem; margin:6px 0 0; padding-left:1.1em; line-height:1.8;">
+                  <li><b>구조 사물</b> — 클래스, 인터페이스, 컴포넌트, 노드</li>
+                  <li><b>행동 사물</b> — 유스케이스, 상호작용, 활동</li>
+                  <li><b>그룹 사물</b> — 패키지 (요소를 묶는 단위)</li>
+                  <li><b>주해 사물</b> — 노트 (메모, 설명 추가)</li>
                 </ul>
               </div>
               <div class="mi">
-                <strong>행위 다이어그램 (동적 — 시스템 행위)</strong>
-                <ul>
-                  <li><b>유스케이스 다이어그램</b> — 사용자·시스템 상호작용 <span class="badge">빈출</span></li>
-                  <li><b>시퀀스 다이어그램</b> — 시간 순 메시지 흐름 <span class="badge">빈출</span></li>
-                  <li><b>활동 다이어그램</b> — 작업 흐름, 조건 분기</li>
-                  <li><b>상태 다이어그램</b> — 객체 상태 전이</li>
-                  <li><b>협업 다이어그램</b> — 객체 협력 관계</li>
+                <strong>관계 (Relationships)</strong>
+                <p>사물 간 <b>연결·상호작용</b>.</p>
+                <ul style="font-size:0.71rem; margin:6px 0 0; padding-left:1.1em; line-height:1.8;">
+                  <li><b>연관 (Association)</b> — 구조적 관계</li>
+                  <li><b>의존 (Dependency)</b> — 일시적 사용</li>
+                  <li><b>일반화 (Generalization)</b> — 상속</li>
+                  <li><b>실체화 (Realization)</b> — 인터페이스 구현</li>
+                  <li><b>집합/합성</b> — 전체-부분</li>
+                </ul>
+              </div>
+              <div class="mi">
+                <strong>다이어그램 (Diagrams)</strong>
+                <p>사물과 관계를 <b>시각화</b>한 그림.</p>
+                <ul style="font-size:0.71rem; margin:6px 0 0; padding-left:1.1em; line-height:1.8;">
+                  <li><b>구조적(정적)</b> — 시스템 구조 표현</li>
+                  <li><b>행위적(동적)</b> — 시스템 행위 표현</li>
                 </ul>
               </div>
             </div>
           </div>
 
+          <!-- ③ 다이어그램 종류 -->
           <div class="mg">
-            <div class="mg-hd violet">클래스 다이어그램 관계 — 화살표 방향+이름 암기 (빈출)</div>
-            <div class="mg-bd" style="padding:0; background:transparent;">
+            <div class="mg-hd violet">③ UML 다이어그램 종류 — 구조적 vs 동적</div>
+            <div class="mg-bd c2">
+              <div class="mi">
+                <strong>구조적(정적) 다이어그램 5종</strong>
+                <table style="font-size:0.71rem; width:100%; border-collapse:collapse; margin-top:6px;">
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700; color:#5b21b6;">클래스 (Class)</td><td style="padding:5px 8px; color:#475569;">클래스·속성·메서드·관계 <span class="badge">빈출</span></td></tr>
+                  <tr><td style="padding:5px 8px; font-weight:700;">객체 (Object)</td><td style="padding:5px 8px; color:#475569;">특정 시점 인스턴스 상태</td></tr>
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700;">컴포넌트</td><td style="padding:5px 8px; color:#475569;">컴포넌트 구조·인터페이스</td></tr>
+                  <tr><td style="padding:5px 8px; font-weight:700;">복합체 구조</td><td style="padding:5px 8px; color:#475569;">클래스 내부 구조 상세</td></tr>
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700;">패키지</td><td style="padding:5px 8px; color:#475569;">패키지 간 의존 관계</td></tr>
+                </table>
+              </div>
+              <div class="mi">
+                <strong>동적(행위) 다이어그램 6종</strong>
+                <table style="font-size:0.71rem; width:100%; border-collapse:collapse; margin-top:6px;">
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700; color:#5b21b6;">유스케이스</td><td style="padding:5px 8px; color:#475569;">사용자↔시스템 상호작용 <span class="badge">빈출</span></td></tr>
+                  <tr><td style="padding:5px 8px; font-weight:700;">시퀀스</td><td style="padding:5px 8px; color:#475569;">시간 순 메시지 흐름 <span class="badge">빈출</span></td></tr>
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700;">커뮤니케이션</td><td style="padding:5px 8px; color:#475569;">객체 간 협력 (구 협업 다이어그램)</td></tr>
+                  <tr><td style="padding:5px 8px; font-weight:700;">상태</td><td style="padding:5px 8px; color:#475569;">객체 상태 전이</td></tr>
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700;">활동</td><td style="padding:5px 8px; color:#475569;">작업 흐름, 조건 분기</td></tr>
+                  <tr><td style="padding:5px 8px; font-weight:700;">타이밍</td><td style="padding:5px 8px; color:#475569;">시간 제약 행위</td></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ④ 클래스 간의 관계 -->
+          <div class="mg">
+            <div class="mg-hd violet">④ 클래스 간의 관계 6종 — 화살표 시각 암기 (빈출)</div>
+            <div style="padding:10px 12px; background:#f8fafc;">
               <table class="utbl">
-                <thead><tr><th>관계</th><th>표기</th><th>의미</th><th>예시</th></tr></thead>
+                <thead>
+                  <tr><th>관계명</th><th>화살표 모양</th><th>선</th><th>머리</th><th>핵심 의미</th><th>예시</th></tr>
+                </thead>
                 <tbody>
-                  <tr><td><b>연관 (Association)</b></td><td>실선 (―→)</td><td>클래스 간 관계가 있음. 양방향 or 단방향.</td><td>학생 ― 수업</td></tr>
-                  <tr><td><b>의존 (Dependency)</b></td><td>점선 화살표 (···→)</td><td>한 클래스가 다른 클래스를 일시적으로 사용</td><td>메서드 파라미터로 사용</td></tr>
-                  <tr><td><b>일반화/상속 (Generalization)</b></td><td>실선 + 빈 삼각형 (△)</td><td>상속 관계. 자식→부모 방향.</td><td>개 → 동물</td></tr>
-                  <tr><td><b>실체화 (Realization)</b></td><td>점선 + 빈 삼각형</td><td>인터페이스 구현</td><td>Dog implements Animal</td></tr>
-                  <tr><td><b>집합 (Aggregation)</b></td><td>실선 + 빈 마름모 (◇)</td><td>전체-부분. 부분은 독립 존재 가능.</td><td>팀 ◇― 선수</td></tr>
-                  <tr><td><b>합성 (Composition)</b></td><td>실선 + 채워진 마름모 (◆)</td><td>강한 전체-부분. 전체 소멸 시 부분도 소멸.</td><td>집 ◆― 방</td></tr>
+                  <tr style="background:#eff6ff">
+                    <td><b>연관</b><br><small>Association</small></td>
+                    <td><code>A ────→ B</code></td>
+                    <td>실선</td>
+                    <td>열린 →</td>
+                    <td>구조적 관계. 양방향(─)/단방향(→). <b>다중성 표기</b> 가능.</td>
+                    <td>학생 ─ 수업</td>
+                  </tr>
+                  <tr>
+                    <td><b>의존</b><br><small>Dependency</small></td>
+                    <td><code>A ····→ B</code></td>
+                    <td>점선</td>
+                    <td>열린 →</td>
+                    <td>B를 <b>일시적 사용</b>. 파라미터·지역변수·리턴타입. 약한 관계.</td>
+                    <td>Order ···→ Date</td>
+                  </tr>
+                  <tr style="background:#f0fdf4">
+                    <td><b>일반화</b><br><small>Generalization</small></td>
+                    <td><code>자식 ────▷ 부모</code></td>
+                    <td>실선</td>
+                    <td><b>빈 삼각형 ▷</b></td>
+                    <td>상속(extends). <b>자식→부모 방향</b>. is-a 관계.</td>
+                    <td>개 ──▷ 동물</td>
+                  </tr>
+                  <tr>
+                    <td><b>실체화</b><br><small>Realization</small></td>
+                    <td><code>구현 ····▷ 인터페이스</code></td>
+                    <td>점선</td>
+                    <td><b>빈 삼각형 ▷</b></td>
+                    <td>인터페이스 <b>구현(implements)</b>. 일반화와 선만 다름.</td>
+                    <td>Dog ···▷ IAnimal</td>
+                  </tr>
+                  <tr style="background:#fff7ed">
+                    <td><b>집합</b><br><small>Aggregation</small></td>
+                    <td><code>부분 ────◇ 전체</code></td>
+                    <td>실선</td>
+                    <td><b>빈 마름모 ◇</b><br>(전체 쪽)</td>
+                    <td><b>부분 독립 존재 가능</b>. 약한 포함. 팀◇─선수.</td>
+                    <td>선수 ──◇ 팀</td>
+                  </tr>
+                  <tr style="background:#fef2f2">
+                    <td><b>합성</b><br><small>Composition</small></td>
+                    <td><code>부분 ────◆ 전체</code></td>
+                    <td>실선</td>
+                    <td><b>채운 마름모 ◆</b><br>(전체 쪽)</td>
+                    <td><b>전체 소멸→부분도 소멸</b>. 강한 포함. 집◆─방.</td>
+                    <td>방 ──◆ 집</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
+            <div style="padding:7px 12px 10px; background:#ede9fe; font-size:0.71rem; color:#4c1d95; border-top:1px solid #ddd6fe;">
+              ⚡ <b>선 종류:</b> 실선(연관·일반화·집합·합성) / 점선(의존·실체화) &nbsp;|&nbsp;
+              <b>삼각형▷:</b> 실선=일반화(상속) / 점선=실체화(구현) &nbsp;|&nbsp;
+              <b>마름모:</b> 빈◇=집합(부분 독립) / 채운◆=합성(부분 소멸)
+            </div>
+          </div>
+
+          <!-- ⑤ 클래스 다이어그램 구성요소 + 접근제어자 -->
+          <div class="mg">
+            <div class="mg-hd violet">⑤ 클래스 다이어그램 구성요소 — 접근제어자 + 다중성</div>
+            <div class="mg-bd c2">
+              <div class="mi">
+                <strong>클래스 박스 구조 (3구획)</strong>
+                <pre style="font-size:0.71rem; font-family:monospace; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:6px; padding:10px; margin:8px 0 0; line-height:1.65; color:#1e293b;">┌──────────────────┐
+│    Animal        │  ← ① 클래스명 구획
+├──────────────────┤
+│ - name : String  │  ← ② 속성 구획
+│ # age  : int     │     접근제어자 이름 : 타입
+├──────────────────┤
+│ + speak() : void │  ← ③ 메서드(오퍼레이션) 구획
+│ - init() : void  │     접근제어자 이름() : 반환타입
+└──────────────────┘</pre>
+              </div>
+              <div class="mi">
+                <strong>접근제어자 (Access Modifier) 4종 — 암기</strong>
+                <table style="font-size:0.74rem; width:100%; border-collapse:collapse; margin-top:8px;">
+                  <thead><tr style="background:#ede9fe;"><th style="padding:5px 8px;">기호</th><th style="padding:5px 8px;">이름</th><th style="padding:5px 8px;">접근 범위</th></tr></thead>
+                  <tbody>
+                    <tr style="background:#f0fdf4;"><td style="padding:6px 10px; font-size:1.2rem; font-weight:900; color:#16a34a; text-align:center;">+</td><td style="padding:6px 8px;"><b>Public</b></td><td style="padding:6px 8px; color:#475569;">모든 클래스에서 접근</td></tr>
+                    <tr><td style="padding:6px 10px; font-size:1.2rem; font-weight:900; color:#dc2626; text-align:center;">−</td><td style="padding:6px 8px;"><b>Private</b></td><td style="padding:6px 8px; color:#475569;">해당 클래스 내부만</td></tr>
+                    <tr style="background:#fef9c3;"><td style="padding:6px 10px; font-size:1.2rem; font-weight:900; color:#d97706; text-align:center;">#</td><td style="padding:6px 8px;"><b>Protected</b></td><td style="padding:6px 8px; color:#475569;">해당 클래스 + 자식 클래스</td></tr>
+                    <tr><td style="padding:6px 10px; font-size:1.2rem; font-weight:900; color:#7c3aed; text-align:center;">~</td><td style="padding:6px 8px;"><b>Package</b></td><td style="padding:6px 8px; color:#475569;">같은 패키지 내</td></tr>
+                  </tbody>
+                </table>
+                <div style="margin-top:8px; font-size:0.7rem; color:#475569; background:#f8fafc; padding:6px 8px; border-radius:4px;">
+                  <b>다중성 표기:</b> &nbsp;
+                  <code>1</code> 정확히 1 &nbsp;|&nbsp;
+                  <code>*</code> 0이상 &nbsp;|&nbsp;
+                  <code>0..1</code> 0또는1 &nbsp;|&nbsp;
+                  <code>1..*</code> 1이상
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑥ 유스케이스 다이어그램 -->
+          <div class="mg">
+            <div class="mg-hd violet">⑥ 유스케이스 다이어그램 — 구성요소 + 관계 (빈출)</div>
+            <div class="mg-bd c2">
+              <div class="mi">
+                <strong>구성 요소</strong>
+                <table style="font-size:0.71rem; width:100%; border-collapse:collapse; margin-top:6px;">
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700;">액터 (Actor)</td><td style="padding:5px 8px; color:#475569;">막대인간. 시스템 외부 존재 (사람·외부시스템).</td></tr>
+                  <tr><td style="padding:5px 8px; font-weight:700;">유스케이스</td><td style="padding:5px 8px; color:#475569;">타원. 시스템이 제공하는 <b>기능 단위</b>.</td></tr>
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700;">시스템 경계</td><td style="padding:5px 8px; color:#475569;">사각형 박스. 내부=시스템 범위.</td></tr>
+                  <tr><td style="padding:5px 8px; font-weight:700;">연관 (Association)</td><td style="padding:5px 8px; color:#475569;">액터↔유스케이스 <b>실선</b>. 상호작용 표시.</td></tr>
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700;">일반화 (Generalization)</td><td style="padding:5px 8px; color:#475569;">액터/UC 간 상속. 실선+빈삼각형.</td></tr>
+                </table>
+              </div>
+              <div class="mi">
+                <strong>«include» vs «extend» — 방향이 반대!</strong>
+                <div style="margin-top:8px; padding:10px; background:#eff6ff; border-radius:6px; font-size:0.71rem; line-height:1.9; border-left:3px solid #2563eb;">
+                  <b>«include»</b> — 반드시 포함 실행<br>
+                  화살표: <code>기본UC ····→ 포함UC</code><br>
+                  공통 기능 항상 실행. <b>기본→포함</b> 방향.<br>
+                  예: 로그인 ···→ 비밀번호확인
+                </div>
+                <div style="margin-top:8px; padding:10px; background:#fef2f2; border-radius:6px; font-size:0.71rem; line-height:1.9; border-left:3px solid #dc2626;">
+                  <b>«extend»</b> — 조건부 선택 실행<br>
+                  화살표: <code>확장UC ····→ 기본UC</code><br>
+                  조건 충족 시만. <b>확장→기본</b> 방향 (include 반대!).<br>
+                  예: 쿠폰적용 ···→ 상품검색
+                </div>
+                <div style="margin-top:6px; padding:5px 8px; background:#fef9c3; border-radius:4px; font-size:0.7rem; color:#92400e;">
+                  ⚡ include: 기본이 포함을 <b>당겨옴</b> / extend: 확장이 기본에 <b>붙음</b>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ⑦ 시퀀스 다이어그램 -->
+          <div class="mg">
+            <div class="mg-hd violet">⑦ 시퀀스 다이어그램 — 구성요소 + 메시지 화살표 (빈출)</div>
+            <div class="mg-bd c2">
+              <div class="mi">
+                <strong>구성 요소</strong>
+                <table style="font-size:0.71rem; width:100%; border-collapse:collapse; margin-top:6px;">
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700;">생명선 (Lifeline)</td><td style="padding:5px 8px; color:#475569;">박스(객체명) + 아래 점선. 객체 존재 기간.</td></tr>
+                  <tr><td style="padding:5px 8px; font-weight:700;">활성 박스</td><td style="padding:5px 8px; color:#475569;">생명선 위 좁은 흰 사각형. <b>처리 중</b> 표시.</td></tr>
+                  <tr style="background:#ede9fe;"><td style="padding:5px 8px; font-weight:700;">소멸 ✕</td><td style="padding:5px 8px; color:#475569;">생명선 끝 X. 객체 소멸.</td></tr>
+                  <tr><td style="padding:5px 8px; font-weight:700;">프레임 (Fragment)</td><td style="padding:5px 8px; color:#475569;">opt·loop·alt·par 키워드 박스.</td></tr>
+                </table>
+              </div>
+              <div class="mi">
+                <strong>메시지 화살표 4종</strong>
+                <table style="font-size:0.71rem; width:100%; border-collapse:collapse; margin-top:6px;">
+                  <thead><tr style="background:#ede9fe;"><th style="padding:5px 8px;">화살표</th><th style="padding:5px 8px;">종류</th><th style="padding:5px 8px;">의미</th></tr></thead>
+                  <tbody>
+                    <tr style="background:#f0fdf4;"><td style="padding:5px 8px;"><code>──►</code></td><td style="padding:5px 8px; font-weight:700;">동기 메시지</td><td style="padding:5px 8px; color:#475569;">실선+채운삼각. <b>응답 기다림.</b></td></tr>
+                    <tr><td style="padding:5px 8px;"><code>──▷</code></td><td style="padding:5px 8px; font-weight:700;">비동기 메시지</td><td style="padding:5px 8px; color:#475569;">실선+빈삼각. 응답 안 기다림.</td></tr>
+                    <tr style="background:#eff6ff;"><td style="padding:5px 8px;"><code>····▷</code></td><td style="padding:5px 8px; font-weight:700;">응답 (Return)</td><td style="padding:5px 8px; color:#475569;">점선+빈삼각. 결과 반환.</td></tr>
+                    <tr><td style="padding:5px 8px;"><code>↩</code></td><td style="padding:5px 8px; font-weight:700;">자기 호출</td><td style="padding:5px 8px; color:#475569;">같은 생명선으로 되돌아옴.</td></tr>
+                  </tbody>
+                </table>
+                <div style="margin-top:6px; font-size:0.7rem; color:#475569; background:#f8fafc; padding:5px 8px; border-radius:4px;">
+                  <b>Fragment 키워드:</b> opt(선택) · alt(분기) · loop(반복) · par(병렬) · ref(참조)
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </article>
+
+      <!-- ⑦-b UI 설계 -->
+      <article id="ui" class="card card--rose" style="grid-column:1/-1;">
+        <header class="card-head">
+          <h2>7-b. UI 설계</h2>
+          <p>원칙 4가지 + 산출물 4종 + 프로토타입 + 품질 평가</p>
+        </header>
+        <div class="card-body">
+
+          <div class="mg">
+            <div class="mg-hd rose">UI 개념 + 유형</div>
+            <div class="mg-bd c3">
+              <div class="mi"><strong>CLI</strong> (Command Line Interface)<p>명령어 입력 방식. 텍스트 기반. 예: 터미널.</p></div>
+              <div class="mi"><strong>GUI</strong> (Graphical UI)<p>그래픽+마우스 방식. 예: Windows, macOS.</p></div>
+              <div class="mi"><strong>NUI</strong> (Natural UI)<p>음성·제스처·터치. 예: Siri, 터치스크린.</p></div>
+            </div>
           </div>
 
           <div class="mg">
-            <div class="mg-hd violet">유스케이스 다이어그램 핵심</div>
-            <div class="mg-bd c3">
-              <div class="mi"><strong>액터 (Actor)</strong><p>시스템 외부에서 상호작용하는 존재. 사람 또는 외부 시스템. 막대 인간 기호.</p></div>
-              <div class="mi"><strong>포함 관계 «include»</strong><p>반드시 포함 실행되는 공통 기능. 화살표: 기본 UC → 포함 UC</p></div>
-              <div class="mi"><strong>확장 관계 «extend»</strong><p>조건에 따라 선택적 실행. 화살표: 확장 UC → 기본 UC</p></div>
+            <div class="mg-hd rose">UI 설계 원칙 4가지 — 암기 필수</div>
+            <div class="mg-bd c2" style="grid-template-columns: repeat(2, 1fr);">
+              <div class="mi" style="background:#fff1f2;">
+                <strong>직관성</strong>
+                <p>누구나 쉽게 이해하고 사용 가능. 별도 설명 없이 기능을 바로 알 수 있어야 함.</p>
+              </div>
+              <div class="mi" style="background:#f0fdf4;">
+                <strong>유효성</strong>
+                <p>사용자 목표 달성을 정확히 지원. 오류 없이 기능 수행 가능.</p>
+              </div>
+              <div class="mi" style="background:#eff6ff;">
+                <strong>학습성</strong>
+                <p>처음 사용자도 쉽게 배울 수 있는 구조. 학습 비용 최소화.</p>
+              </div>
+              <div class="mi" style="background:#fff7ed;">
+                <strong>유연성</strong>
+                <p>다양한 사용자 수준·환경에 맞게 대응. 단축키, 커스터마이징 지원.</p>
+              </div>
             </div>
           </div>
+
+          <div class="mg">
+            <div class="mg-hd rose">UI 개발 산출물 4종 — 순서대로 암기</div>
+            <div class="mg-bd" style="grid-template-columns: repeat(4,1fr);">
+              <div class="mi" style="background:#fef2f2; text-align:center;">
+                <div style="font-size:1.3rem;">📋</div>
+                <strong>목업 (Mockup)</strong>
+                <p>디자인 중심의 <b>정적</b> 시각 시안. 색상·레이아웃 확정용.</p>
+              </div>
+              <div class="mi" style="background:#fff7ed; text-align:center;">
+                <div style="font-size:1.3rem;">🔲</div>
+                <strong>와이어프레임</strong>
+                <p>구성 요소 배치 <b>뼈대</b>. 레이아웃·구조 설계. 흑백 선화.</p>
+              </div>
+              <div class="mi" style="background:#f0fdf4; text-align:center;">
+                <div style="font-size:1.3rem;">⚙️</div>
+                <strong>프로토타입</strong>
+                <p><b>실제 작동</b>하는 시제품. 클릭·인터랙션 가능. 사용성 테스트용.</p>
+              </div>
+              <div class="mi" style="background:#eff6ff; text-align:center;">
+                <div style="font-size:1.3rem;">🎬</div>
+                <strong>스토리보드</strong>
+                <p>화면 흐름·전환을 <b>연속 컷</b>으로 표현. 개발 명세 문서.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mg">
+            <div class="mg-hd rose">사용성(Usability) + 닐슨 휴리스틱 핵심</div>
+            <div class="mg-bd c2">
+              <div class="mi">
+                <strong>사용성(Usability) 5요소</strong>
+                <ul style="margin:6px 0 0; padding-left:1.1em; font-size:0.72rem; line-height:1.8;">
+                  <li><b>학습성</b> — 처음 사용 용이성</li>
+                  <li><b>효율성</b> — 목표 달성 속도</li>
+                  <li><b>기억성</b> — 재사용 시 기억 용이</li>
+                  <li><b>오류</b> — 오류 빈도·복구 용이성</li>
+                  <li><b>만족도</b> — 주관적 만족감</li>
+                </ul>
+              </div>
+              <div class="mi">
+                <strong>닐슨(Nielsen) 10 휴리스틱 핵심만</strong>
+                <ul style="margin:6px 0 0; padding-left:1.1em; font-size:0.72rem; line-height:1.8;">
+                  <li>시스템 상태 <b>가시성</b> 유지</li>
+                  <li>실제 세계와 <b>일치</b>하는 언어</li>
+                  <li>사용자 <b>제어·자유도</b> 보장</li>
+                  <li><b>일관성</b> 및 표준 준수</li>
+                  <li><b>오류 예방</b>이 오류 메시지보다 우선</li>
+                  <li>최소한의 <b>기억 부하</b></li>
+                  <li><b>유연성</b>·효율성 (단축키 등)</li>
+                  <li>미적이고 <b>최소주의</b> 디자인</li>
+                  <li>오류 인식·진단·<b>복구</b> 지원</li>
+                  <li><b>도움말</b> 제공</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
         </div>
       </article>
 

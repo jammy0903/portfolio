@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>정보처리기사 실기 3단원 DB 암기 프레임</title>
   <link rel="stylesheet" href="./memory-frame.css">
+  <style>
+    .erd-tbl { width:100%; border-collapse:collapse; font-size:0.73rem; margin-top:10px; }
+    .erd-tbl th { background:#fef9c3; color:#854d0e; font-weight:700; padding:7px 10px; text-align:left; border-bottom:2px solid #fde68a; }
+    .erd-tbl td { padding:7px 10px; border-bottom:1px solid #fef3c7; color:#334155; vertical-align:middle; }
+    .erd-tbl tr:last-child td { border-bottom:none; }
+    .erd-sym { font-family:monospace; font-size:0.9rem; font-weight:700; color:#1e293b; letter-spacing:1px; }
+    .erd-section-title { font-size:0.72rem; font-weight:700; color:#92400e; background:#fef3c7; border-left:3px solid #f59e0b; padding:5px 10px; margin:14px 0 0; border-radius:0 4px 4px 0; }
+    .erd-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+    .erd-box { border:1.5px solid #fde68a; border-radius:8px; padding:10px 12px; background:#fffbeb; }
+    .erd-box h5 { font-size:0.72rem; font-weight:700; color:#92400e; margin:0 0 6px; }
+    .erd-box ul { margin:0; padding-left:1.1em; }
+    .erd-box li { font-size:0.7rem; color:#475569; line-height:1.7; }
+  </style>
 </head>
 <body>
   <main class="shell">
@@ -112,36 +125,92 @@
         </div>
       </article>
 
-      <article id="erd" class="card card--amber">
+      <article id="erd" class="card card--amber" style="grid-column:1/-1;">
         <header class="card-head">
           <h2>4. ERD</h2>
-          <p>사물 - 사이 - 특징</p>
+          <p>피터첸 기호 · 식별/비식별 · Crow's Foot 카디널리티</p>
         </header>
         <div class="card-body">
-          <div class="shape-board">
-            <div class="shape-cell">
-              <div class="shape shape-rect"></div>
-              <div class="shape-label">개체</div>
-              <div class="shape-caption">관리 대상 그 자체</div>
+
+          <!-- 피터첸 기호 + 카디널리티 칩 -->
+          <div style="display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:start; margin-bottom:14px;">
+            <div class="shape-board" style="margin:0;">
+              <div class="shape-cell">
+                <div class="shape shape-rect"></div>
+                <div class="shape-label">개체</div>
+                <div class="shape-caption">관리 대상</div>
+              </div>
+              <div class="shape-cell">
+                <div class="shape shape-diamond"></div>
+                <div class="shape-label">관계</div>
+                <div class="shape-caption">개체 사이</div>
+              </div>
+              <div class="shape-cell">
+                <div class="shape shape-oval"></div>
+                <div class="shape-label">속성</div>
+                <div class="shape-caption">개체의 특징</div>
+              </div>
             </div>
-            <div class="shape-cell">
-              <div class="shape shape-diamond"></div>
-              <div class="shape-label">관계</div>
-              <div class="shape-caption">개체와 개체 사이</div>
-            </div>
-            <div class="shape-cell">
-              <div class="shape shape-oval"></div>
-              <div class="shape-label">속성</div>
-              <div class="shape-caption">개체나 관계의 특징</div>
+            <div class="chip-grid two-col" style="margin:0;">
+              <div class="mini-chip amber"><strong>1:1 관계</strong><span>한 쪽이 다른 쪽 하나와만 관계</span></div>
+              <div class="mini-chip amber"><strong>1:N 관계</strong><span>한 쪽이 여러 개와 관계</span></div>
+              <div class="mini-chip amber"><strong>N:M 관계</strong><span>양쪽 모두 여러 개. 중간 테이블 필요</span></div>
+              <div class="mini-chip amber"><strong>피터첸 표기법</strong><span>직사각형·다이아몬드·타원 기호 체계</span></div>
             </div>
           </div>
 
-          <div class="chip-grid two-col" style="margin-top:14px;">
-            <div class="mini-chip amber"><strong>1:1 관계</strong><span>한 쪽 개체가 다른 쪽 하나와만 관계</span></div>
-            <div class="mini-chip amber"><strong>1:N 관계</strong><span>한 쪽이 여러 개와 관계</span></div>
-            <div class="mini-chip amber"><strong>N:M 관계</strong><span>양쪽 모두 여러 개와 관계. 중간 테이블 필요</span></div>
-            <div class="mini-chip amber"><strong>피터첸 표기법</strong><span>ERD 기호 체계 (직사각형·다이아몬드·타원)</span></div>
+          <!-- 테이블 3개를 2열 가로 배치 -->
+          <div class="erd-grid2">
+            <div>
+              <p class="erd-section-title">① 선 종류 — 식별 vs 비식별 (빈출)</p>
+              <table class="erd-tbl">
+                <thead><tr><th>선</th><th>표기</th><th>관계 유형</th><th>핵심 의미</th></tr></thead>
+                <tbody>
+                  <tr style="background:#fffbeb">
+                    <td><b>실선</b></td>
+                    <td><span class="erd-sym">─────</span></td>
+                    <td><b>식별 관계</b></td>
+                    <td>자식 FK = PK의 일부. 부모 없으면 자식 존재 불가.</td>
+                  </tr>
+                  <tr>
+                    <td><b>점선</b></td>
+                    <td><span class="erd-sym">- - - -</span></td>
+                    <td><b>비식별 관계</b></td>
+                    <td>자식 FK ≠ PK. 부모 없이도 자식 존재 가능.</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <p class="erd-section-title" style="margin-top:10px;">③ 관계 조합 읽는 법 (빈출)</p>
+              <table class="erd-tbl">
+                <thead><tr><th>Crow's Foot 표기</th><th>읽는 법</th><th>예시</th></tr></thead>
+                <tbody>
+                  <tr style="background:#fffbeb"><td><span class="erd-sym">|| ── ||</span></td><td>1 : 1 필수-필수</td><td>직원 ─ 사원증</td></tr>
+                  <tr><td><span class="erd-sym">|| ── |&lt;</span></td><td>1 : N 필수-1이상</td><td>부서 ─ 직원</td></tr>
+                  <tr style="background:#fffbeb"><td><span class="erd-sym">|| ── O&lt;</span></td><td>1 : N 필수-0이상</td><td>고객 ─ 주문</td></tr>
+                  <tr><td><span class="erd-sym">O| ── O&lt;</span></td><td>0/1 : 0이상</td><td>강사 ─ 수강생</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div>
+              <p class="erd-section-title">② Crow's Foot 카디널리티 기호 암기</p>
+              <table class="erd-tbl">
+                <thead><tr><th>기호</th><th>이름</th><th>의미</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="erd-sym">|</span></td><td>파이프</td><td><b>필수</b> — 반드시 1개 이상</td></tr>
+                  <tr style="background:#fffbeb"><td><span class="erd-sym">O</span></td><td>원</td><td><b>선택</b> — 0개 가능</td></tr>
+                  <tr><td><span class="erd-sym">&lt;</span></td><td>까마귀발</td><td><b>다수</b> — 여러 개 가능</td></tr>
+                  <tr style="background:#fffbeb"><td><span class="erd-sym">||</span></td><td>이중 파이프</td><td>정확히 <b>1</b></td></tr>
+                  <tr><td><span class="erd-sym">O&lt;</span></td><td>원+발</td><td><b>0 이상</b> (zero or many)</td></tr>
+                  <tr style="background:#fffbeb"><td><span class="erd-sym">|&lt;</span></td><td>파이프+발</td><td><b>1 이상</b> (one or many)</td></tr>
+                  <tr><td><span class="erd-sym">O|</span></td><td>원+파이프</td><td><b>0 또는 1</b></td></tr>
+                </tbody>
+              </table>
+              <div class="card-note" style="margin-top:10px; font-size:0.7rem;"><b>암기:</b> 기호는 <b>상대방 쪽</b>에 표기. 직원 쪽에 까마귀발 = "부서 하나에 직원 여럿". 실선=식별(FK⊂PK), 점선=비식별.</div>
+            </div>
           </div>
+
         </div>
       </article>
 
