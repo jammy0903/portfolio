@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/cert-study", "destination": "/cert-study/index.html" },
+    { "source": "/cert-study/(.*)", "destination": "/cert-study/$1" },
     { "source": "/(.*)", "destination": "/" }
   ]
 }
