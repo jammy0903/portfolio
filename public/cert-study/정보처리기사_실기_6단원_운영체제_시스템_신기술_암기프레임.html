@@ -13,174 +13,317 @@
     <section class="hero">
       <p class="eyebrow">정보처리기사 실기 6단원</p>
       <h1>운영체제 / 시스템 / 신기술 암기 프레임</h1>
-      <p class="hero-copy">범위가 넓어서 한 번에 외우면 가장 빨리 무너지는 단원입니다. 먼저 `운영체제`, `빅데이터`, `데이터용어` 세 덩어리로 자르고, 그 안에서 `스케줄링 / 페이지교체`, `하둡 / 저장소 / NoSQL`, `마이닝 / 메타데이터` 순으로 붙이면 훨씬 덜 꼬입니다.</p>
+      <p class="hero-copy">스케줄링 / 교착상태 / 메모리 / RAID(0~6) / 리눅스 명령어 / 신기술 / 하둡·NoSQL·마이닝 전 범위 수록.</p>
       <div class="ribbon">
-        <span class="route-pill">운영체제</span>
-        <span class="route-pill">시스템 / 신기술</span>
-        <span class="route-pill">하둡</span>
-        <span class="route-pill">저장소 / NoSQL</span>
-        <span class="route-pill">마이닝</span>
-        <span class="route-pill">데이터 용어</span>
+        <a class="route-pill" href="#os-sched">스케줄링</a>
+        <a class="route-pill" href="#deadlock">교착상태</a>
+        <a class="route-pill" href="#os-state">메모리 / 페이지교체</a>
+        <a class="route-pill" href="#raid">RAID</a>
+        <a class="route-pill" href="#linux">리눅스 명령어</a>
+        <a class="route-pill" href="#systech">시스템 / 신기술</a>
+        <a class="route-pill" href="#hadoop">하둡 / 빅데이터</a>
+        <a class="route-pill" href="#nosql">NoSQL</a>
+        <a class="route-pill" href="#mining">데이터마이닝</a>
       </div>
     </section>
 
     <section class="frame-grid three-up">
-      <article class="card card--blue">
+
+      <article id="os-sched" class="card card--blue">
         <header class="card-head">
-          <h3>1. 운영체제 - 스케줄링</h3>
-          <p>먼저 비선점 / 선점 / 큐 이동 여부로 자르기</p>
+          <h3>1. 스케줄링</h3>
+          <p>비선점 / 선점 구분, 알고리즘 특성 암기</p>
         </header>
         <div class="card-body">
-          <div class="chip-grid three-col">
-            <div class="mini-chip blue"><strong>FCFS</strong><span>먼저 온 작업 먼저 처리</span></div>
-            <div class="mini-chip blue"><strong>HRN</strong><span>응답률 높은 작업 우선</span></div>
-            <div class="mini-chip blue"><strong>우선순위</strong><span>우선순위 높은 작업 우선</span></div>
+          <div class="split-box">
+            <section class="subpanel">
+              <h4>비선점 (한 번 주면 끝까지)</h4>
+              <ul class="bullet-list">
+                <li><strong>FCFS</strong> — 먼저 온 작업 먼저</li>
+                <li><strong>SJF</strong> — 실행 시간 가장 짧은 것</li>
+                <li><strong>HRN</strong> — (대기+서비스)/서비스 높은 것</li>
+                <li><strong>우선순위</strong> — 우선순위 높은 것</li>
+              </ul>
+            </section>
+            <section class="subpanel">
+              <h4>선점 (CPU 뺏을 수 있음)</h4>
+              <ul class="bullet-list">
+                <li><strong>SRT</strong> — 남은 시간 가장 짧은 것</li>
+                <li><strong>RR</strong> — 시간 할당량(퀀텀) 순환</li>
+                <li><strong>다단계 큐</strong> — 큐별 정책 고정</li>
+                <li><strong>다단계 피드백 큐</strong> — 큐 간 이동 가능</li>
+              </ul>
+            </section>
           </div>
 
-          <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip blue"><strong>SJF</strong><span>실행 시간 가장 짧은 작업</span></div>
-            <div class="mini-chip blue"><strong>SRT</strong><span>남은 시간 가장 짧은 작업</span></div>
-            <div class="mini-chip blue"><strong>RR</strong><span>시간 할당량 순환</span></div>
-          </div>
-
-          <div class="chip-grid two-col" style="margin-top:14px;">
-            <div class="mini-chip blue"><strong>다단계 큐</strong><span>큐별 정책 적용</span></div>
-            <div class="mini-chip blue"><strong>다단계 피드백 큐</strong><span>큐 간 이동 허용</span></div>
-          </div>
-
-          <div class="card-note">한 줄 기준: <strong>FCFS = 먼저 온 순서</strong>, <strong>SJF/SRT = 짧은 것 우선</strong>, <strong>RR = 시간 쪼개서 순환</strong>.</div>
+          <div class="card-note"><strong>HRN 공식:</strong> (대기 시간 + 서비스 시간) ÷ 서비스 시간. 값 클수록 우선 선택. 기아(starvation) 방지 목적.</div>
         </div>
       </article>
 
-      <article class="card card--green">
+      <article id="deadlock" class="card card--rose">
         <header class="card-head">
-          <h3>2. 운영체제 - 상태 / 페이지교체 / 리눅스</h3>
-          <p>상태, 교체 알고리즘, 기본 명령 묶음</p>
+          <h3>2. 교착상태 (Deadlock)</h3>
+          <p>발생 조건 4가지 + 해결 방법 4가지</p>
         </header>
         <div class="card-body">
-          <div class="chip-grid three-col">
-            <div class="mini-chip green"><strong>준비 상태</strong><span>CPU 할당만 기다림</span></div>
-            <div class="mini-chip green"><strong>실행 상태</strong><span>실제 CPU 수행 중</span></div>
-            <div class="mini-chip green"><strong>대기 상태</strong><span>입출력 등 사건 대기</span></div>
-          </div>
-
-          <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip green"><strong>LRU</strong><span>가장 오래 안 쓴 페이지</span></div>
-            <div class="mini-chip green"><strong>LFU</strong><span>사용 빈도 가장 낮은 페이지</span></div>
-            <div class="mini-chip green"><strong>FIFO</strong><span>가장 먼저 들어온 페이지</span></div>
-          </div>
-
-          <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip green"><strong>OPT</strong><span>가장 늦게 참조될 페이지</span></div>
-            <div class="mini-chip green"><strong>NUR</strong><span>최근 사용 / 변경 비트</span></div>
-            <div class="mini-chip green"><strong>IPC</strong><span>프로세스 간 통신</span></div>
-          </div>
-
-          <div class="protocol-row" style="margin-top:14px; margin-bottom:0;">
-            <div class="mini-chip green"><strong>유닉스 / 안드로이드</strong><span>다중사용자·다중작업 / 리눅스 커널 기반 모바일 OS</span></div>
-            <div class="mini-chip green"><strong>chmod / pwd / ls / cd / cp</strong><span>권한설정 / 경로 / 목록 / 이동 / 복사</span></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card card--amber">
-        <header class="card-head">
-          <h3>3. 시스템 / 신기술</h3>
-          <p>복구 시간, 저장 방식, 분산 플랫폼</p>
-        </header>
-        <div class="card-body">
-          <div class="chip-grid three-col">
-            <div class="mini-chip amber"><strong>RTO</strong><span>복구 허용 목표 시간</span></div>
-            <div class="mini-chip amber"><strong>RAID 0</strong><span>중복 없이 분산 저장</span></div>
-            <div class="mini-chip amber"><strong>블록체인</strong><span>블록 단위 분산 저장</span></div>
-          </div>
-
-          <div class="chip-grid two-col" style="margin-top:14px;">
-            <div class="mini-chip amber"><strong>하둡</strong><span>대용량 분산 저장·처리 플랫폼</span></div>
-            <div class="mini-chip amber"><strong>LOD</strong><span>링크드 오픈 데이터</span></div>
-          </div>
-
-          <div class="card-note">이 파트는 이름보다 뜻이 중요합니다. `RTO = 복구 시간`, `RAID 0 = 속도`, `블록체인 = 분산 저장 무결성`, `하둡 = 분산 플랫폼`으로 바로 연결하세요.</div>
-        </div>
-      </article>
-
-      <article class="card card--violet">
-        <header class="card-head">
-          <h3>4. 하둡 / 빅데이터 저장소</h3>
-          <p>수집 → 저장 → 처리 → 분석 저장소 흐름</p>
-        </header>
-        <div class="card-body">
-          <div class="chip-grid four-col">
-            <div class="mini-chip violet"><strong>ETL</strong><span>추출·변환·적재</span></div>
-            <div class="mini-chip violet"><strong>Flume</strong><span>로그 수집·집계·이동</span></div>
-            <div class="mini-chip violet"><strong>Sqoop</strong><span>RDB ↔ 하둡 이동</span></div>
-            <div class="mini-chip violet"><strong>Scrapy</strong><span>웹 크롤링 수집</span></div>
-          </div>
-
-          <div class="protocol-row" style="margin-top:14px;">
-            <div class="mini-chip violet"><strong>HDFS</strong><span>분산 파일 시스템</span></div>
-            <div class="mini-chip violet"><strong>MapReduce</strong><span>Map / Reduce 병렬 처리</span></div>
-          </div>
-
           <div class="chip-grid two-col">
-            <div class="mini-chip violet"><strong>데이터 웨어하우스 / 데이터마트</strong><span>통합 저장소 / 주제별 소규모 저장소</span></div>
-            <div class="mini-chip violet"><strong>OLAP / 3V</strong><span>다차원 분석 / Volume·Velocity·Variety</span></div>
-          </div>
-
-          <div class="card-note">큰 흐름: <strong>ETL·수집도구 → HDFS → MapReduce → DW/DM/OLAP</strong>.</div>
-        </div>
-      </article>
-
-      <article class="card card--rose">
-        <header class="card-head">
-          <h3>5. NoSQL</h3>
-          <p>비관계형 DB 유형을 구조로 외우기</p>
-        </header>
-        <div class="card-body">
-          <div class="chip-grid three-col">
-            <div class="mini-chip rose"><strong>NoSQL</strong><span>고정 스키마 없는 비관계형 DB</span></div>
-            <div class="mini-chip rose"><strong>Key-Value Store</strong><span>키 / 값 쌍 저장</span></div>
-            <div class="mini-chip rose"><strong>Document Store</strong><span>JSON / XML 문서 저장</span></div>
+            <div class="mini-chip rose"><strong>① 상호배제</strong><span>자원을 한 번에 하나만 점유</span></div>
+            <div class="mini-chip rose"><strong>② 점유대기</strong><span>자원 갖고 다른 자원 기다림</span></div>
+            <div class="mini-chip rose"><strong>③ 비선점</strong><span>다른 프로세스 자원 강탈 불가</span></div>
+            <div class="mini-chip rose"><strong>④ 환형대기</strong><span>프로세스가 원형으로 서로 대기</span></div>
           </div>
 
           <div class="chip-grid two-col" style="margin-top:14px;">
-            <div class="mini-chip rose"><strong>Column-Family Store</strong><span>열 단위 저장, 분산 처리 적합</span></div>
-            <div class="mini-chip rose"><strong>Graph DB</strong><span>노드와 엣지 관계 표현</span></div>
+            <div class="mini-chip rose"><strong>예방 (Prevention)</strong><span>4가지 조건 중 하나 제거</span></div>
+            <div class="mini-chip rose"><strong>회피 (Avoidance)</strong><span>은행가 알고리즘 — 안전 상태 유지</span></div>
+            <div class="mini-chip rose"><strong>탐지 (Detection)</strong><span>교착상태 발생 후 탐지</span></div>
+            <div class="mini-chip rose"><strong>회복 (Recovery)</strong><span>프로세스 종료 or 자원 선점</span></div>
           </div>
 
-          <div class="card-note">외우는 순서: <strong>키값 / 문서 / 열 / 그래프</strong>. 문제에서 저장 형태를 설명하면 그 유형 이름을 바로 떠올리면 됩니다.</div>
+          <div class="card-note">발생 조건 4개 = <strong>상점비환</strong> (상호배제·점유대기·비선점·환형대기). 은행가 알고리즘 = 회피 기법의 대표.</div>
         </div>
       </article>
 
-      <article class="card card--steel">
+      <article id="os-state" class="card card--green">
         <header class="card-head">
-          <h3>6. 데이터마이닝 / 데이터 용어</h3>
-          <p>패턴 추출 기법과 데이터 관련 개념</p>
+          <h3>3. 프로세스 상태 / 페이지 교체</h3>
+          <p>상태 전이, 교체 알고리즘, 리눅스 기초</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid three-col">
+            <div class="mini-chip green"><strong>준비 (Ready)</strong><span>CPU 할당 대기</span></div>
+            <div class="mini-chip green"><strong>실행 (Running)</strong><span>CPU 수행 중</span></div>
+            <div class="mini-chip green"><strong>대기 (Waiting)</strong><span>I/O 등 이벤트 대기</span></div>
+          </div>
+
+          <div class="chip-grid three-col" style="margin-top:14px;">
+            <div class="mini-chip green"><strong>FIFO</strong><span>먼저 들어온 페이지 교체</span></div>
+            <div class="mini-chip green"><strong>LRU</strong><span>가장 오래 사용 안 한 페이지</span></div>
+            <div class="mini-chip green"><strong>LFU</strong><span>사용 빈도 가장 낮은 페이지</span></div>
+            <div class="mini-chip green"><strong>OPT</strong><span>가장 늦게 참조될 페이지 (최적)</span></div>
+            <div class="mini-chip green"><strong>NUR</strong><span>최근 미사용 / 변경 비트 기준</span></div>
+            <div class="mini-chip green"><strong>2차 기회</strong><span>FIFO + 참조 비트 재확인</span></div>
+          </div>
+
+          <div class="chip-grid two-col" style="margin-top:14px;">
+            <div class="mini-chip green"><strong>스래싱 (Thrashing)</strong><span>페이지 부재 잦아 CPU 효율 급감</span></div>
+            <div class="mini-chip green"><strong>워킹셋 (Working Set)</strong><span>자주 사용하는 페이지 집합 유지</span></div>
+          </div>
+
+          <div class="card-note">IPC(프로세스 간 통신) 방법: 파이프, 메시지 큐, 공유 메모리, 소켓, 세마포어.</div>
+        </div>
+      </article>
+
+      <article id="raid" class="card card--violet" style="grid-column: 1 / -1;">
+        <header class="card-head">
+          <h3>4. RAID (0 ~ 6 + 10)</h3>
+          <p>속도냐 안정성이냐 — 레벨별 특성 한 줄씩</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid three-col">
+            <div class="mini-chip violet">
+              <strong>RAID 0 — 스트라이핑</strong>
+              <span>데이터를 여러 디스크에 분산 저장. 속도 최대 / 하나 고장 시 전체 데이터 손실. 패리티 없음.</span>
+            </div>
+            <div class="mini-chip violet">
+              <strong>RAID 1 — 미러링</strong>
+              <span>데이터를 두 디스크에 똑같이 복사. 안정성 최고 / 용량 50% 낭비. 패리티 없음.</span>
+            </div>
+            <div class="mini-chip violet">
+              <strong>RAID 2 — 해밍코드</strong>
+              <span>비트 단위 스트라이핑 + 해밍 ECC. 비실용적 — 거의 미사용.</span>
+            </div>
+            <div class="mini-chip violet">
+              <strong>RAID 3 — 전용 패리티 (바이트)</strong>
+              <span>바이트 단위 스트라이핑 + 별도 패리티 드라이브 1개. 패리티 드라이브 병목.</span>
+            </div>
+            <div class="mini-chip violet">
+              <strong>RAID 4 — 전용 패리티 (블록)</strong>
+              <span>블록 단위 스트라이핑 + 별도 패리티 드라이브 1개. 역시 패리티 드라이브 병목.</span>
+            </div>
+            <div class="mini-chip violet">
+              <strong>RAID 5 — 분산 패리티</strong>
+              <span>블록 스트라이핑 + 패리티를 모든 디스크에 분산. 가장 많이 사용. 최소 3개 디스크.</span>
+            </div>
+            <div class="mini-chip violet">
+              <strong>RAID 6 — 이중 분산 패리티</strong>
+              <span>RAID 5 + 패리티 두 세트. 디스크 2개 동시 고장 허용. 최소 4개 디스크.</span>
+            </div>
+            <div class="mini-chip violet">
+              <strong>RAID 10 (1+0)</strong>
+              <span>RAID 1(미러링) + RAID 0(스트라이핑) 결합. 속도 + 안정성 / 비용↑</span>
+            </div>
+            <div class="mini-chip violet">
+              <strong>RAID 01 (0+1)</strong>
+              <span>RAID 0 먼저, RAID 1로 미러링. RAID 10보다 복구 취약.</span>
+            </div>
+          </div>
+
+          <div class="card-note"><strong>한 줄 요약:</strong> RAID 0 = 속도 / RAID 1 = 미러링 / RAID 5 = 분산 패리티(실무 표준) / RAID 6 = 이중 패리티(더 안전) / RAID 10 = 속도+안전. 시험은 "분산 패리티 = RAID 5"를 가장 많이 묻는다.</div>
+        </div>
+      </article>
+
+      <article id="linux" class="card card--amber" style="grid-column: span 2;">
+        <header class="card-head">
+          <h3>5. 리눅스 / 유닉스 명령어</h3>
+          <p>파일 / 권한 / 프로세스 / 네트워크 / 검색</p>
+        </header>
+        <div class="card-body">
+          <div class="split-box">
+            <section class="subpanel">
+              <h4>파일 / 디렉터리</h4>
+              <ul class="bullet-list">
+                <li><strong>ls</strong> — 목록 표시 (ls -al: 숨김+상세)</li>
+                <li><strong>cd</strong> — 디렉터리 이동</li>
+                <li><strong>pwd</strong> — 현재 경로 출력</li>
+                <li><strong>mkdir</strong> — 디렉터리 생성</li>
+                <li><strong>rmdir</strong> — 빈 디렉터리 삭제</li>
+                <li><strong>cp</strong> — 파일/디렉터리 복사</li>
+                <li><strong>mv</strong> — 이동 / 이름 변경</li>
+                <li><strong>rm</strong> — 삭제 (rm -rf: 강제 재귀)</li>
+                <li><strong>cat</strong> — 파일 내용 출력</li>
+                <li><strong>touch</strong> — 빈 파일 생성 / 시간 갱신</li>
+                <li><strong>find</strong> — 파일 검색 (find / -name)</li>
+                <li><strong>grep</strong> — 패턴 검색</li>
+              </ul>
+            </section>
+            <section class="subpanel">
+              <h4>권한 / 프로세스 / 네트워크</h4>
+              <ul class="bullet-list">
+                <li><strong>chmod</strong> — 권한 변경 (chmod 755)</li>
+                <li><strong>chown</strong> — 소유자 변경</li>
+                <li><strong>chgrp</strong> — 그룹 변경</li>
+                <li><strong>ps</strong> — 프로세스 목록</li>
+                <li><strong>kill</strong> — 프로세스 종료 (kill -9)</li>
+                <li><strong>top</strong> — 실시간 프로세스 모니터</li>
+                <li><strong>df</strong> — 디스크 사용량</li>
+                <li><strong>du</strong> — 디렉터리 용량</li>
+                <li><strong>free</strong> — 메모리 사용량</li>
+                <li><strong>ping</strong> — 연결 확인</li>
+                <li><strong>ifconfig</strong> — 네트워크 인터페이스 설정</li>
+                <li><strong>netstat</strong> — 네트워크 연결 상태</li>
+              </ul>
+            </section>
+          </div>
+
+          <div class="chip-grid three-col" style="margin-top:14px;">
+            <div class="mini-chip amber"><strong>chmod 숫자 방식</strong><span>읽기=4, 쓰기=2, 실행=1. 합산. 755 = rwxr-xr-x</span></div>
+            <div class="mini-chip amber"><strong>파이프 (|)</strong><span>앞 명령 출력을 다음 명령 입력으로 전달</span></div>
+            <div class="mini-chip amber"><strong>tar -cvf / -xvf</strong><span>c=압축생성 / x=압축해제 / v=목록 / f=파일명</span></div>
+          </div>
+
+          <div class="card-note">권한 표기: rwxrwxrwx = 소유자·그룹·기타 각 3비트. chmod 777 = 모두 허용. 실행 파일은 x 비트 필요.</div>
+        </div>
+      </article>
+
+      <article id="systech" class="card card--steel">
+        <header class="card-head">
+          <h3>6. 시스템 / 신기술 용어</h3>
+          <p>RTO/RPO, 클라우드, 컨테이너, 블록체인</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid two-col">
+            <div class="mini-chip steel"><strong>RTO (복구 목표 시간)</strong><span>장애 후 서비스 복구까지 허용 최대 시간</span></div>
+            <div class="mini-chip steel"><strong>RPO (복구 목표 시점)</strong><span>복구 시 허용 가능한 데이터 손실 기준 시점</span></div>
+          </div>
+
+          <div class="chip-grid three-col" style="margin-top:14px;">
+            <div class="mini-chip steel"><strong>IaaS</strong><span>인프라 제공 (VM, 스토리지)</span></div>
+            <div class="mini-chip steel"><strong>PaaS</strong><span>플랫폼 제공 (개발 환경)</span></div>
+            <div class="mini-chip steel"><strong>SaaS</strong><span>소프트웨어 제공 (Gmail 등)</span></div>
+          </div>
+
+          <div class="chip-grid three-col" style="margin-top:14px;">
+            <div class="mini-chip steel"><strong>Docker</strong><span>컨테이너 기반 경량 가상화</span></div>
+            <div class="mini-chip steel"><strong>Kubernetes</strong><span>컨테이너 오케스트레이션 관리</span></div>
+            <div class="mini-chip steel"><strong>MSA</strong><span>마이크로서비스 아키텍처</span></div>
+          </div>
+
+          <div class="chip-grid three-col" style="margin-top:14px;">
+            <div class="mini-chip steel"><strong>블록체인</strong><span>블록 단위 분산 저장, 위변조 어려움</span></div>
+            <div class="mini-chip steel"><strong>IoT</strong><span>사물 인터넷 — 기기 간 연결·통신</span></div>
+            <div class="mini-chip steel"><strong>엣지 컴퓨팅</strong><span>데이터를 중앙 서버 대신 단말 근처에서 처리</span></div>
+          </div>
+
+          <div class="card-note">컨테이너 vs VM: 컨테이너는 OS 커널 공유(가볍고 빠름) / VM은 하이퍼바이저 위에 별도 OS(무겁지만 격리 강함).</div>
+        </div>
+      </article>
+
+      <article id="hadoop" class="card card--violet">
+        <header class="card-head">
+          <h3>7. 하둡 / 빅데이터 저장소</h3>
+          <p>수집 → 저장 → 처리 → 분석 흐름</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid two-col">
+            <div class="mini-chip violet"><strong>ETL</strong><span>Extract(추출)·Transform(변환)·Load(적재)</span></div>
+            <div class="mini-chip violet"><strong>Flume</strong><span>로그 수집·집계·이동</span></div>
+            <div class="mini-chip violet"><strong>Sqoop</strong><span>관계형 DB ↔ 하둡 데이터 이동</span></div>
+            <div class="mini-chip violet"><strong>Scrapy</strong><span>웹 크롤링 수집 프레임워크</span></div>
+          </div>
+
+          <div class="chip-grid two-col" style="margin-top:14px;">
+            <div class="mini-chip violet"><strong>HDFS</strong><span>하둡 분산 파일 시스템</span></div>
+            <div class="mini-chip violet"><strong>MapReduce</strong><span>Map(분산 처리) + Reduce(집계) 병렬 처리</span></div>
+          </div>
+
+          <div class="chip-grid two-col" style="margin-top:14px;">
+            <div class="mini-chip violet"><strong>데이터 웨어하우스</strong><span>전사 통합 분석 저장소</span></div>
+            <div class="mini-chip violet"><strong>데이터마트</strong><span>부서·주제별 소규모 저장소</span></div>
+            <div class="mini-chip violet"><strong>OLAP</strong><span>다차원 대화형 분석</span></div>
+            <div class="mini-chip violet"><strong>3V</strong><span>Volume(양)·Velocity(속도)·Variety(다양성)</span></div>
+          </div>
+
+          <div class="card-note">빅데이터 흐름: 수집(Flume·Sqoop·Scrapy) → HDFS 저장 → MapReduce 처리 → DW/DM/OLAP 분석.</div>
+        </div>
+      </article>
+
+      <article id="nosql" class="card card--rose">
+        <header class="card-head">
+          <h3>8. NoSQL</h3>
+          <p>비관계형 DB — 저장 형태로 유형 외우기</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid two-col">
+            <div class="mini-chip rose"><strong>Key-Value Store</strong><span>키/값 쌍 저장. Redis, DynamoDB</span></div>
+            <div class="mini-chip rose"><strong>Document Store</strong><span>JSON/XML 문서. MongoDB, CouchDB</span></div>
+            <div class="mini-chip rose"><strong>Column-Family Store</strong><span>열 단위 저장. Cassandra, HBase</span></div>
+            <div class="mini-chip rose"><strong>Graph DB</strong><span>노드·엣지 관계. Neo4j</span></div>
+          </div>
+
+          <div class="card-note">NoSQL 특징: 고정 스키마 없음 / 수평 확장 용이 / 대용량 처리. 외우는 순서: <strong>키값 / 문서 / 열 / 그래프</strong>. 저장 형태 설명 → 유형 이름 바로 연결.</div>
+        </div>
+      </article>
+
+      <article id="mining" class="card card--steel">
+        <header class="card-head">
+          <h3>9. 데이터마이닝 / 데이터 용어</h3>
+          <p>패턴 추출 기법 + 데이터 관련 개념</p>
         </header>
         <div class="card-body">
           <div class="chip-grid three-col">
             <div class="mini-chip steel"><strong>분류 규칙</strong><span>미리 정한 범주로 분류</span></div>
-            <div class="mini-chip steel"><strong>연관 규칙</strong><span>함께 발생하는 패턴</span></div>
+            <div class="mini-chip steel"><strong>연관 규칙</strong><span>함께 발생하는 패턴 (장바구니 분석)</span></div>
             <div class="mini-chip steel"><strong>연속 데이터 규칙</strong><span>시간 순서 패턴</span></div>
-          </div>
-
-          <div class="chip-grid three-col" style="margin-top:14px;">
             <div class="mini-chip steel"><strong>군집화 규칙</strong><span>유사한 데이터 그룹화</span></div>
-            <div class="mini-chip steel"><strong>텍스트마이닝</strong><span>비정형 텍스트 추출</span></div>
-            <div class="mini-chip steel"><strong>웹마이닝</strong><span>웹 데이터 분석</span></div>
+            <div class="mini-chip steel"><strong>텍스트마이닝</strong><span>비정형 텍스트에서 패턴 추출</span></div>
+            <div class="mini-chip steel"><strong>웹마이닝</strong><span>웹 로그·구조·콘텐츠 분석</span></div>
           </div>
 
           <div class="chip-grid two-col" style="margin-top:14px;">
-            <div class="mini-chip steel"><strong>메타데이터 / 다크데이터</strong><span>데이터에 대한 데이터 / 수집만 되고 방치된 데이터</span></div>
-            <div class="mini-chip steel"><strong>디지털아카이빙 / 마이데이터</strong><span>디지털 장기 보존 / 데이터 주권</span></div>
+            <div class="mini-chip steel"><strong>메타데이터</strong><span>데이터에 대한 데이터 (구조·의미 설명)</span></div>
+            <div class="mini-chip steel"><strong>다크데이터</strong><span>수집됐지만 분석·활용 안 된 데이터</span></div>
+            <div class="mini-chip steel"><strong>디지털아카이빙</strong><span>디지털 콘텐츠 장기 보존</span></div>
+            <div class="mini-chip steel"><strong>마이데이터</strong><span>본인 데이터 주권 보장 서비스</span></div>
           </div>
 
-          <div class="card-note">데이터 관련 용어는 `뜻`이 거의 그대로 답입니다. <strong>메타데이터 = 데이터에 대한 데이터</strong>처럼 짧은 정의를 통째로 외우는 편이 빠릅니다.</div>
+          <div class="card-note">데이터 용어는 뜻이 거의 그대로 답입니다. "데이터에 대한 데이터" = 메타데이터, "수집만 되고 방치" = 다크데이터로 짧은 정의를 통째로 외우세요.</div>
         </div>
       </article>
+
     </section>
 
-    <div class="footer-note">6단원은 범위가 넓어서 한 번에 암기하려 하면 가장 빨리 무너집니다. 먼저 <strong>운영체제 / 빅데이터 / 데이터용어</strong>로 나누고, 각 카드 안에서 대표 키워드만 먼저 고정하세요.</div>
+    <div class="footer-note">6단원은 범위가 넓습니다. <strong>스케줄링 → 교착상태 → 메모리 → RAID → 리눅스 → 신기술 → 하둡·NoSQL·마이닝</strong> 순으로 흐름 잡고, 각 카드에서 대표 키워드만 먼저 고정하세요.</div>
   </main>
 </body>
 </html>

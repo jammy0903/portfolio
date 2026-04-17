@@ -13,115 +13,167 @@
     <section class="hero">
       <p class="eyebrow">정보처리기사 실기 4단원</p>
       <h1>네트워크 암기 프레임</h1>
-      <p class="hero-copy">층, 주소, 라우팅, URL, 전송 프로토콜, Web Service, HDLC를 카드로 나눈 반응형 정리입니다. 단어를 보면 먼저 어느 카드에 들어가는지 고르는 방식으로 외우면 덜 꼬입니다.</p>
+      <p class="hero-copy">OSI 7계층 / TCP·IP 4계층 / 주소·IP / 라우팅 / URL·웹 / 전송·응용 프로토콜 / 포트번호 / 서브넷 / HDLC·Web Service 전 범위.</p>
       <div class="ribbon">
-        <span class="route-pill">계층</span>
-        <span class="route-pill">주소 / IP</span>
-        <span class="route-pill">라우팅 / 교환</span>
-        <span class="route-pill">URL / 웹</span>
-        <span class="route-pill">전송 / 응용 프로토콜</span>
-        <span class="route-pill">HDLC / Web Service</span>
+        <a class="route-pill" href="#osi">OSI 계층</a>
+        <a class="route-pill" href="#tcpip">TCP/IP 4계층</a>
+        <a class="route-pill" href="#ip">주소 / IP</a>
+        <a class="route-pill" href="#routing">라우팅 / 교환</a>
+        <a class="route-pill" href="#url">URL / 웹</a>
+        <a class="route-pill" href="#protocol">전송 / 응용 프로토콜</a>
+        <a class="route-pill" href="#ports">포트번호</a>
+        <a class="route-pill" href="#subnet">서브넷 계산</a>
+        <a class="route-pill" href="#hdlc">HDLC / Web Service</a>
       </div>
     </section>
 
     <section class="frame-grid three-up">
-      <article class="card card--blue">
+
+      <article id="osi" class="card card--blue">
         <header class="card-head">
-          <h3>1. OSI / 프로토콜 기본</h3>
+          <h3>1. OSI 7계층 / 프로토콜 기본</h3>
           <p>계층 문제와 구문·의미·타이밍</p>
         </header>
         <div class="card-body">
           <div class="osi-layout">
             <div class="stack">
-              <div class="stack-layer">7 응용</div>
-              <div class="stack-layer">6 표현</div>
-              <div class="stack-layer">5 세션</div>
-              <div class="stack-layer">4 전송</div>
-              <div class="stack-layer">3 네트워크</div>
-              <div class="stack-layer">2 데이터링크</div>
-              <div class="stack-layer">1 물리</div>
+              <div class="stack-layer">7 응용 (Application)</div>
+              <div class="stack-layer">6 표현 (Presentation)</div>
+              <div class="stack-layer">5 세션 (Session)</div>
+              <div class="stack-layer">4 전송 (Transport)</div>
+              <div class="stack-layer">3 네트워크 (Network)</div>
+              <div class="stack-layer">2 데이터링크 (Data Link)</div>
+              <div class="stack-layer">1 물리 (Physical)</div>
             </div>
             <div>
               <ul class="bullet-list">
-                <li>전송 = 종단 간 신뢰성 전송</li>
-                <li>세션 = 연결 설정 / 동기화</li>
-                <li>표현 = 형식 변환 / 암호화 / 압축</li>
-                <li>응용 = 사용자 서비스와 가장 가까움</li>
+                <li><strong>물리</strong> = 비트 신호 전송</li>
+                <li><strong>데이터링크</strong> = MAC 주소, 오류 제어 (프레임)</li>
+                <li><strong>네트워크</strong> = IP 주소, 라우팅 (패킷)</li>
+                <li><strong>전송</strong> = 종단 간 신뢰성, TCP/UDP (세그먼트)</li>
+                <li><strong>세션</strong> = 연결 설정·유지·동기화</li>
+                <li><strong>표현</strong> = 형식 변환·암호화·압축</li>
+                <li><strong>응용</strong> = 사용자 서비스 (HTTP, FTP 등)</li>
               </ul>
             </div>
           </div>
 
           <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip blue"><strong>구문</strong><span>Syntax / 형식·구조</span></div>
-            <div class="mini-chip blue"><strong>의미</strong><span>Semantic / 각 필드 뜻</span></div>
-            <div class="mini-chip blue"><strong>타이밍</strong><span>Timing / 순서·속도·시점</span></div>
+            <div class="mini-chip blue"><strong>구문 (Syntax)</strong><span>형식·구조</span></div>
+            <div class="mini-chip blue"><strong>의미 (Semantic)</strong><span>각 필드의 뜻</span></div>
+            <div class="mini-chip blue"><strong>타이밍 (Timing)</strong><span>순서·속도·시점</span></div>
           </div>
         </div>
       </article>
 
-      <article class="card card--green">
+      <article id="tcpip" class="card card--green">
         <header class="card-head">
-          <h3>2. 주소 / IP</h3>
-          <p>IP 비트수, 변환, 주소 역할</p>
+          <h3>2. TCP/IP 4계층 (인터넷 모델)</h3>
+          <p>OSI와 대응 관계 필수</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid two-col">
+            <div class="mini-chip green"><strong>응용 계층</strong><span>OSI 5·6·7층 대응. HTTP, FTP, DNS, SMTP</span></div>
+            <div class="mini-chip green"><strong>전송 계층</strong><span>OSI 4층 대응. TCP, UDP</span></div>
+            <div class="mini-chip green"><strong>인터넷 계층</strong><span>OSI 3층 대응. IP, ICMP, ARP, RARP</span></div>
+            <div class="mini-chip green"><strong>네트워크 접속 계층</strong><span>OSI 1·2층 대응. Ethernet, Wi-Fi</span></div>
+          </div>
+
+          <div class="split-box">
+            <section class="subpanel">
+              <h4>TCP (연결형)</h4>
+              <ul class="bullet-list">
+                <li>신뢰성 보장, 순서 보장</li>
+                <li>3-way handshake (연결)</li>
+                <li>4-way handshake (해제)</li>
+                <li>흐름제어, 혼잡제어</li>
+              </ul>
+            </section>
+            <section class="subpanel">
+              <h4>UDP (비연결형)</h4>
+              <ul class="bullet-list">
+                <li>신뢰성 없음, 빠름</li>
+                <li>실시간 스트리밍, DNS, DHCP</li>
+                <li>헤더 단순 (8바이트)</li>
+                <li>멀티캐스트 지원</li>
+              </ul>
+            </section>
+          </div>
+
+          <div class="card-note"><strong>3-way handshake:</strong> SYN → SYN-ACK → ACK. <strong>4-way handshake(해제):</strong> FIN → ACK → FIN → ACK.</div>
+        </div>
+      </article>
+
+      <article id="ip" class="card card--amber">
+        <header class="card-head">
+          <h3>3. 주소 / IP</h3>
+          <p>IPv4 클래스 / IPv6 / 변환 프로토콜</p>
         </header>
         <div class="card-body">
           <div class="chip-grid three-col">
-            <div class="mini-chip green"><strong>IPv6</strong><span>128bit</span></div>
-            <div class="mini-chip green"><strong>NAT</strong><span>사설 IP → 공인 IP</span></div>
-            <div class="mini-chip green"><strong>VPN</strong><span>공용망 위 사설망처럼</span></div>
+            <div class="mini-chip amber"><strong>IPv4</strong><span>32비트, 4옥텟 (0.0.0.0 ~ 255.255.255.255)</span></div>
+            <div class="mini-chip amber"><strong>IPv6</strong><span>128비트, 콜론(:) 구분 16진수</span></div>
+            <div class="mini-chip amber"><strong>NAT</strong><span>사설 IP → 공인 IP 변환</span></div>
+          </div>
+
+          <div class="chip-grid two-col" style="margin-top:14px;">
+            <div class="mini-chip amber"><strong>클래스 A</strong><span>0xxx / 0.0.0.0 ~ 127.255.255.255 / 대규모</span></div>
+            <div class="mini-chip amber"><strong>클래스 B</strong><span>10xx / 128.0.0.0 ~ 191.255.255.255 / 중규모</span></div>
+            <div class="mini-chip amber"><strong>클래스 C</strong><span>110x / 192.0.0.0 ~ 223.255.255.255 / 소규모</span></div>
+            <div class="mini-chip amber"><strong>클래스 D</strong><span>1110 / 멀티캐스트</span></div>
           </div>
 
           <div class="arrow-strip">
             <div class="arrow-box">
               <strong>ARP</strong>
-              <span>IP → MAC</span>
+              <span>IP → MAC 주소 변환</span>
             </div>
             <div class="arrow">↔</div>
             <div class="arrow-box">
               <strong>RARP</strong>
-              <span>MAC → IP</span>
+              <span>MAC → IP 주소 변환</span>
             </div>
           </div>
 
           <div class="chip-grid three-col">
-            <div class="mini-chip green"><strong>네트워크 주소</strong><span>서브넷 자체</span></div>
-            <div class="mini-chip green"><strong>브로드캐스트</strong><span>전체 호스트</span></div>
-            <div class="mini-chip green"><strong>/26</strong><span>사용 가능 62 hosts</span></div>
+            <div class="mini-chip amber"><strong>네트워크 주소</strong><span>서브넷 첫 번째 주소</span></div>
+            <div class="mini-chip amber"><strong>브로드캐스트</strong><span>서브넷 마지막 주소</span></div>
+            <div class="mini-chip amber"><strong>VPN</strong><span>공용망 위에 암호화 사설망 터널</span></div>
           </div>
         </div>
       </article>
 
-      <article class="card card--amber">
+      <article id="routing" class="card card--violet">
         <header class="card-head">
-          <h3>3. 라우팅 / 교환</h3>
-          <p>내부냐 외부냐, 경로냐 홉수냐</p>
+          <h3>4. 라우팅 / 교환</h3>
+          <p>내부냐 외부냐 / 경로냐 홉수냐</p>
         </header>
         <div class="card-body">
           <div class="protocol-row">
-            <div class="mini-chip amber"><strong>IGP</strong><span>AS 내부 라우팅</span></div>
-            <div class="mini-chip amber"><strong>EGP</strong><span>AS 간 라우팅</span></div>
-          </div>
-
-          <div class="card-note" style="margin-top:0;">외부에서 실제 대표 프로토콜 이름은 <strong>BGP</strong></div>
-
-          <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip amber"><strong>RIP</strong><span>홉 수 / 거리 벡터</span></div>
-            <div class="mini-chip amber"><strong>OSPF</strong><span>링크 상태 / 최단 경로</span></div>
-            <div class="mini-chip amber"><strong>BGP</strong><span>AS 간 경로 / 외부 라우팅</span></div>
+            <div class="mini-chip violet"><strong>IGP</strong><span>AS 내부 라우팅</span></div>
+            <div class="mini-chip violet"><strong>EGP/BGP</strong><span>AS 간 라우팅 (외부)</span></div>
           </div>
 
           <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip amber"><strong>데이터그램</strong><span>경로 설정 X</span></div>
-            <div class="mini-chip amber"><strong>가상회선</strong><span>먼저 경로 설정</span></div>
-            <div class="mini-chip amber"><strong>ATM</strong><span>고정 길이 셀</span></div>
+            <div class="mini-chip violet"><strong>RIP</strong><span>홉 수 기준 / 거리 벡터 / 최대 15홉</span></div>
+            <div class="mini-chip violet"><strong>OSPF</strong><span>링크 상태 / 다익스트라 최단 경로</span></div>
+            <div class="mini-chip violet"><strong>BGP</strong><span>AS 간 / 경로 벡터 / 인터넷 표준</span></div>
           </div>
+
+          <div class="chip-grid three-col" style="margin-top:14px;">
+            <div class="mini-chip violet"><strong>데이터그램</strong><span>비연결형 / 패킷마다 독립 경로</span></div>
+            <div class="mini-chip violet"><strong>가상회선</strong><span>연결형 / 미리 경로 설정</span></div>
+            <div class="mini-chip violet"><strong>ATM</strong><span>고정 길이 53바이트 셀</span></div>
+          </div>
+
+          <div class="card-note">거리 벡터(RIP) vs 링크 상태(OSPF): RIP는 홉수만 보고, OSPF는 링크 상태 전체 파악 후 최단 경로 계산. OSPF가 더 정확하나 복잡.</div>
         </div>
       </article>
 
-      <article class="card card--violet">
+      <article id="url" class="card card--rose">
         <header class="card-head">
-          <h3>4. URL / 웹 기본</h3>
-          <p>`?` 뒤, `#` 뒤, 문서 구조 구분</p>
+          <h3>5. URL / 웹 기본</h3>
+          <p>? 뒤 / # 뒤 / 문서 구조</p>
         </header>
         <div class="card-body">
           <div class="url-bar">
@@ -134,81 +186,159 @@
 
           <ul class="bullet-list" style="margin-top:14px;">
             <li>scheme = https://</li>
-            <li>authority = 호스트명·포트</li>
+            <li>authority = 호스트명:포트</li>
             <li>path = /board/list</li>
-            <li>query = ? 뒤</li>
-            <li>fragment = # 뒤</li>
+            <li>query = ? 뒤 (파라미터)</li>
+            <li>fragment = # 뒤 (페이지 내 위치)</li>
           </ul>
 
           <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip violet"><strong>Hypertext</strong><span>링크로 이동하는 텍스트 구조</span></div>
-            <div class="mini-chip violet"><strong>HTML</strong><span>웹 문서 구조</span></div>
-            <div class="mini-chip violet"><strong>HTTP</strong><span>하이퍼텍스트 통신</span></div>
+            <div class="mini-chip rose"><strong>HTTP</strong><span>하이퍼텍스트 통신, 비상태(Stateless)</span></div>
+            <div class="mini-chip rose"><strong>HTTPS</strong><span>HTTP + TLS/SSL 암호화</span></div>
+            <div class="mini-chip rose"><strong>AJAX</strong><span>새로고침 없이 비동기 통신</span></div>
+            <div class="mini-chip rose"><strong>REST API</strong><span>HTTP 메서드로 자원 조작</span></div>
+            <div class="mini-chip rose"><strong>JSON</strong><span>키-값 경량 데이터 형식</span></div>
+            <div class="mini-chip rose"><strong>XML</strong><span>태그 기반 데이터 형식</span></div>
           </div>
 
-          <div class="protocol-row" style="margin-top:14px; margin-bottom:0;">
-            <div class="mini-chip violet"><strong>AJAX</strong><span>새로고침 없는 비동기</span></div>
-            <div class="mini-chip violet"><strong>JSON / HTTPS</strong><span>키-값 / HTTP + TLS·SSL</span></div>
-          </div>
+          <div class="card-note">HTTP 메서드: GET(조회) / POST(생성) / PUT(수정·전체) / PATCH(수정·일부) / DELETE(삭제). REST API 설계 원칙: 무상태(Stateless), 캐시 가능, 계층화.</div>
         </div>
       </article>
 
-      <article class="card card--rose">
+      <article id="protocol" class="card card--steel">
         <header class="card-head">
-          <h3>5. 전송 / 응용 프로토콜</h3>
-          <p>연결형 / 비연결형과 주요 서비스</p>
+          <h3>6. 전송 / 응용 프로토콜</h3>
+          <p>서비스별 프로토콜 이름 + 역할</p>
         </header>
         <div class="card-body">
-          <div class="protocol-row">
-            <div class="mini-chip rose"><strong>TCP</strong><span>연결형 / 신뢰성 O</span></div>
-            <div class="mini-chip rose"><strong>UDP</strong><span>비연결형 / 빠르지만 보장 적음</span></div>
-          </div>
-
-          <div class="chip-grid four-col">
-            <div class="mini-chip rose"><strong>FTP</strong><span>파일</span></div>
-            <div class="mini-chip rose"><strong>SMTP</strong><span>송신</span></div>
-            <div class="mini-chip rose"><strong>POP3</strong><span>내려받기</span></div>
-            <div class="mini-chip rose"><strong>IMAP</strong><span>서버 동기화</span></div>
-          </div>
-
-          <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip rose"><strong>ICMP</strong><span>오류 보고·제어 메시지</span></div>
-            <div class="mini-chip rose"><strong>SSH</strong><span>암호화 원격 접속</span></div>
-            <div class="mini-chip rose"><strong>L2TP</strong><span>2계층 터널링</span></div>
+          <div class="chip-grid two-col">
+            <div class="mini-chip steel"><strong>FTP (20·21)</strong><span>파일 전송. 20=데이터, 21=제어</span></div>
+            <div class="mini-chip steel"><strong>SMTP (25)</strong><span>이메일 송신</span></div>
+            <div class="mini-chip steel"><strong>POP3 (110)</strong><span>이메일 수신·다운로드</span></div>
+            <div class="mini-chip steel"><strong>IMAP (143)</strong><span>이메일 수신·서버 동기화</span></div>
+            <div class="mini-chip steel"><strong>DNS (53)</strong><span>도메인 → IP 주소 변환</span></div>
+            <div class="mini-chip steel"><strong>DHCP (67·68)</strong><span>IP 주소 자동 할당</span></div>
+            <div class="mini-chip steel"><strong>ICMP</strong><span>오류 보고·제어 메시지 (ping)</span></div>
+            <div class="mini-chip steel"><strong>SSH (22)</strong><span>암호화 원격 접속</span></div>
+            <div class="mini-chip steel"><strong>Telnet (23)</strong><span>원격 접속 (비암호화, 취약)</span></div>
+            <div class="mini-chip steel"><strong>SNMP (161)</strong><span>네트워크 장비 관리</span></div>
+            <div class="mini-chip steel"><strong>NTP (123)</strong><span>시간 동기화</span></div>
+            <div class="mini-chip steel"><strong>L2TP (1701)</strong><span>2계층 터널링</span></div>
           </div>
         </div>
       </article>
 
-      <article class="card card--steel">
+      <article id="ports" class="card card--blue">
         <header class="card-head">
-          <h3>6. Web Service / HDLC / 기타</h3>
-          <p>설명서 / 호출 / 등록, 그리고 프레임과 모드</p>
+          <h3>7. 주요 포트 번호</h3>
+          <p>Well-Known Ports (0~1023)</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid two-col">
+            <div class="mini-chip blue"><strong>20 / 21</strong><span>FTP (데이터 / 제어)</span></div>
+            <div class="mini-chip blue"><strong>22</strong><span>SSH</span></div>
+            <div class="mini-chip blue"><strong>23</strong><span>Telnet</span></div>
+            <div class="mini-chip blue"><strong>25</strong><span>SMTP</span></div>
+            <div class="mini-chip blue"><strong>53</strong><span>DNS</span></div>
+            <div class="mini-chip blue"><strong>67 / 68</strong><span>DHCP (서버 / 클라이언트)</span></div>
+            <div class="mini-chip blue"><strong>80</strong><span>HTTP</span></div>
+            <div class="mini-chip blue"><strong>110</strong><span>POP3</span></div>
+            <div class="mini-chip blue"><strong>143</strong><span>IMAP</span></div>
+            <div class="mini-chip blue"><strong>443</strong><span>HTTPS</span></div>
+            <div class="mini-chip blue"><strong>3306</strong><span>MySQL</span></div>
+            <div class="mini-chip blue"><strong>3389</strong><span>RDP (원격 데스크톱)</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article id="subnet" class="card card--green" style="grid-column: 1 / -1;">
+        <header class="card-head">
+          <h3>8. 서브넷 계산 공식</h3>
+          <p>블록크기 = 256 − 마스크값 (이진법 없이 공식 하나로)</p>
+        </header>
+        <div class="card-body">
+          <div class="subnet-grid">
+            <div class="subnet-box">
+              <h4 class="subnet-h4">① 공식 3줄</h4>
+              <ol class="bullet-list" style="padding-left:1.2em; margin:0;">
+                <li><strong>블록크기</strong> = 256 − 마스크값</li>
+                <li><strong>네트워크주소 마지막옥텟</strong><br>= (IP마지막옥텟 ÷ 블록크기) <u>버림</u> × 블록크기</li>
+                <li><strong>브로드캐스트</strong> = 네트워크주소 + 블록크기 − 1</li>
+                <li><strong>사용 가능 호스트수</strong> = 블록크기 − 2</li>
+              </ol>
+              <div class="card-note" style="margin-top:10px;">핵심: <strong>255 옥텟은 건드리지 말고</strong>, 255 아닌 옥텟만 계산!</div>
+            </div>
+
+            <div class="subnet-box">
+              <h4 class="subnet-h4">② 자주 나오는 마스크</h4>
+              <table class="subnet-table">
+                <thead>
+                  <tr><th>마스크값</th><th>블록크기</th><th>CIDR</th><th>호스트수</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>128</td><td>128</td><td>/25</td><td>126</td></tr>
+                  <tr class="highlight"><td><strong>192</strong></td><td>64</td><td><strong>/26</strong></td><td><strong>62</strong></td></tr>
+                  <tr><td>224</td><td>32</td><td>/27</td><td>30</td></tr>
+                  <tr class="highlight"><td>240</td><td>16</td><td>/28</td><td>14</td></tr>
+                  <tr><td>248</td><td>8</td><td>/29</td><td>6</td></tr>
+                  <tr class="highlight"><td>252</td><td>4</td><td>/30</td><td>2</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="subnet-box">
+              <h4 class="subnet-h4">③ 계산 예시</h4>
+              <div class="subnet-example">
+                <strong>예1) 223.13.234.132 / 255.255.255.192</strong><br>
+                블록크기 = 256 − 192 = <strong>64</strong><br>
+                132 ÷ 64 = 2.06 → 버림 → 2 × 64 = <strong>128</strong><br>
+                → 네트워크: <strong>223.13.234.128</strong><br>
+                → 브로드캐스트: <strong>223.13.234.191</strong><br>
+                <span class="warn">⚠️ 234는 3번째 옥텟! 건드리지 마</span>
+              </div>
+              <div class="subnet-example">
+                <strong>예2) 10.0.0.100 / 255.255.255.240</strong><br>
+                블록크기 = 256 − 240 = <strong>16</strong><br>
+                100 ÷ 16 = 6.25 → 버림 → 6 × 16 = <strong>96</strong><br>
+                → 네트워크: <strong>10.0.0.96</strong><br>
+                → 브로드캐스트: <strong>10.0.0.111</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article id="hdlc" class="card card--amber">
+        <header class="card-head">
+          <h3>9. HDLC / Web Service</h3>
+          <p>설명서 / 호출 / 등록, 프레임과 모드</p>
         </header>
         <div class="card-body">
           <div class="chip-grid three-col">
-            <div class="mini-chip steel"><strong>WSDL</strong><span>설명서</span></div>
-            <div class="mini-chip steel"><strong>SOAP</strong><span>XML 호출 메시지</span></div>
-            <div class="mini-chip steel"><strong>UDDI</strong><span>등록 / 검색</span></div>
+            <div class="mini-chip amber"><strong>WSDL</strong><span>웹 서비스 설명서</span></div>
+            <div class="mini-chip amber"><strong>SOAP</strong><span>XML 기반 호출 메시지</span></div>
+            <div class="mini-chip amber"><strong>UDDI</strong><span>서비스 등록·검색</span></div>
           </div>
 
           <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip steel"><strong>I 프레임</strong><span>정보 프레임</span></div>
-            <div class="mini-chip steel"><strong>S 프레임</strong><span>감독 프레임</span></div>
-            <div class="mini-chip steel"><strong>U 프레임</strong><span>비번호 프레임</span></div>
+            <div class="mini-chip amber"><strong>I 프레임</strong><span>정보 프레임 (데이터 전달)</span></div>
+            <div class="mini-chip amber"><strong>S 프레임</strong><span>감독 프레임 (흐름·오류 제어)</span></div>
+            <div class="mini-chip amber"><strong>U 프레임</strong><span>비번호 프레임 (링크 관리)</span></div>
           </div>
 
           <div class="chip-grid three-col" style="margin-top:14px;">
-            <div class="mini-chip steel"><strong>NRM</strong><span>정상응답 / 허가 후 응답</span></div>
-            <div class="mini-chip steel"><strong>ARM</strong><span>비동기응답 / 선택 응답</span></div>
-            <div class="mini-chip steel"><strong>ABM</strong><span>비동기균형 / 양측 대등</span></div>
+            <div class="mini-chip amber"><strong>NRM</strong><span>정상응답 / 주국 허가 후 응답</span></div>
+            <div class="mini-chip amber"><strong>ARM</strong><span>비동기응답 / 허가 없이 응답</span></div>
+            <div class="mini-chip amber"><strong>ABM</strong><span>비동기균형 / 양측이 대등</span></div>
           </div>
 
-          <div class="card-note">추가로 자주 보이는 것: Ad-hoc = 고정 인프라 없이 / IaaS·PaaS·SaaS = 인프라·플랫폼·소프트웨어 서비스</div>
+          <div class="card-note">Ad-hoc = 고정 인프라 없이 장치끼리 직접 통신. IaaS·PaaS·SaaS = 인프라·플랫폼·소프트웨어 서비스 (클라우드 서비스 모델).</div>
         </div>
       </article>
+
     </section>
 
-    <div class="footer-note">HTML은 카드 높이를 고정하지 않아서 PDF처럼 overflow가 옆 카드 아래로 숨어버리는 문제가 없습니다. 모바일에서는 자동으로 1열로 바뀝니다.</div>
+    <div class="footer-note">HTML은 카드 높이를 고정하지 않아서 PDF처럼 overflow가 숨어버리는 문제가 없습니다. 모바일에서는 자동으로 1열로 바뀝니다.</div>
   </main>
 </body>
 </html>

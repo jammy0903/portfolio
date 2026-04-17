@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>정보처리기사 실기 1단원 SW 설계 전체</title>
+  <link rel="stylesheet" href="./memory-frame.css">
+</head>
+<body>
+  <main class="shell">
+    <a class="back-link" href="./index.html">← HTML 목록으로</a>
+
+    <section class="hero">
+      <p class="eyebrow">정보처리기사 실기 1단원</p>
+      <h1>SW 설계 전체 암기 프레임</h1>
+      <p class="hero-copy">개발 방법론 / 아키텍처 패턴 / 결합도·응집도 / UML 다이어그램 / 디자인 패턴 분류표 전 범위.</p>
+      <div class="ribbon">
+        <a class="route-pill" href="#methodology">개발 방법론</a>
+        <a class="route-pill" href="#arch">아키텍처 패턴</a>
+        <a class="route-pill" href="#coupling">결합도</a>
+        <a class="route-pill" href="#cohesion">응집도</a>
+        <a class="route-pill" href="#uml">UML 다이어그램</a>
+        <a class="route-pill" href="#pattern-summary">디자인 패턴 요약</a>
+      </div>
+    </section>
+
+    <section class="frame-grid two-up">
+
+      <article id="methodology" class="card card--blue">
+        <header class="card-head">
+          <h2>1. 소프트웨어 개발 방법론</h2>
+          <p>순서냐, 반복이냐, 애자일이냐</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid two-col">
+            <div class="mini-chip blue"><strong>폭포수 (Waterfall)</strong><span>단계 순서 진행, 이전 단계 복귀 어려움</span></div>
+            <div class="mini-chip blue"><strong>나선형 (Spiral)</strong><span>위험 분석 반복. 계획→분석→개발→평가 사이클</span></div>
+            <div class="mini-chip blue"><strong>프로토타이핑</strong><span>견본(프로토타입) 먼저 만들어 요구사항 확인</span></div>
+            <div class="mini-chip blue"><strong>애자일 (Agile)</strong><span>짧은 반복(스프린트), 변화에 유연</span></div>
+            <div class="mini-chip blue"><strong>스크럼 (Scrum)</strong><span>스프린트·백로그·데일리 스크럼</span></div>
+            <div class="mini-chip blue"><strong>XP (익스트림 프로그래밍)</strong><span>페어 프로그래밍, TDD, 지속적 통합</span></div>
+          </div>
+
+          <div class="chip-grid three-col" style="margin-top:14px;">
+            <div class="mini-chip blue"><strong>SDLC</strong><span>소프트웨어 개발 생명주기</span></div>
+            <div class="mini-chip blue"><strong>CBD</strong><span>컴포넌트 기반 개발</span></div>
+            <div class="mini-chip blue"><strong>클린 코드</strong><span>가독성·유지보수성 높은 코드</span></div>
+          </div>
+
+          <div class="card-note"><strong>애자일 vs 폭포수:</strong> 폭포수 = 계획 중심, 문서화, 변경 어려움 / 애자일 = 작동 소프트웨어 중심, 변화 수용. 스크럼의 역할: 스프린트(2~4주 반복), 스크럼 마스터(방해 제거), 프로덕트 오너(백로그 관리).</div>
+        </div>
+      </article>
+
+      <article id="arch" class="card card--green">
+        <header class="card-head">
+          <h2>2. 아키텍처 패턴</h2>
+          <p>시스템 전체 구조 설계 방식</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid two-col">
+            <div class="mini-chip green"><strong>계층형 (Layered)</strong><span>상위·하위 계층 분리. OSI 모델 같은 구조</span></div>
+            <div class="mini-chip green"><strong>클라이언트-서버</strong><span>서비스 제공자와 요청자 분리</span></div>
+            <div class="mini-chip green"><strong>MVC</strong><span>Model·View·Controller 분리</span></div>
+            <div class="mini-chip green"><strong>파이프-필터</strong><span>데이터가 파이프를 통해 필터 단계 통과</span></div>
+            <div class="mini-chip green"><strong>이벤트 기반</strong><span>이벤트 발생 시 핸들러 실행</span></div>
+            <div class="mini-chip green"><strong>마스터-슬레이브</strong><span>마스터가 슬레이브에 작업 분산</span></div>
+            <div class="mini-chip green"><strong>MSA</strong><span>마이크로서비스 — 서비스별 독립 배포</span></div>
+            <div class="mini-chip green"><strong>브로커</strong><span>컴포넌트 간 중재자 역할</span></div>
+          </div>
+
+          <div class="card-note"><strong>MVC 핵심:</strong> Model = 데이터·비즈니스 로직 / View = 화면 / Controller = 입력 처리. 시험에서 MVC 각 역할 묻는 문제 자주 출제.</div>
+        </div>
+      </article>
+
+      <article id="coupling" class="card card--rose" style="grid-column: 1 / -1;">
+        <header class="card-head">
+          <h2>3. 결합도 (Coupling) — 낮을수록 좋음</h2>
+          <p>모듈 간 의존성 — 내용 → 공통 → 외부 → 제어 → 스탬프 → 자료 (강 → 약)</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid three-col">
+            <div class="mini-chip rose">
+              <strong>① 내용 결합 (Content)</strong>
+              <span>한 모듈이 다른 모듈의 내부 로직·데이터를 직접 참조·수정. 최악.</span>
+            </div>
+            <div class="mini-chip rose">
+              <strong>② 공통 결합 (Common)</strong>
+              <span>두 모듈이 전역 변수(공유 데이터) 공동 사용</span>
+            </div>
+            <div class="mini-chip rose">
+              <strong>③ 외부 결합 (External)</strong>
+              <span>외부 환경(파일·OS·하드웨어)에 종속</span>
+            </div>
+            <div class="mini-chip rose">
+              <strong>④ 제어 결합 (Control)</strong>
+              <span>제어 신호(플래그·스위치)를 파라미터로 전달해 처리 흐름 제어</span>
+            </div>
+            <div class="mini-chip rose">
+              <strong>⑤ 스탬프 결합 (Stamp)</strong>
+              <span>레코드·구조체 등 자료구조 전체를 파라미터로 전달</span>
+            </div>
+            <div class="mini-chip rose">
+              <strong>⑥ 자료 결합 (Data)</strong>
+              <span>단순 값(스칼라)만 파라미터로 전달. 최선.</span>
+            </div>
+          </div>
+
+          <div class="card-note"><strong>암기 순서 (강 → 약):</strong> 내용·공통·외부·제어·스탬프·자료. 앞쪽일수록 나쁨. 자료 결합이 가장 이상적.</div>
+        </div>
+      </article>
+
+      <article id="cohesion" class="card card--amber" style="grid-column: 1 / -1;">
+        <header class="card-head">
+          <h2>4. 응집도 (Cohesion) — 높을수록 좋음</h2>
+          <p>모듈 내부 요소들의 관련성 — 기능 → 순차 → 통신 → 절차 → 시간 → 논리 → 우연 (강 → 약)</p>
+        </header>
+        <div class="card-body">
+          <div class="chip-grid three-col">
+            <div class="mini-chip amber">
+              <strong>① 기능적 응집 (Functional)</strong>
+              <span>단 하나의 기능만 수행. 최선.</span>
+            </div>
+            <div class="mini-chip amber">
+              <strong>② 순차적 응집 (Sequential)</strong>
+              <span>앞 처리 출력이 다음 처리 입력. 순서 있음.</span>
+            </div>
+            <div class="mini-chip amber">
+              <strong>③ 통신적 응집 (Communicational)</strong>
+              <span>같은 자료를 사용하는 기능들의 묶음</span>
+            </div>
+            <div class="mini-chip amber">
+              <strong>④ 절차적 응집 (Procedural)</strong>
+              <span>관련 기능을 순서대로 수행 (자료 공유 없음)</span>
+            </div>
+            <div class="mini-chip amber">
+              <strong>⑤ 시간적 응집 (Temporal)</strong>
+              <span>같은 시간에 실행되는 기능들의 묶음 (초기화 루틴 등)</span>
+            </div>
+            <div class="mini-chip amber">
+              <strong>⑥ 논리적 응집 (Logical)</strong>
+              <span>유사 기능을 묶어두고 선택 플래그로 실행</span>
+            </div>
+            <div class="mini-chip amber">
+              <strong>⑦ 우연적 응집 (Coincidental)</strong>
+              <span>아무 관련 없는 기능들이 우연히 묶임. 최악.</span>
+            </div>
+          </div>
+
+          <div class="card-note"><strong>암기 순서 (강 → 약):</strong> 기능·순차·통신·절차·시간·논리·우연. 앞쪽이 좋고 뒤쪽이 나쁨. 결합도는 낮추고 응집도는 높여야 좋은 모듈.</div>
+        </div>
+      </article>
+
+      <article id="uml" class="card card--violet">
+        <header class="card-head">
+          <h2>5. UML 다이어그램</h2>
+          <p>구조 다이어그램 / 행위 다이어그램 분류</p>
+        </header>
+        <div class="card-body">
+          <div class="split-box">
+            <section class="subpanel">
+              <h4>구조 다이어그램 (정적)</h4>
+              <ul class="bullet-list">
+                <li><strong>클래스 다이어그램</strong> — 클래스·관계</li>
+                <li><strong>객체 다이어그램</strong> — 인스턴스 상태</li>
+                <li><strong>컴포넌트 다이어그램</strong> — 컴포넌트 구조</li>
+                <li><strong>배포 다이어그램</strong> — 하드웨어 배치</li>
+                <li><strong>패키지 다이어그램</strong> — 패키지 관계</li>
+              </ul>
+            </section>
+            <section class="subpanel">
+              <h4>행위 다이어그램 (동적)</h4>
+              <ul class="bullet-list">
+                <li><strong>유스케이스 다이어그램</strong> — 사용자·시스템 상호작용</li>
+                <li><strong>시퀀스 다이어그램</strong> — 시간 순 메시지</li>
+                <li><strong>활동 다이어그램</strong> — 흐름·작업 흐름도</li>
+                <li><strong>상태 다이어그램</strong> — 상태 전이</li>
+                <li><strong>협업 다이어그램</strong> — 객체 협력 관계</li>
+              </ul>
+            </section>
+          </div>
+
+          <div class="card-note"><strong>자주 나오는 관계:</strong> 연관(Association) / 의존(Dependency) / 상속(Generalization) / 실체화(Realization) / 집합(Aggregation) / 합성(Composition). 시험에서 화살표 방향과 이름을 매핑하는 문제 출제.</div>
+        </div>
+      </article>
+
+      <article id="pattern-summary" class="card card--steel">
+        <header class="card-head">
+          <h2>6. 디자인 패턴 분류 요약표</h2>
+          <p>생성 / 구조 / 행위 한눈에 — 세부는 별도 페이지 참고</p>
+        </header>
+        <div class="card-body">
+          <div class="split-box">
+            <section class="subpanel">
+              <h4>생성 패턴 (5개)</h4>
+              <ul class="bullet-list">
+                <li><strong>Singleton</strong> — 인스턴스 하나</li>
+                <li><strong>Factory Method</strong> — 생성 서브클래스 위임</li>
+                <li><strong>Abstract Factory</strong> — 객체군 생성</li>
+                <li><strong>Builder</strong> — 단계적 생성</li>
+                <li><strong>Prototype</strong> — 복제</li>
+              </ul>
+            </section>
+            <section class="subpanel">
+              <h4>구조 패턴 (7개)</h4>
+              <ul class="bullet-list">
+                <li><strong>Adapter</strong> — 인터페이스 변환</li>
+                <li><strong>Bridge</strong> — 추상화·구현 분리</li>
+                <li><strong>Composite</strong> — 부분·전체 동일 취급</li>
+                <li><strong>Decorator</strong> — 기능 동적 추가</li>
+                <li><strong>Facade</strong> — 단순 창구</li>
+                <li><strong>Flyweight</strong> — 인스턴스 공유</li>
+                <li><strong>Proxy</strong> — 대리 접근 제어</li>
+              </ul>
+            </section>
+          </div>
+
+          <div class="chip-grid three-col" style="margin-top:14px;">
+            <div class="mini-chip steel">
+              <strong>행위 패턴 (11개)</strong>
+              <span>Observer / Strategy / Command / Iterator / Visitor / Chain / Template / State / Mediator / Memento / Interpreter</span>
+            </div>
+            <div class="mini-chip steel">
+              <strong>시험 빈출</strong>
+              <span>Observer·Proxy·Factory Method·Singleton·Visitor·Abstract Factory·Iterator·Adapter</span>
+            </div>
+            <div class="mini-chip steel">
+              <strong>미출제 최우선</strong>
+              <span>Strategy·Decorator·Facade·Builder·Prototype</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    <div class="footer-note">디자인 패턴 세부 내용은 <a href="./정보처리기사_실기_1단원_디자인패턴_상세.html" style="color:#2563eb; font-weight:700;">1단원 디자인 패턴 상세 페이지</a>에서 확인하세요. 결합도·응집도는 순서를 통째로 외우는 게 가장 빠릅니다.</div>
+  </main>
+</body>
+</html>
