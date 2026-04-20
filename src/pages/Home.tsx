@@ -1,7 +1,22 @@
 import { Link } from "react-router-dom";
+import { useRef } from "react";
 import { profile, skills } from "../data/profile";
 
 export default function Home() {
+  const clickCount = useRef(0);
+  const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleHelloClick = () => {
+    clickCount.current += 1;
+    if (clickTimer.current) clearTimeout(clickTimer.current);
+    if (clickCount.current >= 3) {
+      clickCount.current = 0;
+      window.location.href = '/topcit/';
+    } else {
+      clickTimer.current = setTimeout(() => { clickCount.current = 0; }, 1500);
+    }
+  };
+
   const buttonBase = {
     padding: '0.75rem 1.5rem',
     borderRadius: '0.5rem',
@@ -17,7 +32,7 @@ export default function Home() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '5rem 1rem' }}>
       {/* Hero Section */}
       <div style={{ textAlign: 'center', maxWidth: '48rem', margin: '0 auto' }}>
-        <p style={{ color: '#d4789c', fontSize: '1.125rem', marginBottom: '1rem' }}>안녕하세요</p>
+        <p onClick={handleHelloClick} style={{ color: '#d4789c', fontSize: '1.125rem', marginBottom: '1rem', cursor: 'default', userSelect: 'none' }}>안녕하세요</p>
         <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>
           {profile.name}
           <span style={{ color: '#78716c', fontSize: '1.5rem', marginLeft: '0.75rem' }}>입니다</span>

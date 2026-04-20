@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/((?!cert-study|assets).*)", "destination": "/" }
+    { "source": "/((?!topcit|cert-study|assets).*)", "destination": "/" }
   ]
 }

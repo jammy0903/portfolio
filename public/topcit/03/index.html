@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#7B3FA6">
+<title>TOPCIT 03 - 시스템 아키텍처</title>
+<style>
+:root{--accent:#7B3FA6;--accent-dark:#5d2188;--accent-rgb:123,63,166}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:15px}
+body{
+  font-family:'맑은 고딕','Malgun Gothic','Noto Sans KR',-apple-system,sans-serif;
+  background:#F2F2F2;
+  color:#1a1a1a;
+  line-height:1.5;
+  min-height:100vh;
+  padding-bottom:72px;
+}
+
+/* 엑셀 상단 리본 */
+.ribbon{
+  position:sticky;top:0;z-index:100;
+  background:var(--accent);
+  border-bottom:3px solid var(--accent-dark);
+  padding:0 12px;
+  display:flex;align-items:center;gap:10px;
+  height:48px;
+}
+.ribbon-back{
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+  color:#fff;padding:6px 12px;border-radius:3px;
+  font-size:13px;text-decoration:none;
+  display:flex;align-items:center;gap:5px;white-space:nowrap;
+}
+.ribbon-back:active{background:rgba(255,255,255,0.25)}
+.ribbon-title{
+  font-size:14px;font-weight:700;color:#fff;
+  flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* 시트 탭 영역 (상단 메타 정보) */
+.sheet-info{
+  background:#fff;
+  border-bottom:2px solid #D9D9D9;
+  padding:14px 12px 12px;
+}
+.sheet-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--accent);color:#fff;
+  padding:3px 10px;border-radius:2px;
+  font-size:12px;font-weight:700;
+  margin-bottom:10px;letter-spacing:0.03em;
+}
+.sheet-info h1{
+  font-size:20px;font-weight:700;
+  color:var(--accent-dark);
+  margin-bottom:4px;
+}
+.sheet-info p{font-size:13px;color:#666}
+
+/* 통계 행 (엑셀 셀처럼) */
+.stat-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border:1px solid #D9D9D9;
+  border-top:none;
+  background:#fff;
+}
+.stat-cell{
+  padding:10px 8px;text-align:center;
+  border-right:1px solid #D9D9D9;
+}
+.stat-cell:last-child{border-right:none}
+.stat-num{font-size:20px;font-weight:700;color:var(--accent)}
+.stat-label{font-size:11px;color:#888;margin-top:1px}
+
+/* 검색 바 */
+.search-bar{
+  background:#fff;border-bottom:1px solid #D9D9D9;
+  padding:8px 12px;display:flex;align-items:center;gap:8px;
+}
+.search-bar label{font-size:12px;color:#888;white-space:nowrap;font-weight:600}
+.search{
+  flex:1;background:#fff;
+  border:1px solid #BFBFBF;
+  padding:7px 10px;font-size:14px;
+  color:#1a1a1a;outline:none;
+  border-radius:2px;
+  font-family:inherit;
+}
+.search:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--accent-rgb),.15)}
+
+/* 섹션 테이블 */
+.tbl-wrap{padding:0}
+.tbl-header{
+  background:var(--accent);color:#fff;
+  padding:8px 12px;
+  display:grid;grid-template-columns:40px 1fr 28px;
+  align-items:center;gap:8px;
+  font-size:12px;font-weight:700;letter-spacing:0.04em;
+  border-bottom:1px solid var(--accent-dark);
+  position:sticky;top:48px;z-index:40;
+}
+
+/* 섹션 행 */
+.row{
+  background:#fff;
+  border-bottom:1px solid #E8E8E8;
+}
+.row:nth-child(even) .row-hd{background:#F8F8F8}
+.row-hd{
+  display:grid;grid-template-columns:40px 1fr 28px;
+  align-items:center;gap:8px;
+  padding:13px 12px;
+  cursor:pointer;
+  min-height:52px;
+}
+.row-hd:active{background:#EDF3FB!important}
+.row-num{
+  font-size:11px;font-weight:800;
+  color:var(--accent);
+  background:rgba(var(--accent-rgb),.1);
+  border:1px solid rgba(var(--accent-rgb),.25);
+  padding:2px 4px;border-radius:2px;
+  text-align:center;font-family:monospace;
+}
+.row-title{font-size:14px;font-weight:600;line-height:1.35;color:#1a1a1a}
+.row-ch{font-size:11px;color:#999;margin-top:2px}
+.arr{font-size:10px;color:#BFBFBF;transition:transform .15s;text-align:center}
+.row.open .arr{transform:rotate(180deg)}
+
+/* 펼침 영역 */
+.row-body{display:none;background:#FAFAFA;border-top:1px solid #E8E8E8;padding:14px 12px}
+.row.open .row-body{display:block}
+
+/* 키워드 */
+.kw-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.kw{
+  background:#fff;border:1px solid #D9D9D9;
+  color:#555;padding:3px 9px;border-radius:2px;
+  font-size:12px;font-family:inherit;
+}
+
+/* 출제 포인트 */
+.quiz{
+  background:#fff;
+  border:1px solid #D9D9D9;
+  border-left:4px solid var(--accent);
+  padding:10px 12px;margin-bottom:12px;
+  border-radius:0 2px 2px 0;
+}
+.quiz h4{
+  font-size:11px;color:var(--accent);font-weight:800;
+  text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;
+}
+.quiz li{font-size:12px;color:#444;margin-left:14px;margin-bottom:3px}
+
+/* 세부항목 */
+.subs{display:flex;flex-direction:column;gap:8px}
+.sub{
+  background:#fff;
+  border:1px solid #D9D9D9;
+  border-radius:2px;padding:12px;
+}
+.sub-mk{
+  display:inline-block;
+  background:var(--accent);color:#fff;
+  padding:1px 7px;border-radius:1px;
+  font-size:11px;font-weight:700;
+  margin-bottom:5px;letter-spacing:.03em;
+}
+.sub-t{font-size:13px;font-weight:700;margin-bottom:5px;line-height:1.4;color:#1a1a1a}
+.sub-c{font-size:12px;color:#555;margin-bottom:6px;line-height:1.6}
+.bul{list-style:none;border-top:1px solid #F0F0F0;padding-top:6px}
+.bul li{
+  font-size:12px;color:#444;
+  padding:3px 0 3px 12px;
+  position:relative;
+  border-bottom:1px dotted #F0F0F0;
+}
+.bul li:last-child{border-bottom:none}
+.bul li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:11px;top:4px}
+
+/* 하단 시트 탭 네비 */
+.sheet-tabs{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:#F0F0F0;
+  border-top:2px solid #D9D9D9;
+  display:flex;overflow-x:auto;
+  -ms-overflow-style:none;scrollbar-width:none;
+  padding:0 4px;
+  gap:2px;
+  align-items:flex-end;
+  height:48px;
+}
+.sheet-tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex-shrink:0;
+  display:flex;align-items:center;gap:4px;
+  padding:6px 10px;
+  background:#DCDCDC;
+  border:1px solid #BFBFBF;border-bottom:none;
+  border-radius:3px 3px 0 0;
+  font-size:12px;color:#555;
+  text-decoration:none;
+  height:36px;
+  transition:background .1s;
+  white-space:nowrap;
+}
+.tab:active,.tab.active{
+  background:#fff;color:var(--active-color,#1a1a1a);
+  font-weight:700;border-color:#BFBFBF;
+  height:40px;
+}
+.tab .ic{font-size:14px}
+
+/* 인덱스 */
+.idx-header{
+  background:var(--accent);color:#fff;
+  padding:20px 16px;
+  border-bottom:3px solid var(--accent-dark);
+}
+.idx-header h1{font-size:22px;font-weight:700;margin-bottom:4px}
+.idx-header p{font-size:13px;opacity:.85}
+.idx-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;
+  border-left:1px solid #D9D9D9;
+  border-top:1px solid #D9D9D9;
+}
+.idx-card{
+  background:#fff;
+  border-right:1px solid #D9D9D9;
+  border-bottom:1px solid #D9D9D9;
+  padding:18px 14px;
+  text-decoration:none;color:inherit;
+  display:block;
+}
+.idx-card:active{background:#EDF3FB}
+.idx-card .ic{font-size:26px;margin-bottom:8px}
+.idx-card .n{font-size:11px;font-weight:800;color:var(--card-c);margin-bottom:4px}
+.idx-card h2{font-size:14px;font-weight:700;margin-bottom:4px;line-height:1.3;color:#1a1a1a}
+.idx-card .m{font-size:12px;color:#888}
+.idx-card .bar{height:3px;background:var(--card-c);border-radius:0;margin-top:10px}
+
+@media(min-width:600px){
+  .idx-grid{grid-template-columns:repeat(3,1fr)}
+  .sheet-info h1{font-size:24px}
+}
+@media(min-width:900px){
+  body{max-width:900px;margin:0 auto}
+  .sheet-tabs{max-width:900px;left:50%;transform:translateX(-50%)}
+  .ribbon{max-width:900px;left:50%;transform:translateX(-50%);position:sticky}
+}
+
+</style>
+</head>
+<body>
+
+<div class="ribbon">
+  <a class="ribbon-back" href="/topcit">◀ 목록</a>
+  <div class="ribbon-title">🏗️ 03. 시스템 아키텍처</div>
+</div>
+
+<div class="sheet-info">
+  <div class="sheet-badge">기술영역 03</div>
+  <h1>시스템 아키텍처</h1>
+  <p>TOPCIT 에센스 핵심 정리</p>
+</div>
+<div class="stat-row">
+  <div class="stat-cell"><div class="stat-num">49</div><div class="stat-label">소단원</div></div>
+  <div class="stat-cell"><div class="stat-num">152</div><div class="stat-label">세부항목</div></div>
+  <div class="stat-cell"><div class="stat-num">115</div><div class="stat-label">키워드</div></div>
+  <div class="stat-cell"><div class="stat-num">63</div><div class="stat-label">출제포인트</div></div>
+</div>
+
+<div class="search-bar">
+  <label>🔍 검색</label>
+  <input id="search" class="search" type="search" placeholder="소단원명 검색..." autocomplete="off">
+</div>
+
+<div class="tbl-wrap">
+  <div class="tbl-header">
+    <div>NO</div><div>소단원</div><div></div>
+  </div>
+  <div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">고가용성(HA, High Availability)</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 고가용성(HA, High Availability) 개념</li><li>나) HA(High Availabilty) 구성 유형</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">고가용성(HA, High Availability) 개념</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">HA(High Availabilty) 구성 유형</div>
+  
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">결함 허용 시스템</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">결함 허용 시스템(Fault tolerant system)</div>
+  
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">재난복구시스템</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 재난복구시스템(DRS, Disaster Recovery System)의 정의</li><li>가) 클라우드 컴퓨팅과 다른 컴퓨팅과의 비교</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">재난복구시스템(DRS, Disaster Recovery System)의 정의</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">재난 복구 목표</div>
+  <p class="sub-c">X, 클라우드 컴퓨팅 기술 어 클라우드 컴퓨팅의 정의</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">클라우드 컴퓨팅과 다른 컴퓨팅과의 비교</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">Hadoop의 주요기술 요소</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">Hadoop 지원 프로그램</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">라)</span>
+  <div class="sub-t">기타 전문 상용 솔루션</div>
+  
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">빅데이터 시스템의 동향 및 전망</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">빅데이터 시스템의 동향</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">빅데이터 시스템의 동향</div>
+  <p class="sub-c">동향 전망 XI, 데이터 링크계층</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">데이터 링크계층의 개념</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">데이터 링크계층 프로토콜</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">데이터 링크계층 프로토콜</div>
+  <p class="sub-c">다음 그림과 같이 데이터 링크계층의 프레임은 네트워크 계층 패킷에 H|2} Bey 7 추가되어 구성된 한다. 다. 이런 과정을 데이터 링크계층의 캡숄화라고 하고, 수신 측에서는 그 네트워크계층 데이터 링크계층 물리계층 [그림 100] 데이터 링크계층으</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">프레임 헤더와 트레일러</div>
+  <p class="sub-c">프레임 헤더에는 호스트 간 비 동기화를 위한 프리앰블680726:괴 Frame 0610018/가 있으며 물리적 주소인 Destination address, Source address 등이 있다. 물리적 Ost 같을 과정이 역으로 수행되어 디캡숄화라고 캡슬화 작을 알 리는 필드인 SFD(Start of 주소는 480 주소체계 | 프레임의 시 를 가지며 논리적</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">MAC 주소 검색 시나리오</div>
+  <p class="sub-c">[그림 99]에서 사용자 AE 있는 컴퓨터와 라우터 (는 같은 네트워크 구간에 있기 때문에 SA'S 하기 위해서는 MAC 주 AS 알아야 한다. 이런 경우에 사용자 ^가 있는 컴퓨터는 브로드캐스트를 통해 같은 네트워크 구간 내 모든 시스템에게 ARP 248 하게 되며, ARP 요청 시 전달되는 프레임 내 데이터 부분에 [그림 104]와 같은 ARP 패킷이 </p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">데이터 링크계층 구성</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) UDP 특징</li><li>가) SCTP 특징</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">데이터 링크계층 부계층</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">논리 링크 제어(LLC)</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">매체 접근 제어(MAC)</div>
+  <p class="sub-c">04 MAC 주소 검색</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">IP 주소와 MAC 주소 변환 프로토콜</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">MAC 주소 검색 시나리오</div>
+  <p class="sub-c">시스템아키텍처 이해와 활용 08 1066 개요</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">(Internet Protocol Version 6) 주소란?</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">IPv6의 등장배경</div>
+  <p class="sub-c">09 IPv6 주소 체계 및 헤더구조</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">IPv6의 주소체계</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">IPv6의 헤더 구조</div>
+  <p class="sub-c">03 UDP(User Datagram Protocol)</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">UDP 특징</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">UDP 프로토콜</div>
+  <p class="sub-c">04 SCTP(Stream Control Transmission Protocol)</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">SCTP 특징</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">SCTP 프로토콜</div>
+  <p class="sub-c">M3 시스템아키텍처 이해와 활용 시스템아키텍처 이해와 활용 05 데이터 링크계층 오류검출과 오류정정기법 가) 오류제어의 개념 나) 오류검출과 오류정정 06 IEEE 802 표준 가) IEEE 802의 개념 나) IEEE 802.3 표준 다 IEEE 8021 표준 라) IEEE 802.15 표준 Xl, 네트워크층 01 네트워크 계층 개요 및 장비 가) 네트워</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">멀티미디어 네트워크</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 영상압축 유형</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">영상압축 유형</div>
+  
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">멀티미디어 데이터</div>
+  <p class="sub-c">Ct) QoS(Quality of Service)</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">인터넷 전화 개념 및 호 신호 프로토콜</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">VoIP(Voice over Internet Protocol)란?</div>
+  <p class="sub-c">VoP= P 네트워크를 기반으로 패킷 데이타 과 같으며 주요 서비스 구성요소는 Saas 있다. 미디어 게 이트웨이는 멀티미디어 데이터 간의 교환 작업을 수행하고 통해 음성통화를 구현하는 통신기술이다. VoP 시스템의 PAE [그림 138] 미디어 게이트웨이와 시그널링 게이트웨이가 , 변경한 데이터를 해당 네트워크에 전달하는 기능을 수행하며, MGCP(Med</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">VoIP 호 신호 프로토콜</div>
+  <p class="sub-c">VoP 호 신호 프로토콜에는 9102} 11.3230| 있다. SP 프로토콜은 인터넷상에서 통신하고자 하는 지능형 단말들이 서로를 식별하여 그 위치를 찾고, 그들 상호 간에 멀티미디어 통신 세션을 생성하거나 삭제 변경하 기 위한 SAS 명시한 응용계층 시그널링 프로토콜이다. [323 프로토콜은 품질이 보장되지 않은 ALANA 음성, 데이터, 영상 서비스를 </p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">미디어 전송 프로토콜</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) RTP 개념</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">RTP 개념</div>
+  <p class="sub-c">loT(nternet of 110061는 각종 사물에 센서와 통신기능을 내장하여 인터넷에 연결하는 개념으로 인간의 명시적인 개입 St 이 상호 협력적으로 센싱, 네트워킹, 정보 처리를 수행할 수 있는 기술을 의미한다. 동시에 어디에나 존재하고 편재하는 개념으로 시간과 장소에 구애받지 않고 정보통신망에 접속할 수 있도록 하는 기술인 유비쿼터스00041006/</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">RTP 표준화 동향</div>
+  <p class="sub-c">이동통신 기반 loT 관련 BASS 3GPPS} ETSIS 중심으로 제정되어 왔으나 2012년부터 076\424이라는 국 제 협의체 SAS 통해 HES 주도하고 있다. 수많은 장치들을 관리하기 위한 OMA(Open Mobile Alliance)O| = LWM2M(Lightweight M2M) 프로토콜 제정을 통해 서버-클라이언트 구조 기반의 통신 방법을 제</p>
+</div><div class="sub">
+  <span class="sub-mk">라)</span>
+  <div class="sub-t">RTP 주요 프로토콜</div>
+  <p class="sub-c">TS 위한 프로토콜은 경량화에 대한 요구가 가장 크며, 기존에도 일반적으로 사용되고 있어 호환성과 확장성에 유리한 프로토콜이 많이 거론되고 있다. 특히 CoAPL} \/011는 lol 특성상 소형 단말들이 인터넷으로 쉽게 연결되어 데이터를 전 송하는데 적합하여 다양한 아키텍처에 통신 프로토콜로 제시되고 있다. 00 CoAP zh 콜이다. PAS 위의 UP </p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">01 주요기술</div>
+  <p class="sub-c">101의 주요 기술은 센싱 기술, 유무선 통신 및 네트워크 인프라 기술, 01 서비스 및 인터페이스 기술이다. OAS 기술 사물에서 얻을 수 있는 정보는 다양한 AMS 통해서 수집된다. 사물의 주변 상황 정보를 얻기 위해 온도, 습도, 열, 가스 조도, 초음파 등 다양한 센서가 사물 내에 장작된다. 센서는 장시간 동안 SAS 할 수 ? 최소화히 이 필요하다</p><ul class="bul"><li>Z-Wave: 지능형 매시 네트워크 토폴로지를 사용하고 마스터 노드를 가지지 않으며, 저전력과 저대역쪽을 요구하는 장</li></ul>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">시스템아키텍처의 개념</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">텍처</span><span class="kw">국제</span><span class="kw">정보시스템</span><span class="kw">관계</span><span class="kw">구조</span><span class="kw">네트워크</span><span class="kw">문서</span><span class="kw">광의의</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>나) 정보시스템의 구성요소</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">시스템아키텍처의 이해</div>
+  <p class="sub-c">O 시스템아키텍처의 개요 11(정보기술)의 기술을 이용한 시스템을 정보시스템이라 한다. 이 정보시스템은 컴퓨터를 이용하여 서비스를 제공하며 컴 퓨터는 하드웨어와 소프트웨어 조합으로 동작된다. 기업내부에서 사용되는 정보시스템이나 사용자에게 서비스로 제공되 는 정보시스템을 구축할 경우 소프트웨어 설계와 개발뿐만 아니라 하드웨어와 같은 IT 인프라스트럭처10[3</p><ul class="bul"><li>국제 시스템엔지니어링 협회(40085:에서 정의한 시스템아키텍처</li><li>광의의 시스템아키텍처 정의</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">정보시스템의 구성요소</div>
+  <p class="sub-c">O 정보시스템의 개요 시스템의 구성요소는 정보시스템이 서비스를 제공하기 위한 기능을 제공하는 SSS 구성되어 있다. 정보시스템의 컴퓨 팅 파워를 제공하는 서버와 데이터를 저장하는 스토리지, 서버와 스토리지 등 각각의 구성요소 사이의 통신을 제공하는 통신을 네트워크, 정보시스템의 기밀성. 무결성, 가용성을 제공하기 위한 보안으로 이루어져 있다. 세부구성요소는</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">시스템아키텍처 유형</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">블록스토리지</span><span class="kw">보안</span><span class="kw">일스토리지</span><span class="kw">지역별</span><span class="kw">아키텍쳐</span><span class="kw">스토리지</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 시스템아키텍처 유형</li><li>나) 시스템 배치 방식에 따른 시스템아키텍처 분류 [열거형]</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">시스템아키텍처 유형</div>
+  <p class="sub-c">시스템을 구성하는 방식은 다양한 방법으로 제공되고 있다. 시스템 구성은 하드웨어, 의 환경변화에 따라 다양한 방법으로 변화되고 있다. 최근 들어 스마트폰 등의 모바일 템은 웹서비스 중심의 시스템아ㅋ AS 기반으로 서비스를 제공 중에 있다. 또 시스템의 배치방식도 중앙 LSS PAS 서비스를 제공하고 있다.</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">시스템 배치 방식에 따른 시스템아키텍처 분류</div>
+  <p class="sub-c">또한 소프트웨어들의 기술변화와 사용자 장비의 증가에 따라 대부분의 시스 클라우드 서비스가 점차 확대됨에 따라 BEARS | 배치하는 방식에 따라 아키텍처 유형을 분류할 수 있다. JABS 한 Rol 집중적으로 배치6 [는 방식 con 방식에 T= o Az 을 중앙 ASS 아키텍쳐라고 한다. 또한 지역별 시스템 및 응용 시스템을 분산 운영하는 방식을 지역별 </p><ul class="bul"><li>지역별 분산형 시스템 아키텍처</li><li>스토리지</li><li>보안</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">응용 프로그램 제공 방식에 따른 분류</div>
+  <p class="sub-c">O 클라이언트-서버 아키텍처 업무의 규모나 환경에 따라 시스템의 기능을 서버와 클라이언트에 아키텍처이다. 시스템의 기능인 데이터관리, 비즈니스 프로세스, 프리센테이션 SAS 어느 곳에 위치시키나에 따라 서버 와 클라이언트에서 담당하는 역할이 달라진다. 클라이언트에서 응용프로그램을 구동시켜 그래픽 화면 구성을 통해 사용 자 인터페이스의 편의성을 ASS 수 있</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">서버의 스택 구조</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">프로그램</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 서버의 스택구조 개념</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">서버의 스택구조 개념</div>
+  <p class="sub-c">서버는 사용자에게 네트워크를 통해 SSL 서비스를 제공하는 컴퓨터나 프로그램을 말한다. 정보시스템에서 서비스를 제공하기 위해 필요한 SAkS=(Computing 0006/)은 서버에서 제공한다. 서버는 과거 6/에서 메인프레임 1/817「308(이라는 MHS 만들기 시작하면서 탄생되었다. 메인프레임이라는 용어는 oo’ ~ O21 22 |(Meit emory</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">컴퓨터 하드웨어</div>
+  <p class="sub-c">컴퓨터의 역사는 고대에 있었던 AWS Se SUS 기원으로 말하기도 하지만, 현대의 컴퓨터의 시초는 1936년 영국의 수학자 앨렌듀링의 튜링머신이라 할 수 있다. 이 FRIAS 수학적 lah 계산 IS 튜링머신을 Sak 증명하였다. 이 후 1946년 최초의 프로그래밍 가능한 범용 컴퓨터로 알려진 에니약[341&amp;이다. 18.000개의 진공관을 이용하여 무게가</p><ul class="bul"><li>웹 시스템 아키텍처</li></ul>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">프로토콜이란?</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">동일함</span><span class="kw">구소</span></div>
+  <div class="subs"></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">인터넷 주소 체계</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">포트</span></div>
+  <div class="subs"></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">04</div>
+  <div><div class="row-title">인터넷 표준</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">프로세스와 스레드</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">프로그램</span><span class="kw">디스패치</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>나) 프로세스 관리를 위한 기법</li><li>다) 주요 운영체제의 종류</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">프로세스의 이해</div>
+  <p class="sub-c">초기의 컴퓨터 시스템은 한번에 하나의 응용 프로그램만 수행할 수 있었다. 즉 하나의 프로그램이 모든 시스템을 점유하 고 자원을 점유하여 사용할 수 있었다. 하지만 오늘날의 컴퓨터 시스템들은 다수의 프로그램이 병행 수행된다. 운영체제 에서 동작되는 다수의 프로그램이 자원을 공유하고 안정적으로 동작되게 컴퓨터 자원을 Belsic, 프로세스란 수행중인 프로그램을</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">프로세스 관리를 위한 기법</div>
+  <p class="sub-c">(1) 프로세스 생성[00689 Creation) 번호200, Process Identification 우선 순위, 레지스터 정보, 주 프로세스는 병행 수행될 수 있어야 하며, 동적으로 생성 제거될 수 있다. 프로세스는 “fork()” 시스템 호출S 통해 여러 개의 새로운 프로세스를 생성할 시스템아키텍처 이해와 활용 ) © 보조 기억장치 관리 컴퓨터 시스템</p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">주요 운영체제의 종류</div>
+  <p class="sub-c">구분 셀(876!)에서 사용사가 키보드로 명령문을 입력하면 운 네트워크를 통해 분산되어 있는 컴퓨터 AAS 한데 모아 하나의 시스템을 만들어 계산 속도를 증가, }화 기능을 제공하다. 447 |(Command-interpreter) 시스템 스템 프 Lo Ase Ss 수행한디 프로그램 능을 사용하기 위해 사용자에게 제공하는 인터페이스로 시스 영체제의 기능을 </p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">운영체제(OS, Operating System)</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">추상화:</span><span class="kw">관리화:</span><span class="kw">하나의</span><span class="kw">프로세스</span><span class="kw">압축(2070030000)</span><span class="kw">프로세스의</span><span class="kw">가상화:</span><span class="kw">스레드의</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 운영체제의 개요 [열거형]</li><li>다) 스레드(Thread) [열거형]</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">운영체제의 개요</div>
+  <p class="sub-c">운영체제는 제한된 컴퓨터 하드웨어 자원을 효율적으로 관리하여 사용자나 SS 프로그램에게 컴퓨터 자원의 인터페이스 를 제공하는 시스템 소프트웨어이다. 최초의 컴퓨터는 운영체제가 없이 단일목적의 프로그램이 동작되게 되어 있었다. 이 형태는 컴퓨터 자원에 대한 접근을 위한 인터페이스 구현부터 자원의 할당, 회수에 대한 구현을 해야 되기 때문에 프로그램의 속도가 </p><ul class="bul"><li>추상화: 컴퓨터 하드워어의 복잡성을 추상화시켜 SB 프로그램에게 표준화된 APL AZ</li><li>가상화: 여러 개의 응용프로그램과 여러 명의 사용자가 컴퓨터 자원을 공유하고 가상의 단독 컴퓨터 하드웨어를 사용하</li><li>관리화: 컴퓨터 자원의 제약비항에 만족시키면서 컴퓨터 자원의 ASS 최대화시켜 응용 프로그램에게 제공</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">운영체제의 주요 기능</div>
+  <p class="sub-c">운영체제는 컴퓨터 하드웨어를 추상화, 가상회시켜 응용 프로그램에게 리소스를 제공하거나 효율적으로 관리하는 기능 제공한다. 따라서 컴퓨터 하드웨어의 주요 PAAR 관리하는 기능으로 나누어서 SOLAS 이해할 수 있다. 아라에서 는 운영체제의 주요기능을 살펴 보도록 하자 (1) 프로세스 관리 단순히 생각하면 프로세스는 실행중인 프로그램이다. 하지만 단순히 프로</p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">스레드(Thread)</div>
+  <p class="sub-c">0) 스레드 개념 중앙처리장치(나를 사용하는 기본 단위이며, 경량 프로세스00700891! 00068의 라고도 한다. [그림 19!와 같이 일반적으 M3 시스템아키텍처 이해와 활용 로 프로세스는 최소 하나의 AMES 갖는다. 스레드는 코드, 데이터, 파일 같은 기억장치를 공유하고 자신만의 레지스터 와 스택을 생성한다. 프로세스는 중앙처리장치 사용시간을 문맥</p><ul class="bul"><li>하나의 프로세스가 점유한 메모리를 공유하여 멀티스레드에서 같은 메모리 주소로 접근 가능</li><li>스레드의 생성과 문맥교환 비용은 프로세스보다 경제적임</li><li>프로세스의 병렬성을 높여 멀티프로세서를 활용 가능</li><li>압축 기법</li></ul>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">프로세스 동기화와 교착상태</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">세그먼테이션기법:</span><span class="kw">단위</span><span class="kw">현상</span><span class="kw">프로세스</span><span class="kw">색인할당</span><span class="kw">최적화(20078!기법:</span><span class="kw">프로세스의</span><span class="kw">임계구역</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 프로세스 동기화의 개념</li><li>가) 스케줄링의 목적</li><li>가) 스케줄링의 목적 [열거형]</li><li>나) 스케줄링 알고리즘의 종류 및 특징</li><li>나) 가상기억장치의 페이지 교체 기법</li><li>나) 가상기억장치의 페이지 교체 기법 [열거형]</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">프로세스 동기화의 개념</div>
+  <p class="sub-c">두 개 이상의 프로세스가 동시에 처리하는 병행 프로세스가 동일한 자료를 접근하여 변경하거나, 변경하고자 하는 자료의 조작 순서가 실행된 결과에 Hadoop 줄 때를 경합상태(306 0000000)라고 한다. 경합상태에서는 4 |의 프로세스만 자료를 소작하도록 보호해야 하고, 이러한 보호를 위해 프로세스 동기화가 필요하다.</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">임계구역 문제</div>
+  <p class="sub-c">프로세스 동기화를 위해 각각의 프로세스는 코드의 일부분에 임계구역을 정의하고 이 임계구역에서 CHE 프로서스와 공 Holi: HRS AGI NES RIC, 동시에 두 개 이상의 BEMAE To) 임계구역 안에서 실행될 + 없는 상호 배타적 관계이다. [그림 21은 임계구역과 잔류구역에 대한 PAS 보여준다. entry section critical sect</p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">임계구역 문제 해결법</div>
+  <p class="sub-c">임계구역 문제는 임계구역의 공유되는 자료를 변경하는 동안에는 인터럽트 발생을 허용하지 않는 방법으로 동기화 하드 웨어를 구성하는 방법이 있다. 하지만 이러한 하드웨어 방법은 다중 프로세서 환경에서는 시스템의 SBS 감소시켜 Ab 용할 수 없다. 다른 방법은 세마포(367030706(를 이용하는 방법이다. 세마포는 동기화 도구로 세마포 SS 정수 변수로써, </p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">기억장치 관리의 이해</div>
+  <p class="sub-c">중앙처리장치는 스케술링을 이용하여 동시에 여러 개의 프로그램이 공유하는 것처럼 이용률을 향상시켰다. 중앙처리장치 는 BAO 실행시키고 AS 읽기 위해서 기억장치에 명령어외 그램이 zs 세스가 기억장치 내에 존재하지 않아도 실행이 가능하도록 하는 동작하기 위해서는 기억장치에 여러 개의 프로세스가 저장되 자료가 저장되어 있어야 된다. 따라서 여러 개의 프로 어</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">스케줄링의 목적</div>
+  <p class="sub-c">*반응시간의 최소화 예측 가능한 수행 시간 *시스템의 과부하 방지 *균형 있는 자원 활용 *우선 순위 제도 실시 등</p><ul class="bul"><li>프로세스의 공정성</li><li>단위 시간 당 처리량의 최대화</li><li>프로세스 수행의 무한정 연기 방지</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">스케줄링 알고리즘의 종류 및 특징</div>
+  <p class="sub-c">스케줄링 알고리즘의 종류와 SAS &lt;표 8&gt;을 참조한다. + 선점형[+68000100) 스케줄링: 한 프로세스가 0[자원)를 점유하고 있을 때 다른 프로세스가 CPUALL)S 빼앗을 수 있 느 바시 는 방식 + 비선점형 (Non-Preemption) 스케줄링: 일단 한 프로세스에게 CPUALH)7} 할당되면 작업이 완료되기 전까지는 CPUAt AS 다른 프</p><ul class="bul"><li>세그먼테이션기법: 가상기억장치에 보관되어 있는 처리해야 할 AVS 다양한 크기의 논리적인 단위인 세그먼트로 분할</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">가상기억장치의 페이지 교체 기법</div>
+  <p class="sub-c">페이징을 하는 가상기억장치에서 페이지가 모두 채워져 있다면 새로운 메모리 페이지를 보소 기억 장치에서 불러 오기 전에 이를 위한 여유 공간을 만들어야 한다. 페이지 교체 기법은 시스템이 교체될 페이지를 선택하는 것으로 시스템의 효율성 및 성능에 영향을 순다, 최적의 교체 기법이나 프로세스의 ASS 예측하기 어려우므로 현실적으로 구현이 불가능함 AFS{LRU</p><ul class="bul"><li>최적화(20078!기법: 앞으로 가장 오랫동안 사용되지 않을 페이지를 교체하는 기법으로 최소의 페이지 부재율을 가지는</li><li>선입선출(0, First in First Out)7 18: 주기억장치에 AME 순서를 추적하여 제일 처음 적재되었던 페이지를 교체하는</li><li>색인할당</li></ul>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">06</div>
+  <div><div class="row-title">가상 기억장치</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">연결할당</span><span class="kw">연속할당</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 가상기억장치의 구현 기법</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">가상기억장치의 구현 기법</div>
+  <p class="sub-c">가상기억장치는 프로세스에서 참소하는 가상주소2} 주기억의 실제 사용 가능한 영역을 가리키는 실 AIZ=A(Physical 400「689)가 있다. 시스템은 프로세스가 가상주소에 접근할 때마다 메모리관리장치04, Memory Management Uni) 통해 이를 실제주소로 빠르게 변환해야 한다. 블록의 구성에 따라 페이징[^39000)기법과 세그먼테이 션기</p><ul class="bul"><li>연속할당</li><li>연결할당</li></ul>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">07</div>
+  <div><div class="row-title">파일 시스템</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">파일시스템의 이해</div>
+  <p class="sub-c">파일시스템은 운영체제 자료와 프로그램에 대해 쉽게 찾고 접근할 수 있도록 관련된 정보 자료를 저장하는 체계로서 A 제적인 파일들의 집합체와 시스템 내의 모든 파일에 관한 정보를 제공하는 디렉토리 구조이다.</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">08</div>
+  <div><div class="row-title">파일의 개념</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">위차:</span><span class="kw">디렉토리</span><span class="kw">이름:</span><span class="kw">시간,</span><span class="kw">파일</span><span class="kw">보호</span><span class="kw">크가:</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>다) 운영체쩌별 파일시스템의 종류</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">운영체쩌별 파일시스템의 종류</div>
+  <p class="sub-c">운영체제 파일시스템 유닉스 Boot Block, Super Block, Bitmap Block, itnode, Data Block 리눅스 확장파일시스템(6, ext2, 803, 804). ZFS, ResierFS, XFS 솔라리스 ZFS, UFS oH OS HFS, 나아 윈도우 FAT, NTFS</p>
+</div><div class="sub">
+  <span class="sub-mk">라)</span>
+  <div class="sub-t">UNIX의 i-node</div>
+  <p class="sub-c">유닉스 시스템에서 -0006는 파일/디렉토리의 AHS 통해 할당, 적용, 생성, 링크, 삭제의 역할을 수행한디 , 파일 디렉투리 , , 1006블록 데이터 블록 파일 {6000 ㅣ. 원본 파일 데이터 + inode + inode table + i number - addressing 10006 구성요소 내용 , - 한 파일이나 디렉터리의 모든 정보 포함 10</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">08</div>
+  <div><div class="row-title">입출력시스템</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">중앙처리장치(CPU, Central Processing Unit)</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">순차적</span><span class="kw">데이터버스:</span><span class="kw">공간적</span><span class="kw">주소버스:</span><span class="kw">명령어</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) CPU의 정의</li><li>다) CPU의 구성요소</li><li>나) 컴퓨터 아키텍처의 종류</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">CPU의 정의</div>
+  <p class="sub-c">메모리 퓨터 아키텍처 분리하여 [그림 3의 와 같이 CPULHEF(CPUS} 캐시)에서는 서 BSS 해독하고, 산술논리연산이나 데이터 처리를 실 중앙처리장치(는 컴퓨터의 가장 중요한 부는 장 치이며, 프로그램의 실행과 데이터를 처리하는 중추적 기능의 수행을 담당하는 요소이다.</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">CPU의 수행 동작</div>
+  <p class="sub-c">CPUS &lt;표 9/에서 보는 바와 같이 모든 명령어들에 대하여 공통적으로 수행하는 기능과 명령어에 따라 필요한 경우에만 수행하는 기능으로 나누어 동작한다. &lt;표 9) CPU의 수행동작 구분 세부동작 설명 공통적 | 거령어 인출 기억장치로부터 명령어를 읽어옴 = 명령어 sHSE(Instruction Decode) 수행해야 할 동작을 결정하기 위해서 인출된 명</p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">CPU의 구성요소</div>
+  <p class="sub-c">중앙처리장치는 [그림 33|와 같이 제어장치, 연산장치, 레지스터 그리고 이들을 연결하여 데이터를 전달하는 버스로 구성 되어 있다. @ 제어유닛: 프로그램 코드(명령어)를 해석하고, 그 것을 실행하기 위한 제어신호들(0000 99089;을 순차적으 시스템아키텍처 이해와 활용 ) + 입출력 장치(/0 Device: 입력장치000 device), 출력장치(0.</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">컴퓨터 아키텍처의 종류</div>
+  <p class="sub-c">컴퓨터 OF MINS] 종류에는 1945년 폰노이만에 의해 발표된 프로그램 내장(38060-ㅁ09107 설계 원리를 적용한 구조인 폰노이만 아키텍처와 명령 메모리와 데이터 메모리를 분리한 하버드 아키텍처가 있다, 두 방식은 [그림 sila 같이 메모리 형태가 다르며, 21249] 장단점이 있다. 폰노이만 아키텍처: 는 메모리로부터 명령을 읽고, 메모리로부터</p><ul class="bul"><li>주소버스: CPU} 외부로 발생하는 주소정보를 전송하는 신호 선들의 집합</li><li>데이터버스: :가 기억장치 혹은 「/0장치와 사이에 데이터를 전송하기 위한 신호선의 집합</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">라)</span>
+  <div class="sub-t">명령어 사이클 (Instruction cycle)</div>
+  <p class="sub-c">CPU7} 한 개의 명령어를 실행하는데 필요한 전체 처리과정으로서, CPU7} 프로그램 실행을 시작한 순간부터 MAS 끄거 나 회복불가능한 오류가 발생하여 중단될 때까지 반복한다. 명령어 사이클은 [그림 34 를 인출하여 연산 완 료 시점까지 인출 사이클, 간접 사이클, 실행 사이클, 인터럽트 사이클로 구성된다. M3 시스템아키텍처 이해와 활용 + 실무 미</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">컴퓨터의 기본 구조</div>
+  <p class="sub-c">컴퓨터의 기본기능은 프로그램 SCS 정해진 순서대로 실행하는 것이다. 즉, 필요한 데이터를 읽어서[6830; 저리하고 , M&amp;t(Store)SIC}. 컴퓨터의 주요 구성요소는 [그림 30]과 같디 중앙처리장치(42. Central Processing Unit): Z2A|A(processore}TS 하며, 프로그램 실행'과 '데이터처리 라는 중추 적인 기능의</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">기억장치의 계층구조</div>
+  <p class="sub-c">기억장치는 [그림 35]와 같이 상위층으로 갈수록 비트당 가격이 높아지고, 용량이 감소하며, 액세스 시간은 짧아지고, CPU 에 의한 액세스 빈도는 높아진다. 내부메모리 (Internal Memory) 비 저 [그림 35] 기억장치의 계층구조 M3 시스템아키텍처 이해와 활용 인출 = 메모리 간접 인출 실행 프로세서 실행 인터럽트 ㄴ [그림 34] 명령어 사</p>
+</div><div class="sub">
+  <span class="sub-mk">마)</span>
+  <div class="sub-t">명령어 집합구조, CISC와 RISC</div>
+  <p class="sub-c">명령어 집합00604예001 set) 또는 명령어 집합 7A(Instruction set architecture, SAJE 마이크로프로세서가 인식해서 기능 을 이해하고 실행할 수 있는 기계어 명령어를 말한다. 명령어 집합 PAE 자료형, 명령어, 레지스터, 어드레싱 모드, 메모 리 구조, 인터럽트, 예외 처리, 외부 입출력을 포함한 프로그래밍 관련 컴퓨터 </p><ul class="bul"><li>공간적 지역성: 기억장치 내 인접하여 저장된 데이터들이 연속적으로 액세스될 가능성이 높음</li><li>순차적 지역성: 분기 하지 않는 한 명령어들은 기억장치에 저장된 순서대로 인출되어 실행됨(약22%)</li></ul>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">04</div>
+  <div><div class="row-title">입출력 장치</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">인공</span><span class="kw">저장</span><span class="kw">계산</span><span class="kw">반도체</span><span class="kw">보존</span><span class="kw">저장장치의</span><span class="kw">오류검출</span><span class="kw">셀(저장</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 입출력 장치의 개념</li><li>나) I/O제어기의 구조와 주소지정 방식의 종류</li><li>다) 기억장치의 분류 및 특징</li><li>가) 뉴로모픽칩 [열거형]</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">입출력 장치의 개념</div>
+  <p class="sub-c">중앙처리장치 내에서 수행할 더 ‘IES 주기먹장지 ol 7/2171 입력동작과 수행한 ATS 주기억 장치에서 출력매체 로 이동 키는 출력동작을 수행하는데 필요한 장치이다.</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">I/O제어기의 구조와 주소지정 방식의 종류</div>
+  <p class="sub-c">입출력 처리를 위해서는 [그림 sola} 같은 |/&lt;제어기가 필요하며, /0제어기는 다음과 같은 역할을 수행한다. + 1/0 장치의 제어와 타이밍조절 + /O 장치와의 통신 담당 *데이터버퍼링 기능 수행 데이터 버스 데이터 레지스터 |“ gol Sy} 상태/제어 레지스터 Le yo 상태신호 | YQ} 주소 버스 타이밍 및 제어회로 00 ! 장치 ] 제어 신</p><ul class="bul"><li>cPugto| 통신 담당</li><li>오류검출</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">직접 메모리 접근</div>
+  <p class="sub-c">@ DMA\(Direct Memory 400659(의 개념 DMAE CPUS] 도움없이 /O 장치가 직접 메모리에 접근하는 방식으로, 매^컨트롤러가 버스를 제어하고 /0와 메모리가 정보를 직접 전송한다. [그림 의 는 매/^컨트롤러가 포함된 시스템 구조이다. DMA 사용하면 고속의 I/O 장치의 경우 CIES CPU| 실제적인 프로세스 작업 시간이 감소하는</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">기억장치의 성능 평가 요소</div>
+  <p class="sub-c">+ 접근 AlZHAccess time) *사이클 AIZKCycle time) *데이터 전송률 *가격(0060</p><ul class="bul"><li>저장 용량</li><li>저장장치의 CHAZ</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">기억장치의 분류 및 특징</div>
+  <p class="sub-c">기억장치는 용도, 물리적 저장방식, 데이터유지, 접근방식, 내용보존 여부에 따라 다양하게 분류될 수 있다. &lt;표 12) 기억장치의 분류 분류 기준 설명 종류 주기억장 it ABA? 리할 램이나 데이터를 일시적으 주기억장치!/30 1가처 |할 프로그램이나 데이터 |적으로 RAM, ROM memory device) 저장하는 기억장치 용도 보조기억장치 주기억장치</p>
+</div><div class="sub">
+  <span class="sub-mk">라)</span>
+  <div class="sub-t">주소지정 방식</div>
+  <p class="sub-c">주기억장치에서 자료가 저장된 위치를 주소(600659!라 하며 제한된 명령어 비트들을 적절하게 이용하여 명령어를 지정 하고 기억장치의 SSS 효율적으로 사용할 수 있도록 다양한 주소지정 BAIS 제공한다. Nan 건 0거 Hom J 소지정 HtAl(Direct Addressing Mode) 소지정 BtAl(indirect Addressing Mode) FA</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">뉴로모픽칩</div>
+  <p class="sub-c">뉴로모픽칩은 뉴로모픽 컴퓨팅의 핵심 기술인 뉴로모픽칩은 사람의 사고 과정과 비슷하게 정보를 처리하는 새로운 반도 체로 뇌의 작동방식을 최대한 실리콘에 — 기술이다. 등이 탑재 + HOO) 일부 소자는 뇌의 신경세포인 뉴런의 역할을 담당하며, 메모리칩은 뉴런과 뉴런 사이를 이어주는 AMA 기능 담당 며, 인간의 뇌처럼 학습하고 연산하는 능력까지 증가 con </p><ul class="bul"><li>반도체 칩 안에는 여러 개의 '코어(606; 들이 존재하며, 코어에는 트랜지스터를 포함한 몇 가지 전자 소자들과 메모리</li><li>인공 뉴런 역할을 하는 코어를 사람의 뇌처럼 병렬로 구성하였기 때문에 적은 전력만으로 많은 양의 데이터 처리가 가</li><li>셀(저장 ㆍ연산) 밴드위스(연결) 구조 + 뉴련(신경기능), AAAS eS)</li><li>각각의 빈도체가 정해진 기능만 수행 기능 ㆍ 저장과 연산 등을 함께 처리</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">양자컴퓨터</div>
+  <p class="sub-c">양자컴퓨터는 양자 역학 고유의 중첩 Vs! 등의 원리에 따라 다수의 정보를 동시에 초고속으로 Hele 수 있는 새로운 념의 컴퓨터이다. 중첩과 AEl 등 양자 역학적 HAS 이용하여 다수의 정보를 동시에 연산할 수 있도록 구현된 컴퓨터로 첩괴 컴퓨터로 특정 연산에 최적 화된 초고속 대용량 컴퓨팅 기술 원리에 기반하며, 양자비트(000!, 큐비트;를 정보처리</p><ul class="bul"><li>계산 Bal 해밀턴단열 변화 ㅣ Tol ole 내성 놓다 유니터리 회전</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">메모리 구조에 의한 병렬 처리 시스템 분류</div>
+  <p class="sub-c">00 SMP(CHAS 다중 프로세서, Symmetric Multiorocessor) 모든 프로세서가 메인메모리를 공유메모리로 사용하는 강결합 시스템 PAS 데이터 전달은 공유메모리를 이용할 + 있 어 프로그램이 용이하다. 하지만 확장의 어려움이 있고, 내부버스를 이용하여 메인 메모리에 접근하여 데이터를 공유하7 때문에 버스에 병목현상이 발생할 수 있다 oa</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">병렬 처리 시스템(Parallel Processing System)</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">지시문</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 병렬 처리 시스템의 개념</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">병렬 처리 시스템의 개념</div>
+  <p class="sub-c">병렬처리는 하나 또는 하나 이상의 독립된 운영체제가 여러 개의 프로세서를 관리하고 여러 작업을 처리하는 것이다. 병 SAAS 위한 프로그램 개발언어와 문법이 별도로 있다. 병렬로 처리할 경우 처리속도는 빠르며 기억장치를 공유할 수 있다. 여러 개의 프로세서로 동작되게 되어, 일부 하드웨어에서 오류가 발생하더라도 전체 시스템의 동작에는 영향이 적 다. 많은 </p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">병렬 처리 시스템의 플린에 의한 분류</div>
+  <p class="sub-c">병렬 컴퓨터 프로세서의 구조 단일 명령어 스트림 단일 명령어 스트림 다중 명령어 AGEL CHS 명령어 스트림 단일 데이터 스트림 다중 데이터 스트림 단일 데이터 스트림 다중 데이터 스트림 (SISD) (SIMD) (MISD) (MIMD) 단일 페트 배열 공유 분산 프로세서 프로세서 프로세서 기억장치 기억장치 대칭 비균일 다중 프로세서 || 기억장치 액세스</p>
+</div><div class="sub">
+  <span class="sub-mk">마)</span>
+  <div class="sub-t">병렬 프로그래밍 기술</div>
+  <p class="sub-c">(1) 컴파일러 기술-0060/- 0060\는 컴파일러 디렉티브가60006) 기반의 병렬 프로그래밍 421이다. 여기서 디렉티브 기반이라는 의미는 병렬처리 를 생각하지 않고 순차적으로 작성된 프로그램에 디렉티브를 추가함으로써 원하는 부분만 병렬적으로 처리할 수 있다는 것을 의미한다. 0080\/의 수행모델은 fork/join 모델이다. 처음 프로그램은 마스</p>
+</div><div class="sub">
+  <span class="sub-mk">바)</span>
+  <div class="sub-t">그래픽 처리 프로세싱 기술</div>
+  <p class="sub-c">00) GPU(Graphics Processing Unit) 컴퓨터의 그래픽스 ANS 전문적으로 담당하는 하드웨어로, 3D 그래픽스 렌더링을 하는데 주로 사용된다. GPUE 부동 소수점 AMS 하는 소형의 코어 수천 개로 구성되어 있어 병렬로 데이터를 처리하므로, 소수의 코어로 구성된 에 비 | 그 성능이 매우 뛰어나다. 대용량 영상 데이터 처리를 위한 G</p>
+</div><div class="sub">
+  <span class="sub-mk">라)</span>
+  <div class="sub-t">스토리지 용량 관리 기술</div>
+  <p class="sub-c">@ 씬 프로비저닝(110 Provisioning) 기존 스토리지 7|SS Thick LUN(Logical Unit 44006&quot;방식의 고정 할당방식으로 데이터 저장공간을 낭비하였다. 씬 프로 비저닝은 실제 데이터의 사용하는 공간을 110 LUNCS 매핑하여 데이터를 할당하는 스토리지를 가상화한 기술이다. or = Cove Olt 라우드컴퓨팅에서 사용자가 요구</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">스토리지 기술</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 저장장치의 개념</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">저장장치의 개념</div>
+  <p class="sub-c">컴퓨터 시스템이 데이터를 접근하여 명령을 실행하기 위해 저장장치를 이용한다. 주기억장치는 메인메모리를 이용하지만 보조기억장치를 이용하여 데이터를 영구적으로 저장하고 활용한다. 정보시스템의 웹 서버, WAS, 데이터베이스에서도 모 두 영구적인 보조기억장치인 저장장치가 필요하다. 웹 서버와 WASS! 운영체제를 저장하거나 응용 프로그램의 바이너리 파일이 저장되</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">저장장치와 서버의 연결</div>
+  <p class="sub-c">최근 멀티미디어 데이터 등의 대용량 데이터가 사용됨에 따라 컴퓨터 시스템에 저장해야 되는 데이터량이 증가되었다. 데 이터 용량이 늘어남에 따라 단일 디스크로 저장할 수 있는 용량을 넘어 별도의 대용량의 스토리지 시스템을 구성해야 된 다. 스토리지 시스템은 단일 디스크로 처리할 수 없는 대용량을 저장하기 위해 디스크를 묶어 논리적으로 사용하는 기술 을 말한다</p>
+</div><div class="sub">
+  <span class="sub-mk">마)</span>
+  <div class="sub-t">저장장치 디스크 스케줄링</div>
+  <p class="sub-c">0) 디스크 스케줄링 데이터를 저장하는 디스크 드라이브는 회전되는 자기 디스크를 이용하는 장치이다. 이 디스크 드라이브에 입출력을 요 청하게 되면 어느 요청을 먼저 처리하고 데이터를 읽는 헤드를 어떻게 움직이냐에 따라 시스템의 성능이 크게 좌우된다. 따라서 디스크 스케줄링은 다수의 사용자가 서로 다른 작업을 처리하기 위해 디스크 드라이브에 입출력을 요청할 </p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">고가용성 저장장치</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">기능</span><span class="kw">기술</span><span class="kw">솔루션</span></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">RAID(Redundant Array of Independent Disks) 기술</div>
+  <p class="sub-c">대용량 스토리지 JAMS 막대한 양의 데이터를 안전하게 저장할 수 있도록 오류 제어장치와 백업 기능을 갖는 것이 반적이다. RAID 기술은 다수의 디스크를 배열하고 상호간의 결합을 통해 별도의 디스크 유닛을 만들어 장애 발생 요안 최소화 시키고 접근 성능을 향상시키는 저장장치 기술이다. ^410의 주요 특징은 가용성 향상, 용량 확장, 속도 향상이 있다. </p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">백업 스토리지: LTO, VIL</div>
+  <p class="sub-c">0) LTO(Linear 1306-0060) 고속 데이터 처리 및 대용량을 지원하는 공개 테이프 드라이브 표준 기술이다. LIOE 각각 물리적 장치와 기술을 의미하 지만, 같은 말로 통용되기도 한다. 테이프 백업 장비, 테이프 미디어 장비, LTO 장비, LTO 라이브러리, 10 등등 혼재돼 불리기도 한다. 2000년에 처음으로 HHS LTOAS 용량 10</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">임베디드 시스템 개요</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">임베디드</span><span class="kw">하나</span><span class="kw">시스템</span><span class="kw">방식</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 영상압축 유형</li><li>나) 임베디드 시스템의 특징</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">영상압축 유형</div>
+  <p class="sub-c">멀티미디어 네트위크에서 대부분의 트래픽을 차지하는 영상 데이터의 압축유형은 무손실 압촉(가역 압축(과 손실 압촉시 가역 압촉(으로 나눌 수 있다. 무손실 압축은 가역압축이라고도 하며, 압축된 IAS 복원시 원래의 데이터 의 정보손실 없이 복원하는 방식을 말한다. 손실 압축보다 압축률이 낮은 것이 특징이다. 손실 압촉은 비가역 압축이라고도 하며, HSE! 데</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">멀티미디어 데이터</div>
+  <p class="sub-c">멀티미디어 데이터에는 텍스트, 이미지, 비디오, 오디오 데이터가 있는데 텍스트는 평문(080 text), 비선형 하이퍼텍스트 °| 형태를 가지며, 기본 언어는 심볼들을 표현하기 위한 유니코드(400006(이며, 무손실 압축방식이다. 멀티미디어에서 이미지는 정지영상으로 불리며 사진, 팩스 페이지, 동영상의 프레임 하나를 말한다. [그림 70]과 같이 이미 지</p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">임베디드 시스템의 개발 과정</div>
+  <p class="sub-c">|베디드 시스템은 [그림 7의 9} 같은 절차로 개발되며, 일반적인 정보시스템 개발과 달리 하드웨어 개빌과정이 포함되는 시스템 요구 분석 하드워어/소프트워어 공동 설계 모텔 ee) ' 하드웨어 인터페이스 소프트웨어 i 파트개발 향목개발 “ 향목개발 | + &lt;——~715%1 물리적 검사 시스템 통합 및 테스트 + 000 품질검사 평가 및 인수 검증 유지 보수</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">임베디드 시스템의 특징</div>
+  <p class="sub-c">임베디드 시스템은 특정 임무만 수행시키기 때문에 설계자들이 최적회하여 그 크기와 생산 비용을 줄이고 신뢰성과 성능을 향상시킬 수 있다 0 제비용 많은 임베디드 시스템이 수백만 개 규모로 양산되기 때문에, 생산 비용을 줄이는 것이 주요 관심사 중 하나일 수밖에 없 다. 몇몇 임베디드 시스템들은 대단한 처리 성능과 AS 필요로 하지 않기 때문어, 그러한 시스템</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">04</div>
+  <div><div class="row-title">임베디드 운영체제</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 임베디드 운영체제의 개념</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">임베디드 운영체제의 개념</div>
+  <p class="sub-c">임베디드 운영체제는 기계나 기타 제어가 필요한 시스템에 대해, 제어를 위한 특정 기능을 수행하는 컴퓨터 시스템에서 작하는 응용 프로그램을 수행하기 위하여 최적화된 운영체제로, 마이크로 프로세서가 내장된 하드웨어를 가지고 정해 진 목적을 수행하기 위해 특성 시스템에 최적화 되어 있는 운영체제이다. 초창기 임베디드 시스템의 경우 어셈블리를 사 용하여 하드웨어를</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">임베디드 운영체제의 구조 및 적용기술</div>
+  <p class="sub-c">임베디드 운영체제는 [그림 73]과 같이 일반적으로 낮은 사양의 프로세서, 제한된 메모리 및 저장 장치, 열악 조건에서 안정된 응용 프로그램의 수행을 지원하기 위한 구조를 가진다. pel 전원제어 |원하는 특징이 있다 [그림 73] 임베디드 운영체제의 구조 그리고 임베디드 운영체제에 적용된 기술은 &lt;표 22&gt;와 같이 실시간, 소형/경량화, MASS ㅅ 시스</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">임베디드 하드웨어</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">임베디드 시스템의 핵심, 마이크로 프로세서</div>
+  <p class="sub-c">임베디드 시스템이 더 많은 기능과 성능을 소화할 수 있는 것은, 그만큼 여기에 사용되는 프로세서가 기기 구동에 요구되 는 성능을 내주는 덕분이다. 초기의 마이크로 프로세서1040 Processor Unit, 이하 MPU}E 하나의 칩에 데이터 처리를 위 한 레지스터, 수학적 HAS 위한 (080 Logic Unit), 결과값을 저장하는 130 등의 PAO]</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">임베디드 소프트웨어</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 임베디드 소프트웨어의 정의</li><li>나) 임베디드 소프트웨어의 특징</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">임베디드 소프트웨어의 정의</div>
+  <p class="sub-c">임베디드 소프트웨어란 임베디드 시스템에 탑재되는 소프트웨어를 트웨어 정의 및 기술분야 말한다. 임베디드 시스템의 응용 분야가 다양해지면서, 예전에는 단순했던 임베디드 소프트웨어가 점점 더 복잡해지고, 다양한 기능을 처리할 수 있게 되었다 임베디드6/\의 주요기술분야는 &lt;표 20&gt;과 같이 임베디드 기본응 임베디드 미들웨어. 임베디드 시스템 소프트웨어. 임 베</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">임베디드 소프트웨어의 특징</div>
+  <p class="sub-c">임베디드 소프트웨어는 물리적 실체가 있는 제품 속에 내장되어 물리적 환경과 끊임없이 상호작용 한다. 즉, 물리적 환경 으로부터 지속적으로 신호를 받아 처리해야 a 경우에 따라서는 사용자의 요구사항을 입력 받아 물리적 환경의 변화까 지 고려해서 반응해야 하는 경우도 있다. 또는 컴퓨터나 스마트폰과 같이 사용자의 요구사항에만 대응하는 SLE 있다. 그래서 임베</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">임베디드 하드웨어의 기술 동향</div>
+  <p class="sub-c">© 커넥티비티 적용 atc 산업과 전통적인 산 적용되던 WA, LTE, BLE, ZigBee2} 같은 확대됨 (2) 저전력 32 비트 프로세서화 |베디드용 프로세서는 9비트 프로세서에서 는 비율이 급격히 증가하였으며 리눅스와 업 융합화 및 01 SMM 센서 네트워크 같은 기기 같은 범용 우영 간 연동성 다양한 디바이스 간의 커넥티비티 기술이 임베디드에 적 </p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">정보시스템의 구조</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">운영체제(26)</span><span class="kw">응용서버</span><span class="kw">1-모니터(113788예07</span><span class="kw">실시간</span><span class="kw">운영체제</span><span class="kw">서버</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 정보시스템의 개념</li><li>다) 임베디드 운영체제의 종류와 동향</li><li>다) 임베디드 운영체제의 종류와 동향 [열거형]</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">정보시스템의 개념</div>
+  <p class="sub-c">정보시스템은 기업 같은 조직이 필요한 정보 제공이나 업무처리와 같은 비즈니스 절차들을 ae 정보기술 (1, InformationTechnology)S 이용한 시스템이다. 정보기술 관련 인력이 하드웨어와 소프트웨어 등의 정보기술 구성요소를 이 용하여 정보기술 서비스를 제공할 수 있는 시스템을 만들어 조직의 업무 절치를 수행할 수 있도록 한다. [그림 75!와</p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">임베디드 운영체제의 종류와 동향</div>
+  <p class="sub-c">임베디드 소프트웨어는 기기의 범위가 매우 넓고 지원 운영체제도 많은 특징이 있지만 크게 정해진 시간안에 동작하는 조 건을 만족시켜야 하는 실시간 운영체저와 그렇지 않은 운영체제로 구분된다. 제로 VxWorks, VRTX, QNX, pSOS 등이 있다. 동작 환 Embedded Window XP, Windows CE $0| 있다. 경에 SYS 둔다. 대표적인</p><ul class="bul"><li>실시간 운영체제 (RTOS): 제한 시간에 영향을 받는 응용 프로그램이나 하드워어 제어에 중점을 둔다. 대표적인 운</li><li>비 실시간 운영체제: 개발의 Hels, 확장성, 다양한 동작</li><li>운영체제(26) 운영체제는 응용 플랫폼을 운영하고 관리하며, 응용프로그램과 플랫폼간의 인터페이스를 제공하는 시스</li><li>웹 응용 MH(WAS, Web Application Serveri= 웹 클라이언트 요청에 대해 안정적인 트랜잭션 처리를 가능하게 해주</li><li>1-모니터: 분산트랜잭?</li></ul>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">정보시스템 용량 산정</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">디스크:</span><span class="kw">사용자</span><span class="kw">비즈니스</span><span class="kw">기초자료</span><span class="kw">필요시</span><span class="kw">참조모델을</span><span class="kw">스토리자:</span><span class="kw">성능에</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>나) 정보시스템 구조 [열거형]</li><li>다) 규모 산정 참조 아키텍처 [열거형]</li><li>라) 규모 산정 절차</li><li>라) 규모 산정 절차 [열거형]</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">정보시스템 구조</div>
+  <p class="sub-c">정보시스템을 구성하기 위한 PRE 여러 유형이 있으며 웹 시스템아키텍처, 클라이언트-서버 시스템아키텍처가 대표석 이다. 최근 대부분의 정보시스템은 3-계층 기반의 웹 시스템아키텍처로 구성하는 것이 일반적이며, 이러한 정보시스템은 구조적 관점에서 [그림 76]과 같이 물리적 영역(하드웨어)과 프로그램 영역(소프트웨어)으로 구분할 수 있다. 리 JDBD | c</p><ul class="bul"><li>성능에 떠른 분류</li><li>디스크: CPU 규모산정에 따른 서버 구성방안에 의거하여, 서버별 OS, 시스템 S/W, 08의 데이터, DBO! 아카이브</li><li>스토리자: CPUS 기준으로 산정된 서버 규모에 따라 필요한 스토리지의 FOE 산정</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">규모 산정 참조 아키텍처</div>
+  <p class="sub-c">규모산정은 서버단위로 이루어지므로 규모 산정을 수행하는 사람은 구축하고자 하는 시스템에 대한 전체적인 아키텍처의 개념적 SAS STO] 둘 필요가 있다. 오늘날 대부분의 정보시스템 아키텍처는 [그림 sila 같이 3-계층(16&quot;으로 구성되 어 있다. 저그 고 정의객체상의 동작으로 사상 프리젠테이션 | | 비즈니스 로직 | | 데이터 서비스 : 표준 인터페이</p><ul class="bul"><li>비즈니스 기능을 비즈니스 접근 제공</li><li>사용자 입력 수집 : 데이터 처리 규칙 포함 + 데이터 저장</li><li>비즈니스 서비스 접근 제공 정의 : 메임프레인 데이터 베이스</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">라)</span>
+  <div class="sub-t">규모 산정 절차</div>
+  <p class="sub-c">구축방향 및 기초자료 및 참조모딜결정및 ㅣ | ㅣ 첩조모먼빔 기초자료 조사 &gt; 업무분석 &gt; 서버 규모산정 가중치 적용 OD 시스템 구축 방향 및 기초 자료 조사 정보화 NAS 위한 HW 용량 산정의 정확성을 확보하기 위해서는 구축 대상 업무 및 시스템에 대한 기초자료가 필요하 , 정확한 기초 자료의 확보를 위해서는 무엇보다도 사용자와의 협조 관계가 필수적이</p><ul class="bul"><li>필요시 신규추가 업무량과 각 업무별 연관성 및 복잡도 분석을 수행하며, 기초자료 및 업무분석 결괴를 통해서 각 업무</li><li>기초자료 및 업무분석 내용에 다한 검증을 수행</li><li>단계2에서 조사된 업무분석 자료를 기반으로 각종 보정계수를 설정</li><li>참조모델을 구성하는 서버에 대해서 구성 요소별로 FOE 산정</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">마)</span>
+  <div class="sub-t">하드웨어 요소별 규모 산정 방식</div>
+  <p class="sub-c">서버를 FASS 구성요소별 규모를 산정하는 방식을 설명한다. 이미 규모 산정 절차에서 언급한 바와 같이 아키텍처 형 태에 따라 서버들을 결정하고 각각의 서버들에 대해서 CPU, 메모리, 디스크, 스토리지에 대한 규모를 산정힌다. 각 요소별 세부 규모 산정 방식은 “TTA 정보시스템 하드웨어 규모신정 지짐&quot;을 참조할 수 있다.</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">정보시스템의 최신기술 및 동향</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">서버,</span><span class="kw">전통적인</span><span class="kw">서버</span><span class="kw">분리된</span><span class="kw">솔루션에</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 규모 산정의 개념</li><li>나) 규모 산정 대상 [열거형]</li><li>나) HA(High Availability) 구성 유형</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">규모 산정의 개념</div>
+  <p class="sub-c">시스템 규모산정은 실제 업무와 응용을 기반으로 수학적인 방번론을 사용하여 도입하고자 하는 시스템의 규모를 추정 혹 은 계산하는 것으로 (H 23&gt;과 같이 시스템의 아키텍처와 응용 기반을 전제로 성능 요구사항과 ASS 결정하는 용량계 획이나 용량 관리의 하위적 개념으로 규정할 수 있다. 또한 규모산정은 특정시스템이나 서버에 대해 일시적으로 이루어지 며, 사전</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">규모 산정 대상</div>
+  <p class="sub-c">일반적으로 규모산정에 대한 대상은 하드웨어뿐만 아니라 소프트웨어나 네트워크를 포함하고 있다. 그러나 용량산정 지 침에서의 규모산정 대상은 &lt;표 25&gt;와 같이 하드웨어로, [나 기타 주변장비가 아닌 서버장비로 규정하였다. 이러 웨어 구성 분야는 여러 가지가 있지만 시스템 가격 및 성능 측면에서 가장 중요한 (메모리, 디스크, 그리고 스토리지 등 4가지 분야를</p><ul class="bul"><li>전통적인 [| 인프라 유형</li><li>분리된 개별 컴포넌트로 도입</li><li>서버, 스토리지, 네트워킹 및 A</li><li>서버 및 Software Defined</li><li>솔루션에 따라 Software</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">HA(High Availability) 구성 유형</div>
+  <p class="sub-c">(1) 핫 스텐바이 Standby, Active-Standby) HA 클러스터링 구축 방법 중 가장 단순한 구소로 가동되는 활성 서버 한 개와 평상시에는 대기 상태로 운영중인 대기 서 He 구성되어 있다. 대기 서버는 전원이 켜져 있으며, 운영체제까지 동작되는 상태이다. 경우에 따라서는 대기 서버를 개 발 시스템으로 활용하기도 한다. 동작 방식은 활성 서버</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">클라우드 IoT 0 TO</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">역할</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 서비스 유형에 따른 분류</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">서비스 유형에 따른 분류</div>
+  <p class="sub-c">클라우드 서비스는 서비스 유형에 따라 laaSiintrastructure as a Service), PaaS(Platform as a Service), SaaS(Software as a Service) 구분할 수 있다. © laa (Infrastructure as a Service) laaS 인터넷 네트워크를 경유하여 인프라 XAMHH, 스토리지, YEAS</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">클라우드 컴퓨팅의 정의</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">형태</span><span class="kw">클라우드</span></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">클라우드 운영 형태에 따른 분류</div>
+  <p class="sub-c">클라우드 서비스는 서비스 운영 형태와 공개범위를 기준으로 3가지로 분류될 수 있다. 그 분류는 다음과 같다. 시스템아키텍쳐 이해와 활용 ) &lt;표 33&gt; 공개 범위를 기준으로 한 클라우드 서비스 유형 클라우드 서비스 설 명 * 인터넷 상에 불특정 다수에게 공개된 클라우드 서비스로 인터넷만으로 접근 가능한 클라우드 (Si Baro 퍼블릭 클라우드 pn + 기업</p><ul class="bul"><li>퍼블릭 클라우드와 프라이빗 클라우드의 결합된 형태로 외부에 공개된 클라우드 서비스와 폐쇄된</li></ul>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">서버 가상화 기술</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">온디멘드:</span><span class="kw">기간:</span><span class="kw">사용량</span><span class="kw">웹브라우저로</span><span class="kw">퍼블릭</span><span class="kw">운영:</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>다) 서버 가상화 방식의 유형</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">히</div>
+  <p class="sub-c">하이퍼바이저1/20604600) 서버 가상화에서 물리적으로 존재하는 MHS 호스트 OSA} 하고 가상으로 제공되는 MHS 가상서버라고 한다. 가상 서버가 물리적인 서버와 같이 보일 수 있도록 물리적 자원을 할당하는 방식에 따라서 서버 가상화 기술을 구분 할 수 있다 물리적인 MHS 가상화하는 기술을 하이퍼바이저(+/06&quot;460&quot;라고 한다. 하이퍼바이저는 서</p><ul class="bul"><li>컨테이너별 커널 구성이 불가능</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">서버 가상화 방식의 유형</div>
+  <p class="sub-c">서버 가상화 기술은 가상화 방식에 따라서 전가상화『41 Virtualization), 반가상화(?3(ㅎ-0143128007). 05레벨 가상화08- level Virtualization) 구분될 수 있다. @ 전가상화 Virtualization) 드웨어를 완전하게 가상화하는 방식으로 게스트 OS(Guest 06\는 하드웨어를 직접 소유하고 접근하는 것으로 </p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">04</div>
+  <div><div class="row-title">스토리지와 네트워크 가상화 기술</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">컨테이너별</span><span class="kw">기술</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 클라우드 플랫폼의 정의</li><li>다) 클라우드 서비스 유형</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">스토리지 가상화</div>
+  <p class="sub-c">Wee 하는 스토리지 공간 대신 110-704680000이라는 기술을 통해서 초기 필요한 최소 공간만을 가상으로 할당하여 서비스 구현이 가능하도록 한다. 추가로 이기종 스토리지 시스템 통합을 사용하는 환경을 제공한다.</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">네트워크 가상화</div>
+  <p class="sub-c">하드웨어 어플라이언스 형태로 존재하던 2. Ｌ3 Ｌ/스위치. 네트워크 방화벽, 보안 장비들을 가상머신으로 구현하고, 네트 AZ 자원들이 하나의 SHH 물리적인 환경에서도 내부적으로 가상화를 통해 분리되어 소작하거 rok</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">클라우드 플랫폼의 정의</div>
+  <p class="sub-c">클라우드 플랫폼은 서버, 스토리지, 네트워크, 가상화기술등과 같은 리소스들을 모으고 이들을 제어하고 운영하기 위한 Cloud Operation System0|C}. 퍼블릭 및 프라이빗 클라우드 컴퓨팅 SASS 구축하는데 필요한 모든 소프트웨어 블록을 개발하는 오픈소스 프로젝트 이다. 또 다른 의미로는 오픈소스 기반으로 클라우드를 구축하고 운용하고자 하는 오</p><ul class="bul"><li>Glance: 가상디스크 이미지파일 관리 저장/등록/관리/전달</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">클라우드 서비스 유형</div>
+  <p class="sub-c">— 00040.000에 의해 개발되고 citrixol] 의해 아파치 재단에서 관리 개발하고 있는 클라우드 컴퓨팅 우프소스 프로젝트이다. M3 시스템아키텍처 이해와 활용 구글이 자사 서비스를 위해 개발했던 운영 노하우를 공개한 것 으로 컨테이너의 관리와 운영을 위한 오케스트레이션 플랫 폼이다. 선언형 프로그래밍 형식으로 노드에서 여러 때 관리하고 예약할 수 </p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">빅데이터 시스템의 구조</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">커뮤니트</span></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">Hadoop 생태계</div>
+  <p class="sub-c">빅데이터 시스템의 구조에 대한 이해는 결국 oks 생태계를 이해하는 것에서 출발한다. oksE High— Availabilty Distributed Object-Oriented Platform의 약자로, 대용량의 데이터를 여러 개의 분산 저장소에서 분산 처리하는 방식의 자바기반 프레임워크이다. SHSS 초기 솔루션으로 Hadoop 분산파일시스템(8 Hado</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">Hadoop의 주요기술 요소</div>
+  <p class="sub-c">@ ots 분산형 파일 A|ABIHDFS) chs 분산형 파일시스템(이하 이은 Shs 네트워크에 연결된 기기에 데이터를 저장하는 분산형 파일시스템이다. *HDFSE 데이터를 저장하면, 다수의 노드에 복제 데이터도 함께 저장해서 데이터 유실을 방지한다. + HDFSO| 파일을 저장하거나, 저장된 파일을 조회하려면 스트리밍 방식으로 데이터에 접근해야 한다. +</p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">Hadoop 지원 프로그램</div>
+  <p class="sub-c">chs 지원 서비스 프로그램은 &lt;표 35&gt;와 같이 빅데이터의 수집, 저장ㆍ활용, 처리, 관리 SS 데이터 처리와 관련된 모든 영역을 대상으로 개발 진행 중이다. &lt;표 35&gt; chs 지원 서비스 프로그램 빅데이터 구분 주요 기술 기술별 주요 기능 Fume - 비정형 데이터 수집 - 클라우드데라에서 개발됐으며, 현재 아파치 인큐베이션에 포함됨 80166 aaa</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">데이터 링크계층 개념</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">05</div>
+  <div><div class="row-title">데이터 링크계층 오류검출과 오류정정기법</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">아마존,</span><span class="kw">구글,</span><span class="kw">아마존</span><span class="kw">기존</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 오류제어의 개념</li><li>가) IEEE 802의 개념</li><li>다) IEEE 802.11 표준 [열거형]</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">오류제어의 개념</div>
+  <p class="sub-c">데이터 링크계층을 통해 프레임 전달 시 네트워크 상태나 송수신 장비의 동작에 따라 여러 오류가 발생할 수 있다. 오류으 종류에는 데이터 부분 중 한 비트만 변경된 OFS 가진 단일 비트 OF(Single-bit error), 데이터 단위에서 2개 이상의 연속적인 비트들이 변경되는 다중 비트 OF(Mutti-pit error), 데이터 부분의 2개 또는 그 </p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">IEEE 802의 개념</div>
+  <p class="sub-c">FEE 위원회에서 정의한 계층별 서비스들은 [그림 10]과 같다. 각 계층별로 나뉘보면 논리적 링크 제어) 계층에서는 Type 1삐확인식 데이터그램 서비스 Type 2 가상 회로 서비스, Type 3 확인식 데이터그램 서비스가 있다. 물리적 매체 접근 MICMIMAC) ABA IEEE 8023 CDMA/CD 매체접근제어, IEEE 8024 토큰 버스 매체 </p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">IEEE 802.3 표준</div>
+  <p class="sub-c">IFEE 802 표준 중에서 가장 많이 사용되는 IEEE 8023 프로토콜 스택에서는 데이터 링크계층의 LLC 계층에 해당하는 FEE 802.27} 있으며, MAC AIST} 물리계층을 포함하는 ㄷㄷ 802.3, IEEE 8025 Token Ring, FDD! 등이 있다. Token Ring / 802.5 (06 참조 모델 LAN 프로토콜 [그림 107] </p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">IEEE 802.11 표준</div>
+  <p class="sub-c">IFEE 802.112 무선 LAN, 와이파이(//+-ㅁ[로 불리는 무선 근거리 통신망을 위한 무선통신 표준화 위원회의 명칭이며 LAN 형태의 이더넷의 단점을 보완하기 위해 배선작업과 유지관리 비용 최소화를 목적으로 한다. 일반적으 송속도 1/006에 DSSS 변조방식을 APSHadoop IEEE 802.16, 5GHz 대역의 주파수 사용과 OFDM 변조방</p><ul class="bul"><li>블록도: 해당 칩셋의 전체 구성과 흐름을 이해</li><li>통신방식: SPL 20 등. 칩셋 제어 방식</li><li>메모리: RAM, ROM} 개발자가 사용할 수 있는 메모리 크기 주소방식</li><li>개발 툴: 해당 칩셋으로 개발하기 위해 필요한 SS</li></ul>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">네트워크 계층 개요 및 장비</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">네트워크 계층이란?</div>
+  <p class="sub-c">네트워크 ABE 061 7 모델 및 TCP/PQ| 3번째 계층이며, 패킷을 송신 측에서 수신 측으로 전송하는 기능을 한다. 네트워 크 ABS 전송계층으로부터 세그먼트(6691060&quot;를 받아서 캡술화하고 데이터링크 계층으로 전달한다. Transport Layer Routing Protocol Letwork | Layer Routing Table ICMP Pr</p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">인터네트워킹 장비</div>
+  <p class="sub-c">인터네트워킹은 네트워크와 네트워크의 연결을 말하며, 대표적인 장비로는 AITIEl, 브리지60096), 스위치 , 라우터 등이 있다. M3 시스템아키텍처 이해와 활용 시스템아키텍처 이해와 활용 [그림 1의 VLAN 구성 [4] &lt;표 47&gt; 스위치와 라우터의 비교 비교항목 스위치 라우터 참조 테이블 MAC 주소 테이블 라우팅 테이블 참조 PDU 이더넷 프레임</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">네트워크 계층 프로토콜</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">네트워크 계층 프로토콜</div>
+  <p class="sub-c">[그림 113]에서 보는 것과 같이 네트워크 계층의 MAS 전송계층의 세그먼트에 헤더[1(6306/를 추가하여 구성된다. 이 런 과정을 네트워크 계층의 캡슬화(67030648000/라고 하며 수신 측에서는 그 과정이 역으로 수행되는데 이는 디캡술회 2}i1 한다. 네트워크 계층 데이터 링크 계층 [그림 113] 네트워크 계층의 캡슬화 M3 시스템아키텍처 이</p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">네트워크 계층 명령어</div>
+  <p class="sub-c">네트워크 계층의 상태정보 또는 특정 SAS 위한 명령어들은 &lt;표 49/와 같다. &lt;표 49&gt; 네트워크 계층 관련 명령어 명령어 내용 Ping ICMP 메시지를 이용해 네트워크 계층까지 연결성을 테스트하는 명령어 ICMP 메시지 2 echo request} reoly 메시지를 사용 Tracert/ 원하는 목적지까지의 경로를 출력해 주는 명령어 Tracerou</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">05</div>
+  <div><div class="row-title">라우팅 프로토콜 알고리즘 및 유형</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">라우팅 프로토콜이란?</div>
+  <p class="sub-c">라우팅 프로토콜S 라우팅 테이블의 효율적인 AAT} 갱신을 위해 라우터 상호 간에 교환하는 메시지 의 종류, 교환 절차, 메시지 수신 시의 행위를 규정하는 규약이다.</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">라우팅 알고리즘이란?</div>
+  <p class="sub-c">라우팅 알고리즘(“04009 Algorithm) 라우터 간에 비용을 가지는 링크로 연결한 그래프 형태의 네트워크에서 출발지 라 우터와 목적지 라우터 간의 최소 비용 경로를 찾는 알고리즘이다. 최소 비용 경로는 출발지에서 목적지까지 가능한 모든 경로상의 링크 비용 종합 중 최소값의 경로를 말한다. 라우팅 알고리슴의 Hadoop &lt;표 54&gt;와 같다. 알고리즘 </p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">04</div>
+  <div><div class="row-title">네트워크 서비스</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">역할</span><span class="kw">블록도:</span><span class="kw">메모리:</span><span class="kw">데이터</span><span class="kw">개발</span><span class="kw">프로토콜</span><span class="kw">통신방식:</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>나) 품질 구현기법</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">QoS(Quality of Service) 특성</div>
+  <p class="sub-c">QoS= 다양한 통신 서비스에 대한 서비스 품실과 성능을 일정 수준으로 보장하여 사용자 요구를 만족시키는 기술이다. 005를 결정하는 주요 특성으로는 &lt;표 50&gt;과 같이 신뢰성, 지연, 지터, 대역폭이 있다. &lt;표 50&gt; Qos 측정요소 특성 내용 신뢰성 | - 한 흐름이 목적지까지 패짓을 안전하게 전달하기 위해 Bee 하는 특성 지연 - 송신 측에서 수신</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">품질 구현기법</div>
+  <p class="sub-c">0 스케줄링 |우터에서 담당하며, 스케줄링에 따라서 패킷의 흐름은 달라질 수 있다. 인터넷에서 패킷의 처리는 리 &lt;표 51&gt; 패킷 스케줄링 방법 스케줄링 방법 내용 타ㅇ큐잉다0ㅇ046409) | - 인더넷의 기본 스케줄링 방법이며, 패킷이 도착하는 순서대로 전달하는 방식 우선순위 큐잉 - 전송되는 패킷에 우선순위 SES 할당하여 가장 높은 우선순위의 큐에 </p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">IPv4 헤더</div>
+  <p class="sub-c">Version| IHL |Type of Service| Total Length ㅣ Identification |Flags| Fragment Offset I Time to Live | Protocol | Header Checksum | Source Address I Destination Address | Options | Padding I [그림 114] 네</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">03</div>
+  <div><div class="row-title">패킷 스위칭 및 네트워크 계층 프로토콜/명령어</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">기능</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>라) 라우팅 프로토콜 종류</li><li>나) IPv6의 특징</li><li>가) TCP 특징</li><li>다) TCP 프로토콜 [열거형]</li><li>가) UDP 특징</li><li>가) UDP 특징 [열거형]</li><li>가) SCTP 특징</li></ul></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">패킷 스위칭</div>
+  <p class="sub-c">패킷 교환 네트워크에서 패킷의 GSS 찾는 방법으로 데이터그램 BA\(Datagram Approach)} 가상 회선 방식(1008! Circuit Approach)0| 있다. 데이터그램 방식은 비연결 서비스로서 모든 패킷을 독립적으로 처리하는 방식이다. 패킷들은 다른 경로로 전달될 수 있으며, 포워딩 결정은 패킷의 목적지 주소에 의해 결정된다. 한편. 가상</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">네트워크 계층 프로토콜/명령어</div>
+  <p class="sub-c">네트워크 계층 프로토콜 ZIP ZA MAC 주소 간의 변환 프로토콜에는 | IP 주소를 MAC 주소로 변환시켜주 ARP(Address Resolution Protocol)?} MAC 주소를 IP BAS 변환시켜주는 ASA 변환 프로토콜에는 RARP(Reverse Address Resolution Protocol)7} 있다. ICMP(Internet Cont</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">IIPv4를 사용한 네트워크 구성(예)</div>
+  <p class="sub-c">223.1.1.1 Sei 00000001 00000001 00000001 [그림 120] Pv45 사용한 네트워크 07 1644 주소지정체계 및 서브네팅</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">IPv4 표현방식</div>
+  <p class="sub-c">+ 241 표기법: O110101 10010101 00011101 00000010 + Dotted decimal notation M3 시스템아키텍처 이해와 활용 고 하며 대표적인 REESE Path vector 라우팅 알고리슴을 사용하는 BGP(Border Gateway Protocol)7} 있다.</p>
+</div><div class="sub">
+  <span class="sub-mk">라)</span>
+  <div class="sub-t">라우팅 프로토콜 종류</div>
+  <p class="sub-c">라우팅 프로토콜 에는 거리벡터 라우 전달하는 RP, RP의 문제점을 고리즘을 사용하며 라우팅 테이블을 of 30초매! 로드캐스팀을 통해 상호 정보를 하량 딜 일부 개선하여 네트워크 상태(대역폭, 지연시간 크상태 라우팅 알고리슴을 사용하는 OSPF, AS 간을 연결할 때 사용하는 BGP7t 있다. A &lt;표 55&gt; 라우팅 프로토콜 종류 을 고려한 프로토콜인 G</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">IPv4(Internet Protocol Version 4) 주소란?</div>
+  <p class="sub-c">1044 주소는 [그림 1의 와 같이 P 계층에서 사용되는 32비트 SAS 라우터나 호스트의 인터넷 AAS 범용적이고 유일하 게 만들어주는 식별자이다. 2 bit 8bit | | 8내 | | 8bit | | 8bit [그림 119] IPva 주소 구조 Pug 주소의 요소로는 인터넷에 연결된 모든 통신망과 그 통신망에 연결된 컴퓨터에 부여되는 고유의 식별 주</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">IPv4 주소지정체계</div>
+  <p class="sub-c">클래식 A 클래식 ㅁ 클래식 ㄷ [그림 121] 44 주소지정체계 1244 주소지정체계는 인터넷 주소자원 관리기관에서 부여한 네트워크 FAP} 네트워크상의 개별 SASS 식별하기 위하 여 네트워크 관리자가 부여한 호스트 주소로 구성된다. 네트워크의 크기나 호스트 수에 따라 &lt;표 56&gt;과 같이 A BC, ㅁ ㄷ 클래스로 나누어지는데 A BC 클래스는 일반 사</p><ul class="bul"><li>네트워크 SAS 자유롭게 설정할 수 있기 때문에 PFA 낭비 방지 및 효과적인 네트워크 구성 가능</li><li>도메인 간의 라우팅에 사용되는 P FAS 효과적으로 관리 가능</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">특수 IPv4 주소</div>
+  <p class="sub-c">Pv40 t= 일반적인 A 8, &lt;: 클래스 주소체계와는 다른 형태의 주소체계가 있는데 이런 SASS 특수 IPv4 주소라고 of 며, 아래 &lt;표 5/&gt;과 같다. &lt;표 57&gt; 특수 44 주소[7] Network ID Host ID 주소 이름 용도 80606 AO | Network address 네트워크 주소를 의미 80606 Alt Net-directed </p>
+</div><div class="sub">
+  <span class="sub-mk">라)</span>
+  <div class="sub-t">서브네팅</div>
+  <p class="sub-c">(1) 서브네팅의 개념 서브네팅은 하나의 네트워크 FAS 여러 개의 작은 네트워크로 나누어 사용하는 방식이다. 서브넷 마스크 (Subnet mask)= IP TA 중에 네트워크 주소 AHS 구분하기 위한 마스크를 말한다(8[ 일반적인 클래식 ( 주소 subnet mask : 서브네팅으로 HES 사용 subnet mask : @ 서브넷 사용 형태 [그림 12</p>
+</div><div class="sub">
+  <span class="sub-mk">바)</span>
+  <div class="sub-t">슈퍼네팅</div>
+  <p class="sub-c">© 슈퍼네팅의 개념 슈퍼네팅은 서브네팅의 반대로서, 작은 여러 개의 네트워크를 하나의 큰 네트워크로 통합하는 것을 말한다. ASA! 래스 주소 블록을 한 기관에 할당하여 외부에서는 하나의 주소 블록처럼 라우팅이 가능하게 하는 주소 배정 기법이다[ (2 FUE 방식 * 네트워크 식별자 중 일부를 호스트 식별자로 사용 + SHOE C 클래스 주소 개수는 2의 </p><ul class="bul"><li>여러 개의 C 클래스 SAS 묶어 하나의 네트워크로 구성</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">사)</span>
+  <div class="sub-t">IPv4 주소 할당방식</div>
+  <p class="sub-c">@ DHCP(Dynamic Host Configuration Protocol) DHCP DHCP 서버를 사용하여 IP 주소 및 관련된 기타 구성 세부 BSS 네트워크의 DHCP 사용 클라이언트에게 동적 으로 할당하는 방법을 제공하는 프로토콜이다. DHCP 서버는 IP 주소, 서브넷 마스크 외에도 DHCP 옵션으로 디폴트 게이트웨이, DNS 서버 주소, 로컬</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">IPv6의 헤더 구조</div>
+  <p class="sub-c">Pv6Q| 기본 헤더구조 및 구성요소 ABS &lt;표 63&gt;과 같으며, [^,6의 기본헤더 외에 여러 확장헤더를 붙일 수 있다. Version(4) Traffic class(8) Flow label(20) Payload length(16) Next header(8) Hop limit(8) Source address(128 bits) Destination add</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">IPv6의 특징</div>
+  <p class="sub-c">i IPv4= 네트워크에 연결된 SAS 단말이 급승하면서 P FA 공간 부속과 함께 취약한 인터넷 보안 문제가 발 생하였다. sake 문제점을 해결하고자 90년대 중반에 Pv) 그로토레! 61이 개발되었다. 기존의 『^/4에 비하여 「?,6의 가 a EAS FA 공간이 32비트에 128비트로 늘어나면서 대략 3.4 x 1032 개의 주소가 사용 가능해져 주</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">IPv6의 주소체계</div>
+  <p class="sub-c">126 FAL 128비트 길이로 Pvd 주소 길이의 4배이며 각 숫자는 16진수로 표기한다. 주소 형태를 기술하는 필드인 wy 접두사 Format Prefx)2t 순수한 FAS 나타내는 주소 필드로 구성된다. 긴 SAS 읽기 쉽게 하기 위해서 16비트씩 콜 론으로 나누고, 각 필드를 16신수로 표현하는 HHS 사용한다. IPv6 주소 네트워크 SFAkpre</p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">가상의 TCP 동작 시나리오</div>
+  <p class="sub-c">아래 그림은 사용자 ^&amp;가 my.server.com 홈페이지에 들어가서 my.pdf 파일을 다운로드 받을 때 TCP 프토토콜 단에서 송 수신하는 상황을 보여준다. 응용 계층 프로그램인 웹 브라우저와 웹 서버 00에 의해 주고 받는 요청과 응답이 전송계층 프로토콜인 TCP] 의해 전달된다. 여기서는 TCP 프로토콜의 동작을 중점적으로 설명하고자 한다. Htt</p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">TCP 특징</div>
+  <p class="sub-c">TOPE TOP/P 모델에서 응용계층과 네트워크 계층 사이에 위치하며, 두 응용계층 사이의 프로세스 간 SUS 제공한다. TOPE 스트림 기반 프로토콜로 데이터를 송수신하기 위한 송신 버퍼와 수신 버퍼를 가진다. TCP 프로토콜의 아래 층에 있는 P= 스트림 형태가 아닌 패킷 형태로 데이터를 전송하고, 이를 위하여 TCP= 하나의 전체 데이터를 여러 개의 </p>
+</div><div class="sub">
+  <span class="sub-mk">다)</span>
+  <div class="sub-t">TCP 프로토콜</div>
+  <p class="sub-c">TCP 프로토콜에서 사용하는 헤더 BYES 다음 그림과 같다[[ 옵션 추가 시 항상 4바이트 단위에 맞게 패딩 바이트를 추가해 주어야 한다. TOP 해더는 SMO] 없을 때 20바이트로 『 헤더의 크기와 동일하다. 따라서 TCP/P 헤더는 총 40 바이트로 사용자 데이터를 한 바이트 보내더라도 반드시 보내야 한 다. 따라서 응용 계층 프로그램에서 효과적인 </p><ul class="bul"><li>PSH: 푸쉬 (push) 기능</li><li>RST: 연결 리셋</li><li>SYN: 순서 HSS 동기화</li><li>송신자로부터 더 이상 데이터가 없음</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">UDP 특징</div>
+  <p class="sub-c">사용자 데이터그램 프로토콜(.0은 연결을 위한 사전 설정과정 없이 바로 데이터를 주고 받는 비연결 서비스를 제공하 TCP2} 달리 전송계층 수준의 신뢰성이 보장되지 않는 프로토콜이다. UDP] 각 사용자 데이터그램은 독립된 GO| THOS TCP} 달리 번호가 부여되지 않는다. UDP 매우 단순한 프로토 콜로 흐름 제어(10)/ Control)7} 없고 따</p><ul class="bul"><li>흐름 및 오류제어를 하지 않는 간단한 요청-응답 SNe 요구하|</li><li>내부 흐름 및 오류제어 기법을 가진 프로세스</li><li>멀티캐스팅 전송기술</li><li>라우팅 정보 프로토콜(03)과 같은 경로 갱신 프로토콜</li></ul>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">UDP 프로토콜</div>
+  <p class="sub-c">사용자 데이터그램(068 08!29「300이라고 부르는 UDP 패킷은 아래 표와 같이 각각 2바이트(6비트)인 4개의 Hoe 만들 어진 고정된 크기의 8바이트 헤더를 가지고 있다. UDP 헤더의 각 필드는 &lt;표 72)9} 같은 목적으로 사용된다. &lt;표 72&gt; 사용자 데이터그램 헤더 필드 필드 이름 길이 내용 Source Port aBytes | AA 포트 </p>
+</div><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">SCTP 특징</div>
+  <p class="sub-c">스트림 제어 전송 프로토콜(667)은 멀티미디어 SAS 위해 UPL 10/-의 일부 장점을 결합하여 설계된 새로 지으 0 FZ SCTIPE HE|S2(mutihoming}S 강조하기 위해 결합이라고 한다. TCPuME 종단 Zt 연결에 지만, SCTPOME 하나의 BEkassociation\e 다중 스트림 송수신이 가능하다. AT} 연결될 Cee 가능하게 </p>
+</div><div class="sub">
+  <span class="sub-mk">나)</span>
+  <div class="sub-t">SCTP 프로토콜</div>
+  <p class="sub-c">장에서는 SCPE SE WSS 다루기 어려우므로 아래 TAS 통해 SCIP 전송 서비스의 기능들을 간략하게 살펴볼 것이다. SCTPY| 기능은 크게 아래와 같이 8가지로 분류할 수 있다. |작과 종료 순서화된 전달 이터 SHASkFragmentation) t (Congestion avoidance) (Chunk bundling) (Packet validat</p>
+</div></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">01</div>
+  <div><div class="row-title">응용 계층 프로토콜이란?</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">데이터베이스</span></div>
+  <div class="subs"></div>
+</div>
+</div><div class="row">
+<div class="row-hd">
+  <div class="row-num">02</div>
+  <div><div class="row-title">소프트웨어 기반 네트워크</div><div class="row-ch">컴퓨터 아키텍처</div></div>
+  <div class="arr">▼</div>
+</div>
+<div class="row-body">
+  <div class="kw-wrap"><span class="kw">경로</span></div>
+  <div class="subs"><div class="sub">
+  <span class="sub-mk">가)</span>
+  <div class="sub-t">기존 통신</div>
+  <p class="sub-c">경의 한계와 패러다임의 변화 © 트라픽 패턴의 변 현재의 애플리케이션들은 데이터를 사용자에게 제공하기 전에 다양한 애플리케이션 서버와 DBSS 액세스하면서 다량의 트래픽을 만들어낸다. 이와 같이 한정된 클라이언트와 서버 간에 일어나던 통신환경에서 다양한 시스템들 간의 액세스 과 정이 발생하는 환경으로 변화하고 있다 12 lok fol O 가상화 기술 BAS</p>
+</div><div class="sub">
+  <span class="sub-mk">라)</span>
+  <div class="sub-t">SDN과 NFV</div>
+  <p class="sub-c">초기에 SONE 연구자와 데이터센터 설계자를 중심으로 개발되었고, -\/는 인터넷 서비스 제공자들(9, Internet Service Provider)ol| 의해 개발되었다. 그러나, SDNa} NPV 기술은 상호보완적으로, 현재 인터넷 서비스 제공자들은 두 기술을 결 합하여 네트워크에 적용하고 있는 추세이다. 00 NFV2} SDN 관계 Creates c</p>
+</div></div>
+</div>
+</div>
+</div>
+
+<nav class="sheet-tabs"><a class="tab " href="/topcit/01/" style=""><span class="ic">💻</span>01</a><a class="tab " href="/topcit/02/" style=""><span class="ic">🗄️</span>02</a><a class="tab active" href="/topcit/03/" style="--active-color:#7B3FA6"><span class="ic">🏗️</span>03</a><a class="tab " href="/topcit/04/" style=""><span class="ic">🔒</span>04</a><a class="tab " href="/topcit/05/" style=""><span class="ic">📊</span>05</a><a class="tab " href="/topcit/06/" style=""><span class="ic">📋</span>06</a></nav>
+<script>
+// 아코디언
+document.querySelectorAll('.row-hd').forEach(h=>{
+  h.addEventListener('click',()=>{
+    h.closest('.row').classList.toggle('open');
+  });
+});
+
+// 검색
+const si=document.getElementById('search');
+if(si){
+  si.addEventListener('input',()=>{
+    const v=si.value.trim().toLowerCase();
+    document.querySelectorAll('.row').forEach(r=>{
+      if(r.classList.contains('tbl-header-row')) return;
+      const t=(r.querySelector('.row-title')?.textContent||'').toLowerCase();
+      const c=(r.querySelector('.row-ch')?.textContent||'').toLowerCase();
+      const b=(r.querySelector('.row-body')?.textContent||'').toLowerCase();
+      const show=!v||t.includes(v)||c.includes(v)||b.includes(v);
+      r.style.display=show?'':'none';
+      if(v&&show) r.classList.add('open');
+      else if(!v) r.classList.remove('open');
+    });
+  });
+}
+</script>
+</body>
+</html>
