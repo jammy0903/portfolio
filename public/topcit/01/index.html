@@ -2,1046 +2,342 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="#1F5C99">
-<title>TOPCIT 01 - 소프트웨어 개발</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOPCIT 01 소프트웨어 개발</title>
 <style>
-:root{--accent:#1F5C99;--accent-dark:#013e7b;--accent-rgb:31,92,153}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Pretendard","Apple SD Gothic Neo",sans-serif;background:#fdf8fb;color:#1a1a2e;min-height:100vh}
 
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{font-size:15px}
-body{
-  font-family:'맑은 고딕','Malgun Gothic','Noto Sans KR',-apple-system,sans-serif;
-  background:#F2F2F2;
-  color:#1a1a1a;
-  line-height:1.5;
-  min-height:100vh;
-  padding-bottom:72px;
-}
+/* 헤더 */
+.header{background:#d4789c;color:#fff;padding:.85rem 1.25rem;display:flex;align-items:center;gap:.75rem;position:sticky;top:0;z-index:20;box-shadow:0 2px 10px rgba(212,120,156,.3)}
+.header-back{color:#fff;text-decoration:none;font-size:1.1rem;opacity:.8}
+.header-back:hover{opacity:1}
+.header h1{font-size:1rem;font-weight:700;flex:1}
+.header-cnt{font-size:.75rem;opacity:.7;white-space:nowrap}
 
-/* 엑셀 상단 리본 */
-.ribbon{
-  position:sticky;top:0;z-index:100;
-  background:var(--accent);
-  border-bottom:3px solid var(--accent-dark);
-  padding:0 12px;
-  display:flex;align-items:center;gap:10px;
-  height:48px;
-}
-.ribbon-back{
-  background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.3);
-  color:#fff;padding:6px 12px;border-radius:3px;
-  font-size:13px;text-decoration:none;
-  display:flex;align-items:center;gap:5px;white-space:nowrap;
-}
-.ribbon-back:active{background:rgba(255,255,255,0.25)}
-.ribbon-title{
-  font-size:14px;font-weight:700;color:#fff;
-  flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
+/* 뷰 토글 */
+.view-toggle{display:flex;gap:0;padding:.7rem 1.25rem .3rem;}
+.vtab{padding:.35rem .9rem;font-size:.78rem;font-weight:600;cursor:pointer;border:1.5px solid #d4789c;background:#fff;color:#d4789c;transition:all .15s}
+.vtab:first-child{border-radius:.5rem 0 0 .5rem}
+.vtab:last-child{border-radius:0 .5rem .5rem 0}
+.vtab.active{background:#d4789c;color:#fff}
 
-/* 시트 탭 영역 (상단 메타 정보) */
-.sheet-info{
-  background:#fff;
-  border-bottom:2px solid #D9D9D9;
-  padding:14px 12px 12px;
-}
-.sheet-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--accent);color:#fff;
-  padding:3px 10px;border-radius:2px;
-  font-size:12px;font-weight:700;
-  margin-bottom:10px;letter-spacing:0.03em;
-}
-.sheet-info h1{
-  font-size:20px;font-weight:700;
-  color:var(--accent-dark);
-  margin-bottom:4px;
-}
-.sheet-info p{font-size:13px;color:#666}
+/* ── 피쉬본 뷰 ── */
+.fb-wrap{display:none;padding:.5rem 1rem 2rem}
+.fb-wrap.show{display:block}
+.fb-title{text-align:center;background:#d4789c;color:#fff;border-radius:.75rem;padding:.6rem 1rem;font-size:.92rem;font-weight:800;margin-bottom:0}
+.fb-spine{position:relative;padding:.4rem 0 .5rem}
+.fb-spine::before{content:'';position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;width:3px;background:linear-gradient(#d4789c,#8b6bae);border-radius:2px;z-index:0}
+.fb-branch{display:flex;align-items:flex-start;margin:.9rem 0;position:relative;z-index:1}
+.fb-branch.left{flex-direction:row-reverse;padding-right:calc(50% + 10px)}
+.fb-branch.left .fb-inner{align-items:flex-end;text-align:right}
+.fb-branch.right{padding-left:calc(50% + 10px)}
+.fb-branch.right .fb-inner{align-items:flex-start;text-align:left}
+.fb-connector{position:absolute;top:14px;height:2px;width:calc(50% - 16px);opacity:.3}
+.fb-branch.left .fb-connector{right:calc(50% + 3px);background:#d4789c}
+.fb-branch.right .fb-connector{left:calc(50% + 3px);background:#8b6bae}
+.fb-inner{display:flex;flex-direction:column;gap:.4rem;width:100%}
+.fb-ch{display:inline-flex;align-items:center;gap:.3rem;flex-wrap:wrap;background:#d4789c;color:#fff;border-radius:.5rem;padding:.36rem .7rem;font-size:.78rem;font-weight:700;cursor:pointer;user-select:none;transition:opacity .15s}
+.fb-branch.right .fb-ch{background:#8b6bae}
+.fb-ch:hover{opacity:.85}
+.fb-arr{font-size:.52rem;transition:transform .2s;flex-shrink:0}
+.fb-cnt{font-size:.62rem;opacity:.7;font-weight:400}
+.fb-sec-blocks{display:none;flex-direction:column;gap:.4rem;width:100%;padding:.2rem 0}
+.fb-sec-blocks.open{display:flex}
+.fb-branch.left .fb-sec-blocks{align-items:flex-end}
+.fb-sec-block{display:flex;flex-direction:column;gap:.18rem;width:100%}
+.fb-branch.left .fb-sec-block{align-items:flex-end}
+.fb-sec{display:inline-flex;align-items:center;gap:.22rem;flex-wrap:wrap;background:#fff;border:1.5px solid #f0c6d8;border-radius:.4rem;padding:.2rem .52rem;font-size:.7rem;color:#555;font-weight:600;cursor:pointer;user-select:none;transition:background .15s}
+.fb-branch.right .fb-sec{border-color:#f3eefa}
+.fb-sec:hover{background:#fdf0f5}
+.fb-branch.right .fb-sec:hover{background:#f3eefa}
+.fb-sec em{font-style:normal;color:#ccc;font-size:.6rem;font-weight:400}
+.fb-con-list{display:none;flex-wrap:wrap;gap:.18rem;padding:.08rem 0}
+.fb-con-list.open{display:flex}
+.fb-branch.left .fb-con-list{justify-content:flex-end}
+.fb-con{background:#f9f1f6;border:1px solid #f0d8ea;border-radius:1rem;padding:.12rem .4rem;font-size:.62rem;color:#888;cursor:pointer;white-space:nowrap;transition:all .15s}
+.fb-branch.right .fb-con{background:#f5f1fa;border-color:#e2d5f5}
+.fb-con:hover{background:#d4789c;color:#fff;border-color:#d4789c}
+.fb-branch.right .fb-con:hover{background:#8b6bae;color:#fff;border-color:#8b6bae}
+.fb-tail{text-align:center;color:#d4789c;opacity:.3;margin-top:.3rem;font-size:.9rem}
 
-/* 통계 행 (엑셀 셀처럼) */
-.stat-row{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  border:1px solid #D9D9D9;
-  border-top:none;
-  background:#fff;
-}
-.stat-cell{
-  padding:10px 8px;text-align:center;
-  border-right:1px solid #D9D9D9;
-}
-.stat-cell:last-child{border-right:none}
-.stat-num{font-size:20px;font-weight:700;color:var(--accent)}
-.stat-label{font-size:11px;color:#888;margin-top:1px}
+/* 검색 */
+.search-wrap{padding:.5rem 1.25rem}
+.search{width:100%;padding:.55rem 1rem;border:2px solid #f0c6d8;border-radius:2rem;font-size:.88rem;outline:none;transition:border .2s;background:#fff}
+.search:focus{border-color:#d4789c}
 
-/* 검색 바 */
-.search-bar{
-  background:#fff;border-bottom:1px solid #D9D9D9;
-  padding:8px 12px;display:flex;align-items:center;gap:8px;
-}
-.search-bar label{font-size:12px;color:#888;white-space:nowrap;font-weight:600}
-.search{
-  flex:1;background:#fff;
-  border:1px solid #BFBFBF;
-  padding:7px 10px;font-size:14px;
-  color:#1a1a1a;outline:none;
-  border-radius:2px;
-  font-family:inherit;
-}
-.search:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--accent-rgb),.15)}
+/* 챕터 탭 (카드뷰) */
+.tabs{display:flex;gap:.35rem;padding:.4rem 1.25rem .5rem;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:.28rem .75rem;border-radius:2rem;border:1.5px solid #d4789c;background:#fff;color:#d4789c;font-size:.74rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
+.tab.active,.tab:hover{background:#d4789c;color:#fff}
 
-/* 섹션 테이블 */
-.tbl-wrap{padding:0}
-.tbl-header{
-  background:var(--accent);color:#fff;
-  padding:8px 12px;
-  display:grid;grid-template-columns:40px 1fr 28px;
-  align-items:center;gap:8px;
-  font-size:12px;font-weight:700;letter-spacing:0.04em;
-  border-bottom:1px solid var(--accent-dark);
-  position:sticky;top:48px;z-index:40;
-}
+/* 카드 그리드 */
+.section-group{padding:.3rem 1.25rem .8rem}
+.section-group.hidden{display:none}
+.section-label{font-size:.68rem;font-weight:700;color:#8b6bae;text-transform:uppercase;letter-spacing:.05em;padding:.35rem 0 .3rem;border-bottom:2px solid #f3eefa;margin-bottom:.5rem}
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem}
+@media(min-width:540px){.card-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.card-grid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1200px){.card-grid{grid-template-columns:repeat(5,1fr)}}
+.card{background:#fff;border-radius:.65rem;padding:.7rem;cursor:pointer;border:1.5px solid #f0e0ea;transition:all .18s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card:hover{border-color:#d4789c;box-shadow:0 4px 14px rgba(212,120,156,.18);transform:translateY(-2px)}
+.card-title{font-size:.78rem;font-weight:700;color:#1a1a2e;margin-bottom:.3rem;line-height:1.35}
+.card-preview{font-size:.68rem;color:#999;line-height:1.4}
+.card.hidden-card{display:none!important}
 
-/* 섹션 행 */
-.row{
-  background:#fff;
-  border-bottom:1px solid #E8E8E8;
-}
-.row:nth-child(even) .row-hd{background:#F8F8F8}
-.row-hd{
-  display:grid;grid-template-columns:40px 1fr 28px;
-  align-items:center;gap:8px;
-  padding:13px 12px;
-  cursor:pointer;
-  min-height:52px;
-}
-.row-hd:active{background:#EDF3FB!important}
-.row-num{
-  font-size:11px;font-weight:800;
-  color:var(--accent);
-  background:rgba(var(--accent-rgb),.1);
-  border:1px solid rgba(var(--accent-rgb),.25);
-  padding:2px 4px;border-radius:2px;
-  text-align:center;font-family:monospace;
-}
-.row-title{font-size:14px;font-weight:600;line-height:1.35;color:#1a1a1a}
-.row-ch{font-size:11px;color:#999;margin-top:2px}
-.arr{font-size:10px;color:#BFBFBF;transition:transform .15s;text-align:center}
-.row.open .arr{transform:rotate(180deg)}
+/* ── 트리 뷰 ── */
+.tree-root{padding:.5rem 1.25rem 2rem;display:none}
+.tree-root.show{display:block}
 
-/* 펼침 영역 */
-.row-body{display:none;background:#FAFAFA;border-top:1px solid #E8E8E8;padding:14px 12px}
-.row.open .row-body{display:block}
+/* 챕터 */
+.tree-ch-wrap{margin-bottom:.5rem}
+.tree-ch{display:flex;align-items:center;gap:.5rem;padding:.6rem .9rem;background:#d4789c;color:#fff;border-radius:.6rem;cursor:pointer;font-size:.85rem;font-weight:700;user-select:none;transition:opacity .15s}
+.tree-ch:hover{opacity:.88}
+.tree-ch-body{display:none;padding:.4rem 0 .4rem 1.2rem;border-left:3px solid #d4789c;margin-left:1rem}
+.tree-ch-body.open{display:block}
 
-/* 키워드 */
-.kw-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
-.kw{
-  background:#fff;border:1px solid #D9D9D9;
-  color:#555;padding:3px 9px;border-radius:2px;
-  font-size:12px;font-family:inherit;
-}
+/* 섹션 */
+.tree-sec-wrap{margin-bottom:.3rem}
+.tree-sec{display:flex;align-items:center;gap:.5rem;padding:.45rem .8rem;background:#f3eefa;border:1.5px solid #8b6bae;border-radius:.5rem;cursor:pointer;font-size:.8rem;font-weight:600;color:#8b6bae;user-select:none;transition:background .15s}
+.tree-sec:hover{background:#e8e0f5}
+.tree-sec-body{display:none;padding:.3rem 0 .3rem 1rem;border-left:2px solid #f3eefa;margin-left:.9rem}
+.tree-sec-body.open{display:block}
 
-/* 출제 포인트 */
-.quiz{
-  background:#fff;
-  border:1px solid #D9D9D9;
-  border-left:4px solid var(--accent);
-  padding:10px 12px;margin-bottom:12px;
-  border-radius:0 2px 2px 0;
-}
-.quiz h4{
-  font-size:11px;color:var(--accent);font-weight:800;
-  text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;
-}
-.quiz li{font-size:12px;color:#444;margin-left:14px;margin-bottom:3px}
+/* 개념 노드 */
+.tree-con{display:flex;align-items:center;gap:.5rem;padding:.3rem .6rem;border-radius:.4rem;cursor:pointer;font-size:.76rem;color:#444;transition:all .15s}
+.tree-con:hover{background:#fdf0f5;color:#d4789c;font-weight:600}
 
-/* 세부항목 */
-.subs{display:flex;flex-direction:column;gap:8px}
-.sub{
-  background:#fff;
-  border:1px solid #D9D9D9;
-  border-radius:2px;padding:12px;
-}
-.sub-mk{
-  display:inline-block;
-  background:var(--accent);color:#fff;
-  padding:1px 7px;border-radius:1px;
-  font-size:11px;font-weight:700;
-  margin-bottom:5px;letter-spacing:.03em;
-}
-.sub-t{font-size:13px;font-weight:700;margin-bottom:5px;line-height:1.4;color:#1a1a1a}
-.sub-c{font-size:12px;color:#555;margin-bottom:6px;line-height:1.6}
-.bul{list-style:none;border-top:1px solid #F0F0F0;padding-top:6px}
-.bul li{
-  font-size:12px;color:#444;
-  padding:3px 0 3px 12px;
-  position:relative;
-  border-bottom:1px dotted #F0F0F0;
-}
-.bul li:last-child{border-bottom:none}
-.bul li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:11px;top:4px}
+/* 화살표 */
+.tree-arr{font-size:.6rem;transition:transform .2s;display:inline-block;width:.8rem;flex-shrink:0}
+.open > .tree-arr, .open + * > .tree-arr{transform:rotate(90deg)}
 
-/* 하단 시트 탭 네비 */
-.sheet-tabs{
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  background:#F0F0F0;
-  border-top:2px solid #D9D9D9;
-  display:flex;overflow-x:auto;
-  -ms-overflow-style:none;scrollbar-width:none;
-  padding:0 4px;
-  gap:2px;
-  align-items:flex-end;
-  height:48px;
-}
-.sheet-tabs::-webkit-scrollbar{display:none}
-.tab{
-  flex-shrink:0;
-  display:flex;align-items:center;gap:4px;
-  padding:6px 10px;
-  background:#DCDCDC;
-  border:1px solid #BFBFBF;border-bottom:none;
-  border-radius:3px 3px 0 0;
-  font-size:12px;color:#555;
-  text-decoration:none;
-  height:36px;
-  transition:background .1s;
-  white-space:nowrap;
-}
-.tab:active,.tab.active{
-  background:#fff;color:var(--active-color,#1a1a1a);
-  font-weight:700;border-color:#BFBFBF;
-  height:40px;
-}
-.tab .ic{font-size:14px}
+/* 개념 dot (enriched 여부) */
+.tree-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.tree-dot.has{background:#d4789c}
+.tree-dot.empty{background:#ddd}
 
-/* 인덱스 */
-.idx-header{
-  background:var(--accent);color:#fff;
-  padding:20px 16px;
-  border-bottom:3px solid var(--accent-dark);
-}
-.idx-header h1{font-size:22px;font-weight:700;margin-bottom:4px}
-.idx-header p{font-size:13px;opacity:.85}
-.idx-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:0;
-  border-left:1px solid #D9D9D9;
-  border-top:1px solid #D9D9D9;
-}
-.idx-card{
-  background:#fff;
-  border-right:1px solid #D9D9D9;
-  border-bottom:1px solid #D9D9D9;
-  padding:18px 14px;
-  text-decoration:none;color:inherit;
-  display:block;
-}
-.idx-card:active{background:#EDF3FB}
-.idx-card .ic{font-size:26px;margin-bottom:8px}
-.idx-card .n{font-size:11px;font-weight:800;color:var(--card-c);margin-bottom:4px}
-.idx-card h2{font-size:14px;font-weight:700;margin-bottom:4px;line-height:1.3;color:#1a1a1a}
-.idx-card .m{font-size:12px;color:#888}
-.idx-card .bar{height:3px;background:var(--card-c);border-radius:0;margin-top:10px}
+/* 개수 뱃지 */
+.tree-count{margin-left:auto;font-size:.68rem;opacity:.65;font-weight:400}
 
-@media(min-width:600px){
-  .idx-grid{grid-template-columns:repeat(3,1fr)}
-  .sheet-info h1{font-size:24px}
-}
-@media(min-width:900px){
-  body{max-width:900px;margin:0 auto}
-  .sheet-tabs{max-width:900px;left:50%;transform:translateX(-50%)}
-  .ribbon{max-width:900px;left:50%;transform:translateX(-50%);position:sticky}
-}
-
+/* 모달 */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;padding:1rem;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex}
+@media(min-width:640px){.overlay{align-items:center}}
+.modal{background:#fff;border-radius:1rem 1rem 0 0;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,.18)}
+@media(min-width:640px){.modal{border-radius:1rem;max-height:85vh}}
+.modal-header{background:#d4789c;color:#fff;padding:.9rem 1.25rem;border-radius:1rem 1rem 0 0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+.modal-header h2{font-size:.95rem;font-weight:700;line-height:1.3}
+.modal-close{background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;opacity:.8;line-height:1}
+.modal-close:hover{opacity:1}
+.modal-body{padding:1.1rem;display:flex;flex-direction:column;gap:.9rem}
+.sec-bg{background:#fdf0f5;border-left:4px solid #d4789c;border-radius:0 .5rem .5rem 0;padding:.8rem 1rem}
+.sec-expl{background:#f3eefa;border-left:4px solid #8b6bae;border-radius:0 .5rem .5rem 0;padding:.8rem 1rem}
+.sec-mn{background:#8b6bae;color:#fff;border-radius:.75rem;padding:.95rem 1.2rem}
+.sec-label{font-size:.64rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.sec-bg .sec-label{color:#d4789c}
+.sec-expl .sec-label{color:#8b6bae}
+.sec-mn .sec-label{color:rgba(255,255,255,.75)}
+.sec-bg p,.sec-expl p{font-size:.85rem;line-height:1.7;color:#333}
+.sec-mn p{font-size:.92rem;line-height:1.6;font-weight:600}
+.no-data{font-size:.82rem;color:#bbb;font-style:italic}
 </style>
 </head>
 <body>
 
-<div class="ribbon">
-  <a class="ribbon-back" href="/topcit">◀ 목록</a>
-  <div class="ribbon-title">💻 01. 소프트웨어 개발</div>
+<div class="header">
+  <a href="/topcit/" class="header-back">←</a>
+  <span style="font-size:1.2rem">💻</span>
+  <h1>TOPCIT 01 &nbsp;소프트웨어 개발</h1>
+  <span class="header-cnt">102개 개념</span>
 </div>
 
-<div class="sheet-info">
-  <div class="sheet-badge">기술영역 01</div>
-  <h1>소프트웨어 개발</h1>
-  <p>TOPCIT 에센스 핵심 정리</p>
-</div>
-<div class="stat-row">
-  <div class="stat-cell"><div class="stat-num">32</div><div class="stat-label">소단원</div></div>
-  <div class="stat-cell"><div class="stat-num">102</div><div class="stat-label">세부항목</div></div>
-  <div class="stat-cell"><div class="stat-num">122</div><div class="stat-label">키워드</div></div>
-  <div class="stat-cell"><div class="stat-num">70</div><div class="stat-label">출제포인트</div></div>
+<div class="view-toggle">
+  <button class="vtab active" onclick="switchView('card', this)">🃏 카드</button>
+  <button class="vtab" onclick="switchView('fb', this)">🌳 트리</button>
 </div>
 
-<div class="search-bar">
-  <label>🔍 검색</label>
-  <input id="search" class="search" type="search" placeholder="소단원명 검색..." autocomplete="off">
+<div class="search-wrap">
+  <input class="search" type="text" placeholder="🔍  개념 검색..." oninput="applyFilters()">
 </div>
 
-<div class="tbl-wrap">
-  <div class="tbl-header">
-    <div>NO</div><div>소단원</div><div></div>
+<div class="tabs" id="tab-bar">
+<button class="tab active" onclick="filterTab(this,'all')">전체</button>
+<button class="tab" onclick="filterTab(this,'0')">소프트웨어 공학 기초</button>
+<button class="tab" onclick="filterTab(this,'1')">소프트웨어 설계 & 아키텍처</button>
+<button class="tab" onclick="filterTab(this,'2')">UI/UX & 개발 도구</button>
+<button class="tab" onclick="filterTab(this,'3')">품질 & 요구사항</button>
+<button class="tab" onclick="filterTab(this,'4')">형상관리 & 오픈소스</button>
+<button class="tab" onclick="filterTab(this,'5')">소프트웨어 유지보수</button>
+<button class="tab" onclick="filterTab(this,'6')">재사용 & 자료구조</button>
+</div>
+<div id="card-content">
+<div class="section-group" data-chapter="0"><div class="section-label">소프트웨어 공학의 배경과 목적</div><div class="card-grid"><div class="card" onclick="openModal('소프트웨어 공학 소개','옛날에 프로그래머 한 명이 혼자 간단한 프로그램을 만들 때는 그냥 머릿속으로 생각하면서 만들어도 됐어. 근데 프로그램이 점점 복잡해지고 여러 사람이 함께 만들어야 하는 상황이 오자, 아무 계획 없이 만들다가 완전 엉망이 되는 사태가 자꾸 발생한 거야!','소프트웨어 공학은 쉽게 말해 \'프로그램을 망하지 않게 만드는 체계적인 방법론\'이야. 집 지을 때 설계도 없이 막 짓다간 무너지잖아? 소프트웨어도 마찬가지로 \'뭘 만들지 분석 → 설계 → 개발 → 테스트 → 유지보수\' 순서대로 계획적으로 진행하는 거야. 핵심은 좋은 과정(Process)과 잘 짜인 조직(Organization), 이 두 가지를 갖추는 것!','🏠 \'집 짓기 PO\': Process(과정)와 Organization(조직), 이 두 개만 기억해! → \'PO 없으면 소프트웨어 폭망(POOR)\'')"><div class="card-title">소프트웨어 공학 소개</div><div class="card-preview">🧠 🏠 '집 짓기 PO': Process(과정)와 Organization…</div></div><div class="card" onclick="openModal('소프트웨어 공학 배경','1960년대에 컴퓨터가 퍼지면서 소프트웨어 만들어달라는 요청이 폭발적으로 늘었는데, 만들 줄 아는 사람도 부족하고 체계적인 방법도 없어서 프로젝트가 줄줄이 실패했어. 이 대혼란을 \'소프트웨어의 위기\'라고 부르고, 이걸 해결하려고 소프트웨어 공학이 본격적으로 탄생하게 된 거야.','소프트웨어 공학은 쉽게 말해 \'건물 짓는 설계도와 공사 규칙\'이라고 생각하면 돼. 집 지을 때 그냥 막 쌓으면 무너지잖아? 소프트웨어도 마찬가지로 체계적인 순서와 규칙 없이 만들면 망하는 거야. 그래서 \'어떻게 하면 소프트웨어를 안 망하고 잘 만들 수 있을까?\'를 연구하는 게 바로 소프트웨어 공학이야.','**위기 → 공학** 스토리로 기억해! \'60년대 소프트웨어 위기(危機) → 공학(工學)으로 극복!\' — 위기가 없었으면 공학도 없었다! \'위기 낳은 공학\' 딱 이것만 기억해 😤')"><div class="card-title">소프트웨어 공학 배경</div><div class="card-preview">🧠 **위기 → 공학** 스토리로 기억해! '60년대 소프트웨어 위기(危…</div></div><div class="card" onclick="openModal('소프트웨어 공학의 4가지 중요요소','옛날에 프로그래머들이 그냥 감으로 소프트웨어를 만들다 보니 완성도 못 하거나 엉망진창인 결과물이 나오는 일이 너무 많았어. 그래서 \'어떻게 하면 제대로, 제때, 싸게 만들 수 있을까?\'를 연구하다가 소프트웨어 공학이 탄생했고, 핵심 요소 4가지를 정리하게 됐어.','소프트웨어를 잘 만들려면 4가지가 필요해 — \'방법(어떻게 만들지)\', \'도구(뭘 써서 만들지)\', \'절차(어떤 순서로 만들지)\', \'사람(누가 만들지)\'. 예를 들어 집 짓는 것처럼, 설계 방법도 알아야 하고, 망치·드릴 같은 도구도 있어야 하고, 기초→뼈대→지붕 순서도 지켜야 하고, 결국 일 할 사람도 있어야 하잖아. 이 4가지가 딱 맞아야 좋은 소프트웨어가 제때, 예산 안에서 나올 수 있어.','🧠 \'방도절사\' — **방**법, **도**구, **절**차, **사**람! \'방도 없고 절이 없으면 사람도 못 만든다\' 라고 외워봐!')"><div class="card-title">소프트웨어 공학의 4가지 중요요소</div><div class="card-preview">🧠 🧠 '방도절사' — **방**법, **도**구, **절**차, **사…</div></div></div></div>
+<div class="section-group" data-chapter="0"><div class="section-label">소프트웨어 개발 생명주기</div><div class="card-grid"><div class="card" onclick="openModal('정의','옛날에 프로그램을 만들 때 그냥 생각나는 대로 코딩했다가 나중에 엉망진창이 되는 경우가 많았어. 그래서 \'아, 순서대로 단계를 정해놓고 만들자!\' 하고 생긴 개념이 바로 소프트웨어 생명주기야.','소프트웨어 생명주기는 프로그램이 태어나서 죽을 때까지의 과정이야. 마치 집을 지을 때 \'이 땅에 집 지어도 될까?(타당성) → 언제 지을까?(계획) → 뭐가 필요하지?(분석) → 어떻게 생기게 할까?(설계) → 실제로 짓기(구현) → 문제없나 확인(테스트) → 사람들이 살기(운용) → 고치고 수리하기(유지보수)\' 순서로 진행되는 것과 똑같아.','🎵 \'타-계-분-설-구-테-운-유\' → **\'타계분설구테운유\'** = \'**타**고난 **계**획대로 **분**명히 **설**계하고 **구**현한 뒤 **테**스트, **운**용, **유**지!\'라고 외워봐!')"><div class="card-title">정의</div><div class="card-preview">🧠 🎵 '타-계-분-설-구-테-운-유' → **'타계분설구테운유'** =…</div></div><div class="card" onclick="openModal('목적','옛날에 팀으로 프로그램을 만들다 보니 각자 다른 방향으로 일하다가 결국 엉망진창이 되는 문제가 생겼어. 그래서 \'우리가 왜 이걸 만드는지\' 명확히 정하고 시작하자는 개념이 생긴 거야!','소풍을 가는데 목적지를 안 정하면 다들 다른 곳으로 걸어가서 뿔뿔이 흩어지잖아. 소프트웨어 프로젝트의 \'목적\'도 똑같이 \'우리가 이 프로그램으로 무엇을 이루려는지\' 딱 정해놓는 거야. 목적이 명확해야 팀원 모두가 같은 방향으로 힘을 모을 수 있어!','목적 = \'목\'표 지점을 \'적\'어라! ✏️ → 안 적으면 다들 딴 데 감!')"><div class="card-title">목적</div><div class="card-preview">🧠 목적 = '목'표 지점을 '적'어라! ✏️ → 안 적으면 다들 딴 데…</div></div><div class="card" onclick="openModal('소프트웨어 생명주기 선정','옛날에 소프트웨어를 만들 때 그냥 무작정 개발했다가 중간에 요구사항이 바뀌거나 실패하는 경우가 너무 많았어. 그래서 \'프로젝트 상황에 맞는 개발 순서와 방식을 미리 골라서 쓰자!\'는 필요성이 생긴 거야.','소프트웨어 생명주기 선정은 쉽게 말해 \'집 짓기 방식 고르기\'야. 집을 지을 때 설계도 다 그리고 짓는 방식도 있고, 일단 작은 모형 먼저 만들어보는 방식도 있잖아. 마찬가지로 소프트웨어도 프로젝트의 위험도나 불확실성에 따라 폭포수, 프로토타입, 나선형 같은 개발 방식 중에서 가장 잘 맞는 걸 골라 쓰는 거야. 잘못된 방식을 고르면 시간도 돈도 다 날리니까 처음에 신중하게 선택하는 게 정말 중요해!','🌀 \'폭→프→나→애\' 로 외워! (폭포수 → 프로토타입 → 나선형 → 애자일) \'폭풍 프로 나선 애인\' — 폭풍같은 프로젝트엔 나선형 애인(방식)을 골라라!')"><div class="card-title">소프트웨어 생명주기 선정</div><div class="card-preview">🧠 🌀 '폭→프→나→애' 로 외워! (폭포수 → 프로토타입 → 나선형 →…</div></div><div class="card" onclick="openModal('소프트웨어 생명주기 모델 종류','옛날에 소프트웨어를 만들다 보니 \'어떤 순서로 개발해야 하지?\'라는 혼란이 생겼어. 그래서 프로젝트 상황에 맞게 골라 쓸 수 있는 여러 가지 개발 순서 틀(모델)들이 만들어졌어.','소프트웨어 생명주기 모델은 \'집 짓는 설계도\'같은 거야. 어떤 집은 설계를 완벽하게 다 짜고 짓고(폭포수 모델), 어떤 집은 먼저 작게 짓고 확인받고 또 고치고(V모델, 나선형 모델) 하는 것처럼, 프로젝트 상황에 따라 가장 잘 맞는 순서 틀을 골라서 쓰는 거야. 요구사항이 처음부터 명확하면 폭포수나 V모델처럼 단계별로 딱딱 진행하는 게 유리해.','모델 고르기 = 옷 고르기! \'날씨(프로젝트 상황)에 맞는 옷(모델)을 입어라\' — 요구사항이 명확하면 정장(V모델/폭포수), 계속 바뀌면 레이어드(나선형/애자일)!')"><div class="card-title">소프트웨어 생명주기 모델 종류</div><div class="card-preview">🧠 모델 고르기 = 옷 고르기! '날씨(프로젝트 상황)에 맞는 옷(모델)…</div></div><div class="card" onclick="openModal('소프트웨어 개발 방법론 비교','옛날에는 소프트웨어를 만드는 방식이 제각각이라 팀마다 다른 방법으로 개발하다 보니 협업이 너무 어려웠어. 그래서 \'우리 이 방식으로 통일해서 만들자!\'하고 체계적인 개발 방법론들이 하나씩 생겨나게 됐어.','소프트웨어 개발 방법론은 쉽게 말해 \'집 짓는 설계 방식\'이야. 구조적 방법론은 \'일 순서대로 차근차근 짓기\', 정보공학 방법론은 \'데이터(재료) 중심으로 짓기\', 객체지향 방법론은 \'레고 블록처럼 부품 만들어서 조립하기\', CBD 방법론은 \'이미 만들어진 부품(컴포넌트)을 재사용해서 빠르게 조립하기\'야.','구정객CBD → \'구정(舊正)에 객(손님)이 CBD(커피)를 마신다\' 🎄구조적-정보공학-객체지향-CBD 순서로 기억! 각각의 핵심은 구=업무순서, 정=데이터, 객=클래스/레고, C=재사용부품')"><div class="card-title">소프트웨어 개발 방법론 비교</div><div class="card-preview">🧠 구정객CBD → '구정(舊正)에 객(손님)이 CBD(커피)를 마신다'…</div></div><div class="card" onclick="openModal('소프트웨어 개발 단계','옛날에 개발자들이 아무 계획 없이 무작정 코딩부터 시작했다가 나중에 \'이거 고객이 원하는 게 아니었어!\' 하면서 처음부터 다시 만드는 일이 너무 많았어. 그래서 사람들이 \'순서대로 단계를 나눠서 개발하자!\'고 정리한 게 바로 이 소프트웨어 개발 단계야.','집 짓는 것과 똑같아. 먼저 \'방이 몇 개 필요해?\'(요구사항 분석) → \'설계도 그리기\'(설계) → \'실제로 벽돌 쌓기\'(구현/코딩) → \'문이 제대로 열리나 확인하기\'(테스팅) 순서로 진행돼. 이 순서를 안 지키면 벽 다 세우고 나서 \'창문 위치가 잘못됐네\' 하고 허무는 것처럼, 시간과 돈이 몇 배로 낭비되는 거야.','요설구테 → \'요\'리사(요구사항) \'설\'거지(설계) \'구\'매(구현) \'테\'이블(테스팅) — 요리하고, 설거지하고, 재료 구매하고, 테이블 차리면 밥상 완성! 순서가 이상하면 밥상이 엉망이 되는 것처럼 개발도 순서가 중요해!')"><div class="card-title">소프트웨어 개발 단계</div><div class="card-preview">🧠 요설구테 → '요'리사(요구사항) '설'거지(설계) '구'매(구현) …</div></div></div></div>
+<div class="section-group" data-chapter="0"><div class="section-label">애자일 개발 방법론</div><div class="card-grid"><div class="card" onclick="openModal('애자일 방법론 종류','옛날에는 소프트웨어를 만들 때 계획을 엄청 꼼꼼히 세우고 순서대로 만들었는데, 중간에 고객 요구사항이 바뀌면 처음부터 다시 해야 하는 문제가 생겼어. 그래서 \'더 유연하고 빠르게 만들자!\'는 애자일 선언문이 나왔고, 이를 실천하는 다양한 방법론들이 등장하게 됐어.','애자일 방법론은 요리 레시피처럼 \'어떻게 유연하게 개발할지\'에 대한 구체적인 방법들이야. 스크럼은 팀원들이 매일 짧게 모여 진행상황을 점검하는 방식이고, XP(익스트림 프로그래밍)는 켄트 벡이 만든 코드 품질에 집중하는 방식이야. 린은 도요타 공장에서 낭비를 줄이던 방식을 소프트웨어에 적용한 거라서, \'필요한 것만, 빠르게\'가 핵심이야.','애자일 방법론 3대장 → \'스X린\' 🎮 스크럼(Scrum) + X(XP, 켄트벡) + 린(Lean, 도요타) — \'스크럼하다가 X(극한)으로 린(lean·날씬하게) 만든다!\'')"><div class="card-title">애자일 방법론 종류</div><div class="card-preview">🧠 애자일 방법론 3대장 → '스X린' 🎮 스크럼(Scrum) + X(X…</div></div><div class="card" onclick="openModal('애자일 개발 방법론 XP','옛날에는 소프트웨어 개발할 때 계획을 엄청 꼼꼼히 짜고 몇 년씩 개발했는데, 막상 완성하면 고객이 원하는 게 달라져서 다 쓸모없어지는 일이 많았어. 그래서 1990년대 후반에 켄트 벡이라는 개발자가 \'그냥 조금씩 빠르게 만들고 계속 고쳐나가자!\'는 방식을 만들게 됐어.','XP는 마치 레고 블록 조립하듯이 소프트웨어를 조금씩 만들고, 바로바로 테스트하고, 문제 있으면 즉시 고치는 방식이야. 예를 들어 친구랑 같이 숙제할 때 다 끝내고 검토하는 게 아니라, 한 문제 풀고 바로 맞는지 확인하면서 진행하는 것처럼! 특히 소규모 팀에서 빠르게 결과물을 만들어야 할 때 딱 맞는 방법이야.','XP = \'극한(eXtreme) 빨리빨리\' → 만들고✅ 테스트하고✅ 고치고✅ 반복! 엑스(X)자로 계속 교차하며 앞으로 나간다고 기억해!')"><div class="card-title">애자일 개발 방법론 XP</div><div class="card-preview">🧠 XP = '극한(eXtreme) 빨리빨리' → 만들고✅ 테스트하고✅ …</div></div><div class="card" onclick="openModal('스크럼','옛날에 소프트웨어 개발할 때 계획을 처음에 다 세워두고 개발했는데, 중간에 요구사항이 바뀌면 처음부터 다시 해야 하는 큰 문제가 있었어. 그래서 \'조금씩 빠르게 만들고, 계속 수정하자!\'는 방식이 필요해졌고 스크럼이 탄생했어.','스크럼은 럭비 경기에서 선수들이 모여 전략 짜는 것처럼, 개발팀이 짧은 기간(보통 2주) 동안 목표를 정해서 함께 달리는 방식이야. 예를 들어 앱을 만들 때 \'이번 2주는 로그인 기능만 완성하자!\'처럼 작은 목표를 반복해서 완성해 나가는 거야. 팀에는 제품 책임자(뭘 만들지 결정), 스크럼 마스터(팀이 잘 달리도록 도와주는 사람), 개발팀 이렇게 3가지 역할이 있어.','스크럼 = \'스\'프린트(짧게 달리기) + \'크\'게 3가지 역할 + \'럼\'비처럼 팀이 뭉쳐서! → \'스크럼은 짧게짧게 팀플!\'')"><div class="card-title">스크럼</div><div class="card-preview">🧠 스크럼 = '스'프린트(짧게 달리기) + '크'게 3가지 역할 + '…</div></div></div></div>
+<div class="section-group" data-chapter="1"><div class="section-label">소프트웨어 설계 원리</div><div class="card-grid"><div class="card" onclick="openModal('정보 은닉','옛날에 여러 개발자가 함께 코드를 짤 때, 한 사람이 내부 코드를 바꾸면 다른 사람의 코드까지 줄줄이 고장나는 문제가 생겼어. 그래서 \'내 방 안은 내가 알아서 할게, 너는 문(인터페이스)으로만 소통해\'라는 규칙이 필요해진 거야.','카페 키오스크를 생각해봐. 우리는 버튼만 누르면 되고, 기계 안에서 커피가 어떻게 만들어지는지 알 필요가 없잖아. 정보 은닉도 똑같아. 모듈 안에서 뭔가 바뀌어도 밖에서는 그냥 버튼(인터페이스)만 누르면 되니까, 다른 모듈에 영향이 안 가는 거야. 덕분에 한 부분을 고쳐도 다른 부분이 망가지지 않아서 훨씬 안전하게 개발할 수 있어.','🔒 \'내 방은 잠금, 문으로만 소통\' — 방(모듈) 내부는 자물쇠로 잠그고, 문(인터페이스)으로만 연락한다고 기억해!')"><div class="card-title">정보 은닉</div><div class="card-preview">🧠 🔒 '내 방은 잠금, 문으로만 소통' — 방(모듈) 내부는 자물쇠로 …</div></div><div class="card" onclick="openModal('단계적 정제','옛날에 프로그래머들이 처음부터 복잡한 코드를 한 번에 짜려다 보니 너무 어렵고 오류도 많이 생겼어. 그래서 \'일단 큰 그림부터 그리고, 점점 세부적으로 쪼개가자!\'는 방식이 필요해졌어.','레고로 집 만드는 걸 상상해봐. 처음엔 \'집 만들기\'라고만 생각하다가, \'지붕, 벽, 문\'으로 나누고, 또 \'지붕은 빨간 블록 3줄\'처럼 점점 구체적으로 쪼개가잖아. 단계적 정제가 딱 그거야 — 큰 덩어리를 계속 잘게 잘라서 실제로 만들 수 있을 만큼 작게 만드는 과정이야. 추상적인 것(큰 그림) → 구체적인 것(세부 코드) 순서로 내려간다고 생각하면 돼.','🔍 \'큰→작→작→작\' — \'큰 문제를 작게, 또 작게, 또 작게!\' 줌인(Zoom-in) 카메라처럼 점점 확대해서 세부사항을 보여준다고 기억해!')"><div class="card-title">단계적 정제</div><div class="card-preview">🧠 🔍 '큰→작→작→작' — '큰 문제를 작게, 또 작게, 또 작게!' …</div></div><div class="card" onclick="openModal('모듈화','옛날에는 프로그램을 하나의 거대한 덩어리로 짰는데, 나중에 고치거나 기능을 추가하려면 전체를 다 뒤져야 해서 너무 힘들었어. 그래서 \'차라리 처음부터 작은 조각들로 나눠서 만들자!\'는 생각이 나온 거야.','레고 블록 생각해봐! 집 전체를 하나의 덩어리로 만들면 문 하나 고치려고 집 전체를 부숴야 하잖아. 근데 레고처럼 블록 단위로 만들면 문 블록만 쏙 빼서 고치면 끝이야. 모듈화가 딱 그거야 — 큰 프로그램을 작은 기능 단위 블록들로 쪼개서 만드는 것!','모듈화 = \'모아서 쪼개기\' → 🧩 레고처럼 조립/분리 가능!')"><div class="card-title">모듈화</div><div class="card-preview">🧠 모듈화 = '모아서 쪼개기' → 🧩 레고처럼 조립/분리 가능!</div></div><div class="card" onclick="openModal('응집도','옛날에 프로그램을 짤 때 관련 없는 기능들을 한 덩어리에 마구 쑤셔넣다 보니 나중에 고치거나 이해하기가 너무 힘들었어. 그래서 \'비슷한 기능끼리 얼마나 잘 모여 있는가\'를 측정하는 기준이 필요해졌고, 그게 바로 응집도야.','응집도는 한 모듈(기능 묶음) 안에 있는 것들이 얼마나 찰떡궁합인지를 나타내. 예를 들어 \'주방\'이라는 공간에 냉장고, 가스레인지, 칼, 도마가 있으면 모두 요리라는 하나의 목적으로 뭉쳐 있으니 응집도가 높은 거야. 반대로 주방에 변기, 소파, 책상까지 있으면 \'이게 뭐 하는 공간이야?\' 싶잖아 — 그게 응집도가 낮은 거야.','응집도는 \'같은 팀, 같은 목표!\' — 팀원이 모두 같은 포지션(목적)으로 뭉쳐 있을수록 응집도 UP! 뿔뿔이 흩어지면 응집도 DOWN!')"><div class="card-title">응집도</div><div class="card-preview">🧠 응집도는 '같은 팀, 같은 목표!' — 팀원이 모두 같은 포지션(목적…</div></div><div class="card" onclick="openModal('결합도','옛날에 프로그램이 커지면서 여러 부품(모듈)들이 서로 너무 복잡하게 얽혀있어서, 한 부품을 고치면 다른 부품들이 줄줄이 망가지는 문제가 생겼어. 그래서 \'얼마나 서로 얽혀있나\'를 측정하는 기준이 필요해졌고, 그게 바로 결합도야.','결합도는 레고 블록들이 서로 얼마나 찰싹 붙어있는지를 나타내는 거야. 블록들이 너무 꽉 붙어있으면(결합도 높음) 하나만 바꾸려 해도 다른 것들까지 다 분해해야 하고, 반대로 블록들이 딱 필요한 만큼만 연결되어 있으면(결합도 낮음) 하나만 쏙 빼서 고치고 다시 끼울 수 있어. 그래서 좋은 프로그램은 결합도가 낮을수록 좋아!','결합도는 \'찐따로!\' — 찐하게 붙을수록(결합도 높을수록) 따로 고치기 힘들다! 낮을수록 Good!')"><div class="card-title">결합도</div><div class="card-preview">🧠 결합도는 '찐따로!' — 찐하게 붙을수록(결합도 높을수록) 따로 고치…</div></div></div></div>
+<div class="section-group" data-chapter="1"><div class="section-label">소프트웨어 아키텍처 스타일</div><div class="card-grid"><div class="card" onclick="openModal('MVC(Model - View-Controller) 구조','옛날에 개발자들이 코드를 짤 때 데이터 처리, 화면 표시, 사용자 입력을 한 곳에 다 뒤섞어서 썼더니 나중에 수정할 때 어디를 고쳐야 할지 몰라서 엄청 혼란스러웠어. 그래서 역할을 딱 3가지로 나눠서 관리하자는 아이디어가 나온 거야.','학교 급식을 생각해봐! 영양사 선생님(Model)이 메뉴와 재료를 결정하고, 식판에 담긴 음식(View)이 학생 눈에 보이고, 조리사(Controller)가 영양사 지시를 받아 음식을 만들어서 식판에 올려주는 거야. 이렇게 역할이 나뉘어 있으니까 메뉴만 바꾸고 싶으면 영양사한테만 말하면 되고, 식판 디자인만 바꾸고 싶으면 식판만 바꾸면 돼서 서로 영향을 최소화할 수 있어.','📌 \'M(메뉴) - V(보여줘) - C(조리사)\' → 데이터는 Model이 갖고, 눈에 보이는 건 View, 둘 사이를 연결하는 건 Controller! \'MVC = 메뉴·뷰·컨트롤러\' 세 글자만 기억해!')"><div class="card-title">MVC(Model - View-Controller) 구조</div><div class="card-preview">🧠 📌 'M(메뉴) - V(보여줘) - C(조리사)' → 데이터는 Mod…</div></div><div class="card" onclick="openModal('클라이언트-서버 모델','옛날에는 모든 컴퓨터가 각자 따로 놀아서 정보를 나누려면 USB나 디스크를 직접 들고 다녀야 했어. 그래서 한 곳에 정보를 모아두고 여러 사람이 필요할 때마다 요청해서 꺼내 쓰는 방식이 필요해졌지!','식당을 생각해봐! 손님(클라이언트)이 \'짜장면 주세요~\' 하고 주문하면, 주방(서버)이 음식을 만들어서 가져다 주잖아. 손님은 여러 명일 수 있지만 주방은 하나고, 손님은 요리법을 몰라도 그냥 주문만 하면 돼. 인터넷에서 유튜브 영상을 볼 때도 똑같이 내 폰(클라이언트)이 유튜브 컴퓨터(서버)한테 \'이 영상 줘!\' 하고 요청하는 거야!','**\'손님은 요청, 주방은 응답!\'** — 클라이언트(손님) → 요청 → 서버(주방) → 응답 → 클라이언트(손님) 이 흐름만 기억해!')"><div class="card-title">클라이언트-서버 모델</div><div class="card-preview">🧠 **'손님은 요청, 주방은 응답!'** — 클라이언트(손님) → 요청…</div></div><div class="card" onclick="openModal('계층 구조','옛날에 프로그램이 커지면서 어디서 문제가 생겼는지 찾기가 너무 힘들었어. 그래서 역할별로 층층이 나눠서 관리하면 훨씬 쉽겠다는 생각에서 계층 구조가 탄생했지!','계층 구조는 마치 햄버거 같아. 빵, 패티, 야채, 소스가 각자 역할이 있고 순서대로 쌓여 있잖아. 네트워크도 똑같이 7층으로 나눠져 있어서, 문제가 생기면 \'몇 층짜리 빵이 문제야?\' 이렇게 층별로 딱 찾아낼 수 있어. 덕분에 고치기도 쉽고, 같은 규격이라 어떤 장비든 서로 맞춰 쓸 수 있어!','🍔 \'햄버거 7층 건물\' - 7층짜리 햄버거 빌딩! 각 층은 자기 일만 하고, 문제 나면 층별로 확인! \'7층 햄버거는 층층이 해결~\'')"><div class="card-title">계층 구조</div><div class="card-preview">🧠 🍔 '햄버거 7층 건물' - 7층짜리 햄버거 빌딩! 각 층은 자기 일…</div></div><div class="card" onclick="openModal('컨텍스트(Context) 모델','소프트웨어를 만들기 전에 \'우리가 뭘 만들어야 하지?\'를 정리하지 않으면 범위가 끝도 없이 커지는 문제가 생겼어. 그래서 개발 시작 전에 시스템의 울타리를 딱 그어서 \'여기까지만 우리 거야!\'를 명확히 하는 방법이 필요해졌지.','컨텍스트 모델은 우리 동네 지도에서 \'우리 아파트 단지\' 영역을 동그라미로 표시하는 것과 같아. 동그라미 안은 우리가 만들 시스템이고, 동그라미 밖은 외부 세계(사용자, 다른 시스템 등)야. 이 모델은 그 경계선에서 뭐가 들어오고 나가는지(입출력)만 딱 보여줘서, 팀 전체가 \'우리가 만들 것\'과 \'우리가 안 만들 것\'을 헷갈리지 않게 해줘.','컨텍스트 = \'컨\'테이너 속 \'텍\'스트처럼, 박스(경계) 안에 시스템을 가두고 밖에서 뭐가 드나드는지 본다! → \'경계 박스 + 입출력\'')"><div class="card-title">컨텍스트(Context) 모델</div><div class="card-preview">🧠 컨텍스트 = '컨'테이너 속 '텍'스트처럼, 박스(경계) 안에 시스템…</div></div><div class="card" onclick="openModal('패키지 다이어그램','소프트웨어가 점점 커지면서 수백 개의 기능들이 뒤죽박죽 섞여 있어서 어디에 뭐가 있는지 찾기도 힘들고 관리하기도 너무 어려워졌어. 그래서 관련 있는 기능들끼리 묶어서 덩어리로 관리하고, 그 덩어리들 사이의 관계를 그림으로 표현할 필요가 생겼지!','학교 사물함 생각해봐! 체육 용품은 체육 사물함, 미술 용품은 미술 사물함처럼 관련 있는 것들끼리 묶어놓잖아. 패키지 다이어그램은 소프트웨어를 이런 사물함(패키지)들로 나눠서, 각 사물함 안에 뭐가 들었는지는 숨기고 사물함들끼리 어떻게 연결되어 있는지만 그림으로 보여주는 거야. 이렇게 하면 전체 구조를 한눈에 파악할 수 있고, 사물함끼리 연결이 적을수록 더 깔끔하고 좋은 설계야!','패키지 다이어그램 = \'패묶숨관\' → 패(패키지로) 묶(관련 기능 묶고) 숨(내부는 숨기고) 관(관계만 그림으로 표현)!')"><div class="card-title">패키지 다이어그램</div><div class="card-preview">🧠 패키지 다이어그램 = '패묶숨관' → 패(패키지로) 묶(관련 기능 묶…</div></div></div></div>
+<div class="section-group" data-chapter="1"><div class="section-label">소프트웨어 아키텍처 설계</div><div class="card-grid"><div class="card" onclick="openModal('소프트웨어 아키텍처 개요','옛날에 개발자들이 코드를 막 짜다 보니 나중에 기능 하나 고치면 다른 곳이 와르르 무너지는 문제가 생겼어. 그래서 \'처음부터 설계도를 잘 그려두자!\'는 생각으로 소프트웨어 아키텍처 개념이 등장했어.','소프트웨어 아키텍처는 건물 짓기 전에 그리는 설계도랑 똑같아. 방을 몇 개 만들고, 어디에 문을 달고, 배선은 어떻게 할지 미리 정해두는 것처럼, 프로그램도 어떤 부분이 어떤 역할을 하고 서로 어떻게 연결될지 큰 그림을 먼저 그려두는 거야. 이 설계도가 잘 되어 있으면 나중에 기능을 추가하거나 고칠 때 훨씬 쉽고 안전하게 작업할 수 있어.','아키텍처 = \'아, 키(key)가 설계도!\' → 소프트웨어의 핵심 열쇠🔑는 미리 그린 설계도!')"><div class="card-title">소프트웨어 아키텍처 개요</div><div class="card-preview">🧠 아키텍처 = '아, 키(key)가 설계도!' → 소프트웨어의 핵심 열…</div></div><div class="card" onclick="openModal('소프트웨어 아키텍처 설계 절차','옛날에 개발자들이 설계도 없이 무작정 코드부터 짜다가 나중에 고치려면 전부 다 뜯어고쳐야 하는 대참사가 반복됐어. 그래서 집 짓기 전에 설계도를 먼저 그리듯이, 소프트웨어도 체계적인 설계 순서를 정하게 된 거야.','소프트웨어 아키텍처 설계 절차는 집을 짓는 과정이랑 똑같아. \'어떤 집이 필요해?(요구사항 파악)\' → \'전체 구조를 스케치해(아키텍처 결정)\' → \'각 방의 역할을 정해(컴포넌트 설계)\' → \'방들이 서로 어떻게 연결될지 정해(인터페이스 설계)\' → \'설계가 맞는지 검토해(검증)\' 순서로 진행되는 거야. 이 순서를 지켜야 나중에 벽 뚫고 배관 다시 까는 불상사를 막을 수 있어.','요아컴인검 → \'요아, 컴인검?\' 으로 외워! 요(요구사항) 아(아키텍처 결정) 컴(컴포넌트 설계) 인(인터페이스 설계) 검(검증) — \'야, 요아야, 컴퓨터 인터넷 검색해봐!\' 문장으로 순서를 기억해봐!')"><div class="card-title">소프트웨어 아키텍처 설계 절차</div><div class="card-preview">🧠 요아컴인검 → '요아, 컴인검?' 으로 외워! 요(요구사항) 아(아키…</div></div></div></div>
+<div class="section-group" data-chapter="1"><div class="section-label">소프트웨어 아키텍처 설계 표현 방법</div><div class="card-grid"><div class="card" onclick="openModal('컨텍스트 모델','옛날에 프로그램을 만들 때 \'이 프로그램이 세상의 어떤 부분을 담당하는지\' 경계가 불명확해서 개발자들이 뭘 만들어야 할지 헷갈리는 문제가 있었어. 그래서 \'우리 프로그램이 어디서 시작하고 어디서 끝나는지\'를 한눈에 보여주는 지도가 필요해졌지.','컨텍스트 모델은 우리가 만들 프로그램을 동네 지도의 \'우리 집\'처럼 딱 하나의 동그라미로 표시하고, 그 주변에 연결된 학교·마트·은행처럼 외부에서 관계 맺는 것들을 그려놓은 그림이야. 쉽게 말해 \'우리 프로그램은 이런 것들과 연결되고, 이 경계 안쪽만 우리가 만든다\'는 걸 보여주는 큰 그림이지. 개발 시작 전에 범위를 딱 정해두는 설계도 역할을 해.','🗺️ \'컨텍스트 = 경계 지도\' → 컨(경계)텍(테두리)스트(스타트 전에 그린다) — 개발 시작 전, 우리 프로그램의 울타리를 그리는 것!')"><div class="card-title">컨텍스트 모델</div><div class="card-preview">🧠 🗺️ '컨텍스트 = 경계 지도' → 컨(경계)텍(테두리)스트(스타트 …</div></div><div class="card" onclick="openModal('컴포넌트 다이어그램','프로그램이 커질수록 어떤 부품이 어떤 부품과 연결되어 있는지 한눈에 파악하기가 너무 어려워졌어. 그래서 레고 조립 설명서처럼 소프트웨어의 부품들과 연결 관계를 그림으로 표현하는 방법이 필요해졌어.','컴포넌트 다이어그램은 소프트웨어를 레고 블록처럼 나눠서, 각 블록(부품)이 어떻게 생겼고 서로 어떻게 연결되는지 보여주는 설계 그림이야. 예를 들어 쇼핑몰 앱을 만들 때 \'로그인 부품\', \'결제 부품\', \'장바구니 부품\'이 서로 어떻게 이어지는지 한눈에 보여주는 거야. 개발자들이 전체 구조를 미리 파악하고 각자 맡은 부품을 만들 수 있도록 도와주는 설계도야.','🧩 \'컴포넌트 = 레고 블록 설계도\' — \'컴\'퓨터 부품을 \'포\'장해서 \'넌\'트(연결)한 그림! 레고 박스 뒷면 조립 설명서를 떠올려봐!')"><div class="card-title">컴포넌트 다이어그램</div><div class="card-preview">🧠 🧩 '컴포넌트 = 레고 블록 설계도' — '컴'퓨터 부품을 '포'장해…</div></div><div class="card" onclick="openModal('패키지 다이어그램','프로그램이 커지면서 수백 개의 클래스들이 뒤죽박죽 섞여서 어디에 뭐가 있는지 찾기가 너무 힘들어졌어. 그래서 관련된 클래스들끼리 묶어서 한눈에 구조를 보여주는 지도 같은 게 필요해졌지.','패키지 다이어그램은 마치 학교 서랍장 정리랑 똑같아. 수학 관련 건 1번 서랍, 영어 관련 건 2번 서랍처럼 비슷한 클래스들을 폴더(패키지)로 묶어서 보여주는 거야. 그리고 각 폴더끼리 어떻게 연결되고 의존하는지를 화살표로 표시해줘서 전체 프로그램 구조를 한눈에 파악할 수 있어.','📦 \'패키지 = 택배 박스\' — 관련된 물건(클래스)끼리 같은 박스에 담고, 박스끼리 화살표로 배송 관계를 표시한다!')"><div class="card-title">패키지 다이어그램</div><div class="card-preview">🧠 📦 '패키지 = 택배 박스' — 관련된 물건(클래스)끼리 같은 박스에…</div></div><div class="card" onclick="openModal('사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점','옛날에는 프로그램이 그냥 \'작동만 하면 된다\'는 식으로 만들어졌는데, 사람들이 쓰다 보니 \'기능은 있는데 너무 불편해!\'라는 불만이 폭발했어. 그래서 \'어떻게 보여줄까(UI)\'와 \'어떻게 느끼게 할까(UX)\'를 따로 나눠서 생각하게 된 거야.','UI는 눈에 보이는 \'옷\'이고, UX는 그 옷을 입었을 때의 \'기분\'이야. 예를 들어 카페에서 음료 주문할 때 키오스크 화면에 보이는 버튼과 글씨가 UI고, 주문하면서 \'쉽다~\' 또는 \'너무 복잡해!\'라고 느끼는 전체 경험이 UX인 거야. 즉, UI가 예뻐도 UX가 불편하면 망한 거고, 둘 다 좋아야 사람들이 계속 쓰게 돼!','UI = 눈👀 (보이는 것), UX = 마음💓 (느끼는 것) → \'눈은 UI, 마음은 UX!\' 딱 이것만 기억해!')"><div class="card-title">사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점</div><div class="card-preview">🧠 UI = 눈👀 (보이는 것), UX = 마음💓 (느끼는 것) → '눈…</div></div><div class="card" onclick="openModal('컴파일러 언어','옛날에 컴퓨터는 사람이 쓴 코드를 바로 못 알아들어서 매번 한 줄씩 해석하다 보니 너무 느렸어. 그래서 \'그냥 실행 전에 코드 전체를 한 번에 컴퓨터 언어로 번역해두자!\'는 아이디어로 컴파일러 언어가 생겼어.','컴파일러 언어는 요리로 치면 \'레시피 전체를 미리 번역해서 요리책으로 만들어두는 것\'이야. 번역하는 데 시간이 좀 걸리지만, 한 번 만들어두면 나중에 요리할 때는 엄청 빠르게 할 수 있어. C나 C++ 같은 언어가 여기에 해당하는데, 게임이나 빠른 프로그램 만들 때 자주 써.','컴파일러 = \'컴 미리 파!\' → 실행 전에 미리 다 번역(파)해두는 언어!')"><div class="card-title">컴파일러 언어</div><div class="card-preview">🧠 컴파일러 = '컴 미리 파!' → 실행 전에 미리 다 번역(파)해두는…</div></div></div></div>
+<div class="section-group" data-chapter="1"><div class="section-label">구조적 설계 방법</div><div class="card-grid"><div class="card" onclick="openModal('트랜잭션흐름 중심 설계(Transaction Flow-Oriented Design)','옛날에 프로그램을 만들 때 입력이 들어오면 무조건 하나의 흐름으로만 처리했는데, 현실에서는 \'카드 결제\', \'현금 결제\', \'포인트 결제\'처럼 같은 입력이라도 상황에 따라 다른 길로 가야 하는 경우가 많았어. 그래서 입력을 받아서 여러 갈래 중 하나로 보내주는 설계 방식이 필요하게 된 거야.','편의점 계산대를 생각해봐. 손님이 물건을 가져오면(입력), 계산원이 결제 방식을 확인하고 \'현금이면 현금통으로, 카드면 카드기로, 상품권이면 상품권 처리로\' 각각 다른 길로 보내잖아. 트랜잭션 흐름 중심 설계가 딱 이거야 — 하나의 입력을 받아서 내용을 판단한 뒤, 여러 경로 중 딱 하나를 골라서 처리하는 방식이야. 여기서 \'계산원\'처럼 어떤 길로 보낼지 결정하는 핵심 지점을 \'트랜잭션 중심\'이라고 불러.','🚦 \'입력 → 판단 → 하나의 길 선택!\' — 교차로 신호등처럼 차(입력)가 오면, 신호(판단)를 보고, 직진/좌회전/우회전 중 딱 하나만 간다! \'입판하\' 로 기억해!')"><div class="card-title">트랜잭션흐름 중심 설계(Transaction Flow-Oriented Design)</div><div class="card-preview">🧠 🚦 '입력 → 판단 → 하나의 길 선택!' — 교차로 신호등처럼 차(…</div></div></div></div>
+<div class="section-group" data-chapter="1"><div class="section-label">객체 지향 설계와 원리</div><div class="card-grid"><div class="card" onclick="openModal('객체와 클래스','옛날에 프로그래머들이 비슷한 정보를 가진 사람이나 물건을 하나하나 따로 만들다 보니 코드가 너무 길어지고 복잡해졌어. 그래서 \'비슷한 것들은 하나의 틀로 묶어버리자!\'는 생각에서 클래스와 객체 개념이 생겼어.','클래스는 붕어빵 틀이고, 객체는 그 틀로 찍어낸 붕어빵이야. 틀(클래스)은 \'반죽, 팥, 모양\'이라는 속성을 정의하고, 실제로 찍어낸 붕어빵(객체)마다 팥이 많거나 적거나 하는 고유한 값을 가지는 거지. 예를 들어 \'학생\'이라는 틀로 김철수(학번 956234, 전공 Math)와 이영희(학번 925462, 전공 CS)라는 서로 다른 붕어빵을 만드는 거야.','클래스 = 붕어빵 틀 🐟, 객체 = 붕어빵 🍞 → \'틀은 하나, 빵은 여러 개!\'')"><div class="card-title">객체와 클래스</div><div class="card-preview">🧠 클래스 = 붕어빵 틀 🐟, 객체 = 붕어빵 🍞 → '틀은 하나, 빵은…</div></div></div></div>
+<div class="section-group" data-chapter="1"><div class="section-label">디자인 패턴</div><div class="card-grid"><div class="card" onclick="openModal('디자인 패턴 개념','옛날에 프로그래머들이 비슷한 문제를 만날 때마다 매번 처음부터 해결책을 고민하느라 시간을 엄청 낭비했어. 그래서 \'자주 나오는 문제들은 미리 검증된 해결법을 정리해두자!\'는 생각으로 디자인 패턴이 탄생했어.','요리 레시피랑 똑같아! 김치찌개를 처음 만들 때 레시피 보고 따라하면 실패 없이 맛있게 만들 수 있잖아. 디자인 패턴도 마찬가지로, 프로그래밍하다가 자주 만나는 문제 상황에 대해 \'이렇게 하면 잘 돼!\'라고 검증된 레시피를 모아둔 거야. 매번 새로 고민할 필요 없이 맞는 레시피 골라서 쓰면 되니까 훨씬 빠르고 안전하게 프로그램을 만들 수 있어.','디자인 패턴 = \'요리 레시피 책\' → 문제(재료) 만나면 → 레시피(패턴) 찾아서 → 바로 해결! 🍳')"><div class="card-title">디자인 패턴 개념</div><div class="card-preview">🧠 디자인 패턴 = '요리 레시피 책' → 문제(재료) 만나면 → 레시피…</div></div><div class="card" onclick="openModal('대표적인 디자인 패턴','프로그래머들이 비슷한 문제를 매번 처음부터 새로 해결하느라 시간을 엄청 낭비했어. 그래서 \'자주 나오는 문제 유형별로 검증된 해결책을 정리해두자!\'는 생각으로 디자인 패턴이 탄생했어.','디자인 패턴은 요리 레시피 같은 거야. 카레를 만들 때마다 재료 배합을 새로 연구하는 게 아니라 검증된 레시피를 쓰는 것처럼, 프로그램 개발할 때도 자주 등장하는 문제 유형마다 \'이렇게 만들면 잘 돼!\'하는 정해진 틀을 쓰는 거야. 크게 3가지 목적으로 나뉘는데, \'객체를 어떻게 만들지(생성)\', \'구조를 어떻게 짜지(구조)\', \'객체들이 어떻게 협력하지(행위)\'로 구분해서 쓰면 돼.','【생구행 패턴 삼형제】로 외워! \'생(생성)-구(구조)-행(행위)\' → 생성 패턴 대표는 \'A B F P S(아빠FPS)\' = Abstract Factory, Builder, Factory Method, Prototype, Singleton / 구조 패턴 대표는 \'A B(어브)\' = Adapter, Bridge!')"><div class="card-title">대표적인 디자인 패턴</div><div class="card-preview">🧠 【생구행 패턴 삼형제】로 외워! '생(생성)-구(구조)-행(행위)' …</div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">사용자 인터페이스(User Interface) 개요</div><div class="card-grid"><div class="card" onclick="openModal('일관성 필요','옛날에 큰 프로그램을 만들 때 여러 사람이 나눠서 화면을 만들다 보니, 어떤 버튼은 파란색, 어떤 버튼은 빨간색이고 위치도 제각각이 되는 문제가 생겼어. 사용자 입장에서는 같은 앱인데 화면마다 느낌이 달라서 너무 헷갈리고 불편했지.','예를 들어 맥도날드 매장이 전국에 수백 개인데, 어떤 매장은 계산대가 왼쪽, 어떤 매장은 오른쪽, 메뉴판 글씨도 제각각이라고 생각해봐. 손님 입장에서 너무 혼란스럽겠지? 그래서 미리 \'우리 매장은 이렇게 통일한다\'는 규칙을 정해두고, 나중에 다시 점검해서 규칙 안 지킨 곳을 고치는 거야. 소프트웨어도 똑같이, 여러 명이 만들어도 화면이 통일되어 보이도록 처음에 규칙을 정하고 나중에 검토해서 수정해야 해.','🍔 \'맥도날드는 전 세계 어디서나 같은 느낌!\' → 규칙 먼저 정하고(표준화) → 나중에 점검(검토)! \'정하고 → 점검\' 두 글자만 기억해!')"><div class="card-title">일관성 필요</div><div class="card-preview">🧠 🍔 '맥도날드는 전 세계 어디서나 같은 느낌!' → 규칙 먼저 정하고…</div></div><div class="card" onclick="openModal('사용자 중심 설계','옛날에 프로그램들은 개발자 편의대로만 만들어져서, 일반 사람들이 쓰려면 두꺼운 설명서를 달달 외워야 했어. 그러다 보니 \'좋은 기능이 있어도 쓰기 너무 어려워서 아무도 안 쓰는\' 문제가 생겨서, 아예 처음부터 사용자 입장에서 설계하자는 개념이 나왔어.','식당으로 생각해봐. 주방장 편한 대로 메뉴판을 요리 온도 순서로 정렬하면 손님은 엄청 헷갈리잖아. 사용자 중심 설계는 손님(사용자)이 쉽게 주문하고, 실수로 엉뚱한 걸 시켰을 때 \'이거 맞아요?\' 하고 확인해주고, 잘못 시켰으면 취소도 되게 해주는 식당처럼 만드는 거야. 즉, 프로그램이 사용자한테 맞춰주는 거지, 사용자가 프로그램에 맞추는 게 아니야.','✋ \'제어-학습-피드백-실수방지\' → 줄여서 \'제학피실\' → \'제발 학생 피해서 실수하지 마!\' 로 외워봐. 사용자가 제어할 수 있고, 쉽게 학습하고, 피드백 받고, 실수해도 괜찮게 만드는 것!')"><div class="card-title">사용자 중심 설계</div><div class="card-preview">🧠 ✋ '제어-학습-피드백-실수방지' → 줄여서 '제학피실' → '제발 …</div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">사용자 경험(User Experience) 개요</div><div class="card-grid"><div class="card" onclick="openModal('사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점','옛날에 앱이나 웹사이트를 만들 때 \'그냥 예쁘게만 만들면 되지~\' 했는데, 막상 써보면 버튼이 어디 있는지도 모르고 불편해서 사람들이 안 쓰는 문제가 생겼어. 그래서 \'어떻게 보여줄까(UI)\'와 \'사용자가 어떻게 느끼고 경험하는가(UX)\'를 따로 나눠서 연구하게 됐어.','UI는 \'그릇\'이고 UX는 \'음식 맛\'이라고 생각해봐. 예쁜 그릇(UI)에 음식을 담아도, 음식이 맛없으면(UX) 손님은 실망하잖아. 반대로 맛은 끝내주는데 그릇이 지저분하면 그것도 별로고. 즉, UI는 눈에 보이는 버튼·색깔·화면 디자인 그 자체이고, UX는 그걸 사용하면서 \'편하다, 불편하다, 기분 좋다\' 같이 사용자가 전체적으로 느끼는 경험이야.','UI = 이미지(눈에 보이는 것), UX = 이모지(😊😡 느낌과 감정) — \'UI는 눈, UX는 맘\'으로 기억해!')"><div class="card-title">사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점</div><div class="card-preview">🧠 UI = 이미지(눈에 보이는 것), UX = 이모지(😊😡 느낌과 감정…</div></div><div class="card" onclick="openModal('MAKE - 아이디어를 제품으로 전환','옛날에는 좋은 아이디어가 있어도 머릿속에만 있으면 다른 사람한테 설명하기가 너무 힘들었어. 그래서 아이디어를 실제로 눈에 보이는 결과물로 만들어가는 단계별 도구들이 필요해졌어.','아이디어를 제품으로 만드는 과정은 집 짓기랑 똑같아. 먼저 공사 일정표랑 팀원 역할을 정하고(GitHub, Trello), 그 다음 설계 도면을 그리고(Visio, moqups), 마지막으로 실제 집 모양 미니어처를 만들어보는 거야(Photoshop, Sketch). 이렇게 3단계를 거치면 머릿속 아이디어가 진짜 제품처럼 눈에 보이게 돼!','**\'관 설 프\'** 로 외워! 👉 **관**리(GitHub/Trello) → **설**계(Visio/moqups) → **프**로토타입(Photoshop/Sketch) / \'관설프\' = 관리하고, 설계하고, 프로토 만들자!')"><div class="card-title">MAKE - 아이디어를 제품으로 전환</div><div class="card-preview">🧠 **'관 설 프'** 로 외워! 👉 **관**리(GitHub/Trel…</div></div><div class="card" onclick="openModal('Check-사용자 분석 및 대응방법 확인','웹사이트나 앱을 만들었는데 사용자들이 어디서 헷갈려하고 어디서 그냥 꺼버리는지 알 수가 없어서 답답했어. 그래서 사용자들의 행동을 실시간으로 추적하고 분석하는 도구들이 생기게 됐어.','내 가게에 CCTV 달고 손님들이 어떤 진열대 앞에서 오래 서있는지, 어디서 그냥 나가버리는지 관찰하는 거랑 똑같아. 시각적 분석(Beusable, Clicktale)은 화면 어디를 많이 클릭하는지 열지도로 보여주고, 구글 애널리틱스 같은 수치 분석은 몇 명이 방문했는지 숫자로 보여줘. A/B 테스트는 간판 두 가지 버전을 만들어서 어느 쪽이 손님을 더 많이 끄는지 실험해보는 거고, 사용자 녹화는 손님 동선을 영상으로 다시 돌려보는 거야.','📸 \'시수AB녹\' - 시각적 분석 → 수치 분석 → A/B테스트 → 녹화! 사용자 분석 4단계를 \'시수AB녹\' 한 단어로 기억해!')"><div class="card-title">Check-사용자 분석 및 대응방법 확인</div><div class="card-preview">🧠 📸 '시수AB녹' - 시각적 분석 → 수치 분석 → A/B테스트 → …</div></div><div class="card" onclick="openModal('-시장의 피드백 지속확인','옛날에는 개발자들이 몇 년씩 열심히 만들어서 출시했는데, 막상 사용자들이 \'이거 불편해요, 안 써요\'라고 해서 망하는 경우가 많았어. 그래서 \'만들면서도 계속 사람들 반응을 확인하자!\'는 생각이 생긴 거야.','음식점 사장님이 새 메뉴를 만들 때 손님한테 맛 좀 봐달라고 계속 물어보는 것처럼, 앱이나 서비스를 만들면서도 사용자들한테 \'이거 어때요? 불편한 데 없어요?\'를 계속 확인하는 거야. 설문도 돌리고, 채팅으로 물어보고, 심지어 화면에서 마우스가 어디로 움직이는지까지 추적해서 사람들이 어디서 헷갈려하는지 파악하는 거지.','사온원원 — **사**용자 모집 → **온**라인 설문 → **원**하는 피드백 수집 → **원**격 테스트, 이 4단계를 계속 반복하면서 시장 반응을 확인한다고 기억해!')"><div class="card-title">-시장의 피드백 지속확인</div><div class="card-preview">🧠 사온원원 — **사**용자 모집 → **온**라인 설문 → **원**…</div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">프로그래밍 언어의 개요</div><div class="card-grid"><div class="card" onclick="openModal('프로그래밍 언어 개념','옛날에 컴퓨터는 0과 1로만 이루어진 기계어만 알아들을 수 있었는데, 사람이 직접 0101010 이런 걸 쓰는 건 너무 힘들었어. 그래서 사람도 읽기 쉽고 컴퓨터도 이해할 수 있도록 다양한 프로그래밍 언어들이 만들어지게 됐어.','프로그래밍 언어는 사람과 컴퓨터가 대화하는 \'통역사\' 같은 거야. 저급언어는 컴퓨터 입장에서 바로 알아듣는 말(0과 1, 기계어)이라 빠르지만 사람이 쓰기 너무 어렵고, 고급언어는 사람이 쓰기 편한 영어 비슷한 말인데 컴파일러나 인터프리터라는 번역기가 컴퓨터 말로 바꿔줘. 마치 한국어로 말하면 통역사가 외국인한테 전달해주는 것처럼!','저급 = 저(컴퓨터) 급(급하게 바로 실행), 고급 = 고(고상하게 사람이 읽기 편함) — \'저급은 컴퓨터 친화적, 고급은 사람 친화적!\'')"><div class="card-title">프로그래밍 언어 개념</div><div class="card-preview">🧠 저급 = 저(컴퓨터) 급(급하게 바로 실행), 고급 = 고(고상하게 …</div></div><div class="card" onclick="openModal('인터프리터 언어','옛날에 프로그램을 실행하려면 코드 전체를 한 번에 기계어로 번역한 다음에야 실행할 수 있었는데, 이러면 오류 하나 고칠 때마다 전체를 다시 번역해야 해서 너무 불편했어. 그래서 \'번역하면서 동시에 바로 실행하는\' 방식이 필요해졌지.','인터프리터 언어는 마치 동시통역사 같아. 영어 연설을 끝까지 다 듣고 번역하는 게 아니라, 한 문장 듣고 바로 번역해서 전달하는 것처럼, 코드를 한 줄 읽고 바로 실행하는 방식이야. 덕분에 코드를 고치면 바로바로 결과를 확인할 수 있어서 개발할 때 편리하지만, 실행할 때마다 매번 번역을 새로 해야 해서 속도는 좀 느려.','인터프리터 = \'인터\'(inter, 사이사이) → 줄 사이사이마다 바로바로 번역+실행! 동시통역사처럼 한 줄씩 바로바로!')"><div class="card-title">인터프리터 언어</div><div class="card-preview">🧠 인터프리터 = '인터'(inter, 사이사이) → 줄 사이사이마다 바…</div></div><div class="card" onclick="openModal('컴파일러 언어','옛날에 컴퓨터는 0과 1로만 이루어진 기계어만 알아들었는데, 사람이 직접 0과 1로 프로그램을 짜는 건 너무 힘들었어. 그래서 사람이 읽기 쉬운 언어로 코드를 짜면, 컴퓨터가 알아들을 수 있게 자동으로 번역해주는 도구가 필요해졌어.','컴파일러 언어는 마치 \'번역가\'랑 똑같아. 네가 한국어로 편지를 쓰면, 번역가가 그걸 영어로 통째로 다 번역해준 다음에 상대방한테 전달하는 것처럼, 컴파일러도 사람이 쓴 코드를 컴퓨터가 이해하는 기계어로 한 번에 전부 번역해줘. 번역을 한 번만 해두면 그 다음부터는 번역된 결과물을 바로 쓰니까 실행 속도가 엄청 빠른 게 장점이야.','컴파일러 = \'통째로 번역 → 빠름, but 뚱뚱함\' — 번역은 한 방에 끝나서 빠르지만, 기계어로 바꾸면 코드가 뚱뚱하게 불어나서 메모리를 많이 먹어!')"><div class="card-title">컴파일러 언어</div><div class="card-preview">🧠 컴파일러 = '통째로 번역 → 빠름, but 뚱뚱함' — 번역은 한 …</div></div><div class="card" onclick="openModal('언어','옛날에 컴퓨터를 움직이는 운영체제를 만들려면 기계어로 직접 짜야 해서 엄청 힘들었어. 그래서 1970년대에 벨 연구소의 데니스 리치가 사람도 읽기 쉽고 컴퓨터도 빠르게 실행할 수 있는 C언어를 딱 만들어낸 거야.','C언어는 요리 레시피처럼 \'1번 재료 준비 → 2번 볶기 → 3번 담기\' 이런 식으로 순서대로 실행되는 언어야. 요즘 우리가 쓰는 아이폰, 안드로이드 운영체제도 거의 C언어로 만들어졌을 만큼 빠르고 강력한데, 대신 메모리(재료 창고)를 직접 관리해야 해서 Java보다 좀 더 꼼꼼하게 신경 써야 해.','C언어 = \'빠른 치타(C)\' 🐆 — 치타는 엄청 빠르지만(실행속도 빠름) 사냥감을 직접 잡아야 해(메모리 직접 관리). Java는 동물원에서 밥 주는 것처럼 편하지만, C는 야생이라 스스로 다 해야 한다고 기억해!')"><div class="card-title">언어</div><div class="card-preview">🧠 C언어 = '빠른 치타(C)' 🐆 — 치타는 엄청 빠르지만(실행속도 …</div></div><div class="card" onclick="openModal('C++ 언어','옛날에 C언어로 프로그램을 만들었는데, 프로그램이 점점 커지다 보니 코드가 너무 복잡해지고 관리가 엄청 힘들어졌어. 그래서 C언어의 빠른 속도는 유지하면서 코드를 더 체계적으로 묶어서 관리할 수 있게 만든 게 바로 C++야.','C++는 레고 블록 만들기라고 생각해봐. 그냥 C언어가 부품을 하나하나 따로 만드는 거라면, C++는 부품들을 \'세트 박스(클래스)\'에 넣어서 관리하는 거야. 그 세트 박스는 다른 박스한테 설계도를 물려줄 수도 있고(상속), 박스 안이 어떻게 생겼는지 몰라도 그냥 버튼만 눌러서 쓸 수 있어(캡슐화). 덕분에 한 번 만든 박스를 여러 곳에서 재활용할 수 있어서 대형 프로그램 만들 때 딱이야!','C++ = C에서 ++(1 증가)! → C보다 딱 한 단계 업그레이드된 언어, \'클래스\'라는 박스가 추가됐다고 기억해!')"><div class="card-title">C++ 언어</div><div class="card-preview">🧠 C++ = C에서 ++(1 증가)! → C보다 딱 한 단계 업그레이드…</div></div><div class="card" onclick="openModal('Java 언어','옛날에 프로그램을 만들면 윈도우에서만 되거나 맥에서만 되는 문제가 있었어. 그래서 \'어디서든 똑같이 돌아가는 언어\'가 필요했고, 1995년에 Java가 그 해답으로 등장했어.','Java는 마치 \'만능 번역기\'야. 네가 한국어로 편지를 쓰면 그 번역기가 미국 사람한테는 영어로, 일본 사람한테는 일본어로 자동으로 바꿔주는 것처럼, Java로 짠 프로그램은 윈도우든 맥이든 어떤 컴퓨터에서도 똑같이 실행돼. 그래서 웹사이트, 앱, 스마트폰까지 정말 다양한 곳에서 쓰이는 인기 언어가 됐어.','☕ Java = \'카페 어디서나 커피\' → 어느 카페(컴퓨터)를 가도 커피(프로그램)맛이 똑같다! \'Write Once, Run Anywhere(한 번 써서, 어디서나 실행)\'')"><div class="card-title">Java 언어</div><div class="card-preview">🧠 ☕ Java = '카페 어디서나 커피' → 어느 카페(컴퓨터)를 가도…</div></div><div class="card" onclick="openModal('JavaScript 언어','옛날에 웹페이지는 그냥 글자랑 그림만 보여주는 정적인 종이 같은 존재였어. 사람들이 \'버튼 누르면 뭔가 움직이고, 클릭하면 반응하는 살아있는 웹페이지 만들고 싶다!\'고 해서 JavaScript가 탄생했어.','JavaScript는 웹페이지에 \'움직임\'을 불어넣는 마법 같은 언어야. 예를 들어 쇼핑몰에서 버튼 누르면 장바구니 숫자가 바뀌거나, 팝업창이 뜨거나, 사진이 슬라이드 되는 것들이 다 JavaScript가 하는 일이야. 요즘은 웹뿐만 아니라 서버, 앱 개발까지 쓰일 정도로 완전 만능 언어가 됐어.','JS = \'잠깐! 살아있네!\' → 정적인 웹페이지에 생명을 불어넣는 언어! React, Node, Angular 다 JS 가족🫂')"><div class="card-title">JavaScript 언어</div><div class="card-preview">🧠 JS = '잠깐! 살아있네!' → 정적인 웹페이지에 생명을 불어넣는 …</div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">소프트웨어 개발 프레임워크</div><div class="card-grid"><div class="card" onclick="openModal('소프트웨어 개발 프레임워크 개념','옛날에는 개발자들이 프로그램을 만들 때 필요한 기능을 처음부터 끝까지 전부 직접 만들어야 해서 시간이 엄청 오래 걸렸어. 똑같은 코드를 여러 사람이 따로따로 반복해서 만드는 비효율적인 상황이 계속되다 보니, \'자주 쓰는 건 미리 만들어두고 공유하자!\'는 생각에서 프레임워크가 탄생했어.','프레임워크는 집을 지을 때의 \'기본 뼈대(골조)\'라고 생각하면 돼. 건설회사가 벽, 기둥, 지붕 뼈대를 미리 세워놓으면, 입주자는 벽지 색깔이나 가구 배치 같은 내 취향대로 꾸미는 것에만 집중할 수 있잖아. 개발자도 프레임워크가 로그인, 데이터 저장 같은 기본 기능을 미리 갖춰놔 주면, 실제 서비스의 핵심 기능 만드는 것에만 집중할 수 있어서 훨씬 빠르고 일관성 있게 개발할 수 있어.','프레임워크 = \'집 뼈대\'! 👉 \'뼈대는 내가 줄게, 살은 네가 붙여!\' — 뼈대(기본 구조)는 프레임워크가, 살(비즈니스 로직)은 개발자가!')"><div class="card-title">소프트웨어 개발 프레임워크 개념</div><div class="card-preview">🧠 프레임워크 = '집 뼈대'! 👉 '뼈대는 내가 줄게, 살은 네가 붙여…</div></div><div class="card" onclick="openModal('전자정부 표준프레임워크','옛날에 정부 시스템을 만들 때마다 개발자들이 기본적인 기능을 매번 처음부터 새로 만들어야 해서 시간도 돈도 엄청 낭비됐어. 그래서 \'어차피 다 필요한 공통 기능은 미리 만들어두고 같이 쓰자!\'는 생각으로 이 프레임워크가 탄생했지.','레고 세트라고 생각해봐. 집을 지을 때 벽돌, 창문, 문 같은 기본 부품이 이미 다 만들어져 있으면, 우리는 그냥 조립해서 \'내 방만의 특별한 인테리어\'만 추가하면 되잖아. 전자정부 표준프레임워크가 딱 그 레고 기본 부품 세트야. 개발자들은 로그인, 게시판 같은 공통 기능은 이미 만들어진 걸 가져다 쓰고, 자기 서비스만의 특별한 기능만 새로 만들면 돼.','🏛️ \'정부 레고\' → 정부가 레고 기본 세트(공통기능)를 미리 만들어줬으니, 나는 내 작품(고유기능)만 만들면 끝!')"><div class="card-title">전자정부 표준프레임워크</div><div class="card-preview">🧠 🏛️ '정부 레고' → 정부가 레고 기본 세트(공통기능)를 미리 만들…</div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">통합개발환경(IDE)</div><div class="card-grid"><div class="card" onclick="openModal('통합개발환경(IDE) 개념','옛날에는 코드 짜는 프로그램, 오류 찾는 프로그램, 실행 파일 만드는 프로그램을 각각 따로 켜서 왔다갔다 해야 했어. 그게 너무 불편하니까 \'그냥 다 한 곳에 모아버리자!\'해서 IDE가 탄생한 거야.','IDE는 요리사의 주방이라고 생각하면 돼. 칼(편집기), 불(컴파일러), 맛 보기(디버거)가 한 주방에 다 갖춰져 있어서 왔다갔다 안 해도 되는 거지. 비주얼 스튜디오, 이클립스 같은 게 대표적인 IDE인데, 코드 작성부터 오류 찾기, 완성 프로그램 배포까지 한 프로그램 안에서 전부 해결할 수 있어.','IDE = \'이 다 있어!\' — 편집, 디버깅, 컴파일 이 다 있어!')"><div class="card-title">통합개발환경(IDE) 개념</div><div class="card-preview">🧠 IDE = '이 다 있어!' — 편집, 디버깅, 컴파일 이 다 있어!</div></div><div class="card" onclick="openModal('소프트웨어 빌드(Software Build)','옛날에 개발자들이 코드를 다 짜고 나서 \'이제 실행해볼까?\' 했더니 파일이 너무 많고 복잡해서 어떻게 합쳐야 할지 몰라 엄청 고생했어. 그래서 \'코드를 실행 가능한 프로그램으로 자동으로 만들어주는 과정\'이 필요해졌지.','빌드는 레고 설명서랑 부품들(소스 코드)을 가져다가 완성된 레고 작품(실행 가능한 프로그램)으로 조립해주는 과정이야. 예를 들어 카카오톡 개발자들이 코드를 짜면, 빌드를 통해 우리가 폰에서 설치하고 쓸 수 있는 앱 파일이 만들어지는 거지. 매일 빌드(Daily Build)를 하면 문제가 생겼을 때 일찍 발견할 수 있어서 나중에 큰 사고를 막을 수 있어.','빌드 = \'부품을 일단 드디어 완성!\' — 코드 부품들을 모아서 드디어 실행 가능한 완성품으로 만드는 것!')"><div class="card-title">소프트웨어 빌드(Software Build)</div><div class="card-preview">🧠 빌드 = '부품을 일단 드디어 완성!' — 코드 부품들을 모아서 드디…</div></div><div class="card" onclick="openModal('소프트웨어 배포','옛날에 개발자가 코드를 완성해도 다른 사람 컴퓨터에서 실행이 안 되거나, 업데이트할 때마다 하나하나 손으로 설치해줘야 하는 번거로움이 있었어. 그래서 \'어떻게 하면 완성된 프로그램을 사람들이 쉽게 쓸 수 있게 전달할까?\'를 체계적으로 정리한 게 바로 소프트웨어 배포야.','소프트웨어 배포는 쉽게 말해 \'음식 배달\' 같은 거야. 요리사(개발자)가 음식(프로그램)을 만들면, 그걸 포장하고(빌드), 배달하고(릴리스), 손님 집에 차려주고(설치), 필요하면 메뉴를 바꾸고(업데이트), 나중에 치우는(삭제/은퇴) 전체 과정이 다 배포야. 즉, 프로그램이 완성된 순간부터 사람들이 쓰고, 쓰다가 없애는 것까지 모든 단계를 말하는 거지.','배포 = \'릴설적업삭은\' → 릴리스 → 설치 → 적응 → 업데이트 → 삭제 → 은퇴! \'릴설적업삭은\'을 \'릴(리)설(리)적업삭은\'으로 리듬감 있게 외워봐!')"><div class="card-title">소프트웨어 배포</div><div class="card-preview">🧠 배포 = '릴설적업삭은' → 릴리스 → 설치 → 적응 → 업데이트 →…</div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">소프트웨어 개발도구와 프로그래밍 언어의 기술 동향</div><div class="card-grid"><div class="card" onclick="openModal('소프트웨어 개발도구의 기술 동향','옛날에는 개발자들이 코드를 짜고, 오류를 찾고, 테스트하는 걸 전부 손으로 일일이 했어서 시간이 엄청 오래 걸렸어. 그래서 \'이걸 자동으로 도와주는 도구가 있으면 얼마나 좋을까?\'라는 생각에서 다양한 개발 도구들이 만들어지고 계속 발전해왔어.','소프트웨어 개발도구 기술 동향이란, 요즘 개발자들이 어떤 최신 도구를 쓰는지에 관한 흐름이야. 예를 들어 요즘은 AI가 코드를 자동으로 짜주거나(GitHub Copilot), 클라우드에서 바로 개발할 수 있고(Cloud IDE), 여러 명이 동시에 같은 코드를 수정할 수 있는 협업 도구도 생겼어. 쉽게 말해 \'혼자 손으로 다 하던 것\'에서 \'AI랑 팀이 함께 자동으로 빠르게 하는 것\'으로 바뀌는 흐름이야.','🔑 \'AI클자저\' 로 외워! → AI(AI 코딩 도우미) + 클(클라우드 개발환경) + 자(자동화 빌드/테스트) + 저(저코드/노코드 도구) — 요즘 개발도구 트렌드 4총사!')"><div class="card-title">소프트웨어 개발도구의 기술 동향</div><div class="card-preview">🧠 🔑 'AI클자저' 로 외워! → AI(AI 코딩 도우미) + 클(클라…</div></div><div class="card" onclick="openModal('프로그래밍 언어 기술 동향','옛날에는 컴퓨터한테 일 시키려면 기계어로 직접 0과 1을 입력해야 했는데, 그게 너무 힘드니까 사람이 읽기 쉬운 언어들이 하나씩 만들어지기 시작했어. 시대가 바뀌면서 AI, 앱, 웹 등 새로운 분야가 생길 때마다 거기에 맞는 새로운 언어나 트렌드가 계속 등장하게 된 거야.','프로그래밍 언어 트렌드는 마치 \'유행하는 음식\'처럼 시대마다 인기 있는 게 달라져. 예전엔 C, Java가 대세였다면, 요즘은 파이썬(AI/데이터), 코틀린(앱), 타입스크립트(웹)가 핫하고, 클라우드랑 AI 쪽이 급성장하면서 관련 언어들이 주목받고 있어. 쉽게 말해 \'지금 어떤 일을 많이 하느냐\'에 따라 잘 나가는 언어가 바뀌는 거야.','🎵 \'P-J-K-T\' → 파이썬·자바·코틀린·타입스크립트! \'피자 주문 카톡 타닥\' 으로 외워봐 😄 (피=Python, 자=Java, 카=Kotlin, 타=TypeScript)')"><div class="card-title">프로그래밍 언어 기술 동향</div><div class="card-preview">🧠 🎵 'P-J-K-T' → 파이썬·자바·코틀린·타입스크립트! '피자 주…</div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">개발프레임워크와 소프트웨어 아키텍처 기술 동향</div><div class="card-grid"><div class="card" onclick="openModal('소프트웨어 개발도구의 기술 동향','옛날에는 개발자들이 메모장 같은 곳에 코드를 직접 타이핑하고, 실수를 찾으려면 처음부터 끝까지 눈으로 다 읽어야 했어. 그러다 보니 \'이걸 자동으로 도와주는 도구가 있으면 얼마나 좋을까?\' 하는 필요에서 점점 똑똑한 개발 도구들이 생겨나기 시작한 거야.','요즘 소프트웨어 개발 도구의 트렌드는 크게 4가지야. 첫째, AI가 코드를 대신 짜주는 \'자동완성·AI 코딩 도우미(예: GitHub Copilot)\', 둘째, 내 컴퓨터 대신 인터넷 어디서든 개발할 수 있는 \'클라우드 개발 환경\', 셋째, 코드 없이 블록 조립하듯 앱을 만드는 \'로우코드·노코드 도구\', 넷째, 여러 명이 동시에 같은 코드를 구글 문서처럼 함께 편집하는 \'협업 중심 도구\'야. 쉽게 말하면 개발 도구가 점점 더 빠르고, 쉽고, 함께 쓰는 방향으로 진화하고 있어.','**\'아클로협\'** 으로 외워! → **아**I 자동화, **클**라우드 개발, **로**우코드/노코드, **협**업 도구 — \'아, 클라우드에서 로봇이랑 협업한다!\' 라고 한 문장으로 기억해봐!')"><div class="card-title">소프트웨어 개발도구의 기술 동향</div><div class="card-preview">🧠 **'아클로협'** 으로 외워! → **아**I 자동화, **클**라…</div></div><div class="card" onclick="openModal('소프트웨어아키텍처 기술 동향','옛날에는 프로그램을 그냥 한 덩어리로 만들었는데, 규모가 커지면서 수정 하나 잘못하면 전체가 망가지는 문제가 생겼어. 그래서 \'어떻게 하면 소프트웨어를 더 잘 설계할 수 있을까?\' 하는 고민에서 다양한 아키텍처 방식들이 등장하게 된 거야.','소프트웨어 아키텍처는 건물 설계도 같은 거야. 집을 지을 때 방을 어떻게 나누고 연결할지 미리 계획하듯이, 프로그램도 기능들을 어떻게 나누고 연결할지 설계하는 거거든. 요즘 트렌드는 크게 4가지야: 레고블록처럼 기능을 잘게 나누는 \'마이크로서비스\', 클라우드 중심의 \'클라우드 네이티브\', AI를 접목한 \'지능형 아키텍처\', 그리고 보안을 처음부터 설계에 넣는 \'제로 트러스트\' 방식이야.','🏠 \'마클지제\' - 마이크로서비스(레고처럼 조각), 클라우드(구름 위에), 지능형(AI 두뇌), 제로트러스트(아무도 믿지 마!) → \'마켓에서 클지(클지?) 제발 사지마\' 로 외워봐!')"><div class="card-title">소프트웨어아키텍처 기술 동향</div><div class="card-preview">🧠 🏠 '마클지제' - 마이크로서비스(레고처럼 조각), 클라우드(구름 위…</div></div></div></div>
+<div class="section-group" data-chapter="3"><div class="section-label">테스팅 개념 및 프로세스</div><div class="card-grid"><div class="card" onclick="openModal('테스팅 개념','옛날에 프로그램을 만들고 나서 오류를 뒤늦게 발견하면 고치는 데 엄청난 돈과 시간이 들었어. 그래서 미리미리 문제를 찾아내는 체계적인 방법이 필요하게 됐지.','테스팅은 쉽게 말해 \'출시 전 제품 검사\'야. 예를 들어 새 스마트폰을 팔기 전에 떨어뜨려도 되는지, 배터리는 잘 가는지 미리 테스트하는 것처럼, 소프트웨어도 실제 사용자한테 주기 전에 문제가 없는지 확인하는 거야. 단, 살충제를 계속 같은 걸로 뿌리면 벌레가 내성이 생기듯이, 똑같은 테스트만 반복하면 새로운 오류를 못 잡으니까 테스트 방법도 계속 바꿔줘야 해!','테스팅 3불(不) 법칙 → \'무완반\' 🚫 : 무결함 증명 불가, 완벽한 테스팅 불가, 반복 테스트는 효과 없다!')"><div class="card-title">테스팅 개념</div><div class="card-preview">🧠 테스팅 3불(不) 법칙 → '무완반' 🚫 : 무결함 증명 불가, 완벽…</div></div><div class="card" onclick="openModal('테스팅 프로세스','옛날에 개발자들이 프로그램을 만들고 나서 \'대충 돌려보고 괜찮으면 출시\'하다 보니 나중에 엄청난 버그가 터지는 사고가 많았어. 그래서 테스트도 그냥 하는 게 아니라 순서와 규칙을 정해서 체계적으로 하자는 흐름이 생긴 거야.','테스팅 프로세스는 요리 레시피랑 똑같아. 요리할 때 \'재료 준비 → 조리 → 맛보기 → 완성 확인\' 순서가 있듯이, 소프트웨어 테스트도 \'계획 → 분석·설계 → 구현·실행 → 결과 보고 → 마감\' 순서로 진행돼. 순서를 안 지키면 뭘 테스트했는지도 모르고 버그를 놓치게 되니까, 레시피처럼 단계를 꼭 지켜야 하는 거야.','**\'계분구완마\'** — 계획 → 분석/설계 → 구현/실행 → 완료평가/리포팅 → 마감! \'계단 분리해서 구워 완전히 마무리\' 로 외워봐 😄')"><div class="card-title">테스팅 프로세스</div><div class="card-preview">🧠 **'계분구완마'** — 계획 → 분석/설계 → 구현/실행 → 완료평…</div></div><div class="card" onclick="openModal('테스트 설계','옛날에는 개발자가 대충 \'아 이거 될 것 같은데?\' 하고 프로그램을 출시했다가 엄청난 버그로 망하는 경우가 많았어. 그래서 \'체계적으로 어디를 어떻게 테스트할지 미리 계획 세우자!\'는 필요성이 생긴 거야.','테스트 설계는 마치 수학 시험 출제 계획서 같은 거야. 시험 문제(테스트 케이스)를 만들 때 \'어떤 문제를 낼지, 정답은 뭔지, 몇 점짜리인지\' 미리 정해두는 것처럼, 프로그램도 \'어떤 상황을 입력하면, 어떤 결과가 나와야 하는지\' 미리 설계해두는 거지. 이렇게 해야 나중에 \'이 부분은 테스트했나?\' 하는 불안 없이 꼼꼼하게 확인할 수 있어.','테스트 케이스 구성 = \'입사수기후\' 🎯 → 입력값, 사전조건, 수행절차, 기대결과, 후속조건! \'입사 수기 후기\' 처럼 외워봐!')"><div class="card-title">테스트 설계</div><div class="card-preview">🧠 테스트 케이스 구성 = '입사수기후' 🎯 → 입력값, 사전조건, 수행…</div></div><div class="card" onclick="openModal('테스팅 유형','소프트웨어를 다 만들고 나서 한꺼번에 테스트하면 어디서 문제가 생겼는지 찾기가 너무 힘들었어. 그래서 개발 단계마다 나눠서 테스트하는 방법이 생겨났어.','집을 지을 때 벽돌 하나하나 확인하고(단위 테스트), 방과 방이 잘 연결되는지 보고(통합 테스트), 집 전체가 제대로 돌아가는지 확인하고(시스템 테스트), 마지막으로 실제로 살 사람이 \'내가 원하던 집 맞아?\' 점검하는 것(인수 테스트)처럼 테스트도 단계별로 나눠서 해. 각 단계마다 누가 테스트하고, 무엇을 확인하고, 어떤 환경에서 할지가 다 달라.','🏠 \'단통시인\' - **단**위 → **통**합 → **시**스템 → **인**수, 벽돌 → 방연결 → 집전체 → 입주자확인 순서로 외워!')"><div class="card-title">테스팅 유형</div><div class="card-preview">🧠 🏠 '단통시인' - **단**위 → **통**합 → **시**스템 →…</div></div><div class="card" onclick="openModal('테스팅 기법','옛날에 프로그램을 만들고 나서 \'어디가 잘못됐는지\' 찾는 게 너무 어려웠어. 그래서 사람들이 \'내부를 들여다보며 테스트하는 방법\'이랑 \'겉에서 결과만 보고 테스트하는 방법\' 두 가지로 나눠서 체계적으로 오류를 잡기 시작했어.','화이트박스 테스팅은 투명한 유리 상자처럼 내부 코드를 다 들여다보면서 \'이 길, 저 길 다 가봤나?\' 확인하는 거야. 블랙박스 테스팅은 검은 상자처럼 내부는 모르지만 \'버튼 누르면 제대로 된 결과 나오나?\' 겉에서 입력과 출력만 보고 테스트하는 거야. 쉽게 말해 화이트박스는 요리사가 레시피 보면서 맛 확인하는 거고, 블랙박스는 손님이 그냥 음식 먹어보고 맛있냐 없냐 판단하는 거지!','🤍화이트 = 속이 훤히 보이는 코드 해부! 🖤블랙 = 속은 몰라도 결과로 승부! → \'화이트는 속(코드), 블랙은 겉(결과)\'')"><div class="card-title">테스팅 기법</div><div class="card-preview">🧠 🤍화이트 = 속이 훤히 보이는 코드 해부! 🖤블랙 = 속은 몰라도 결…</div></div></div></div>
+<div class="section-group" data-chapter="3"><div class="section-label">리팩토링</div><div class="card-grid"><div class="card" onclick="openModal('리팩토링 개념','옛날에 개발자들이 기능 추가나 버그 수정을 반복하다 보니 코드가 스파게티처럼 뒤엉켜서 나중엔 본인도 못 알아보는 상황이 생겼어. 그래서 \'기능은 그대로 두고 코드 내부만 깔끔하게 정리하자!\'는 아이디어가 나온 거야.','리팩토링은 집 대청소랑 똑같아. 집에 있는 물건(기능)은 하나도 버리지 않으면서, 어질러진 방 구조만 깔끔하게 정리하는 거야. 겉에서 보면 똑같은 집인데 안은 훨씬 찾기 쉽고 편해지는 것처럼, 프로그램도 사용자 눈엔 똑같이 작동하지만 개발자 입장에선 훨씬 고치기 쉬운 코드가 되는 거지.','리팩토링 = \'리모델링\'! 건물 부수지 않고(기능 유지) 내부 인테리어만 바꾸는 것(구조 개선) → \'리(inside)모델링\'으로 기억해!')"><div class="card-title">리팩토링 개념</div><div class="card-preview">🧠 리팩토링 = '리모델링'! 건물 부수지 않고(기능 유지) 내부 인테리…</div></div><div class="card" onclick="openModal('코드스멜(Code Smell) 개념','옛날에 개발자들이 코드를 빨리빨리 짜다 보니, 나중에 다른 사람이 그 코드를 보면 도대체 뭔 소린지 몰라서 수정도 못 하는 상황이 생겼어. 그래서 \'이런 패턴이 보이면 나쁜 코드다!\'라는 신호를 정리해서 코드스멜이라는 개념이 탄생했어.','코드스멜은 음식이 상하기 전에 나는 이상한 냄새랑 똑같아. 음식이 겉보기엔 멀쩡해 보여도 냄새가 나면 \'어, 이거 곧 썩겠다\' 싶잖아? 코드도 지금 당장 돌아가긴 하는데, 중복이 너무 많거나 한 곳에 너무 많은 기능이 몰려있으면 \'어, 이거 나중에 문제 생기겠다\'는 신호를 보내는 거야. 그 신호를 발견하면 코드를 깔끔하게 다시 정리(리팩토링)해줘야 해.','코드스멜 종류는 \'중·긴·방·과·두\' 로 외워! → 중복된 코드, 긴 메소드, 방대한 클래스, 과다한 매개변수, 두 가지 이유로 수정되는 클래스. \'중간 방과 후\'처럼 읽으면 바로 떠오르지?')"><div class="card-title">코드스멜(Code Smell) 개념</div><div class="card-preview">🧠 코드스멜 종류는 '중·긴·방·과·두' 로 외워! → 중복된 코드, 긴…</div></div><div class="card" onclick="openModal('대표적인 리팩토링 기법','옛날에 개발자들이 코드를 계속 수정하다 보니 코드가 스파게티처럼 엉켜서 나중에 뭘 고치려면 다른 게 터지는 문제가 생겼어. 그래서 기능은 그대로 유지하면서 코드를 깔끔하게 정리하는 \'리팩토링 기법\'들이 만들어졌어.','리팩토링 기법은 방 청소하는 방법 모음집이라고 생각해봐. 예를 들어 \'메소드 추출(Extract Method)\'은 방 한쪽에 잡동사니가 너무 많으면 박스 하나 꺼내서 거기 담고 박스에 이름표 붙이는 거야. \'클래스 추출(Extract Class)\'은 짐이 너무 많은 방을 둘로 나눠서 각자 맡을 짐을 나눠 갖는 거고. 이렇게 하면 코드가 훨씬 찾기 쉽고 깔끔해져!','리팩토링 = \'추추이이\' 기억해! → 추출(Extract Method: 긴 코드 뽑아서 이름 붙이기), 추출(Extract Class: 역할 많은 클래스 쪼개기), 이동(기능 이동: 기능을 맞는 클래스로 옮기기), 이관(Replace Parameter: 매개변수 대신 직접 호출하게 바꾸기)')"><div class="card-title">대표적인 리팩토링 기법</div><div class="card-preview">🧠 리팩토링 = '추추이이' 기억해! → 추출(Extract Method…</div></div></div></div>
+<div class="section-group" data-chapter="3"><div class="section-label">요구사항 관리</div><div class="card-grid"><div class="card" onclick="openModal('요구사항 관리의 정의','옛날에 개발자들이 고객이 원하는 걸 처음에 듣고 바로 만들었더니, 나중에 고객이 \'이거 내가 원한 게 아니야!\'라고 해서 다 뜯어고치는 사태가 자주 발생했어. 그래서 처음부터 원하는 걸 잘 정리하고, 중간에 바뀌어도 잘 추적해서 관리하는 방법이 필요해진 거야.','요구사항 관리는 식당 주문 과정이랑 똑같아. 손님이 \'김치찌개 해주세요\'라고 주문하면(요구사항 개발), 주방에서 실제로 김치찌개를 제대로 만들고 있는지 확인하고, 손님이 중간에 \'아, 순두부찌개로 바꿔주세요\'라고 해도 주문서를 업데이트해서 놓치지 않는 게(요구사항 관리) 핵심이야. 즉, \'정해진 것이 실제로 잘 반영되고 있는지 감시하고, 변경사항도 빠짐없이 챙기는 것\'이 요구사항 관리야.','요구사항 관리 = \'확·추\' 2글자만 기억해! 제대로 되고 있는지 \'확\'인하고, 변경사항을 \'추\'적한다!')"><div class="card-title">요구사항 관리의 정의</div><div class="card-preview">🧠 요구사항 관리 = '확·추' 2글자만 기억해! 제대로 되고 있는지 '…</div></div><div class="card" onclick="openModal('요구사항 관리의 중요성','옛날에 개발자들이 고객 말만 듣고 무작정 만들었다가 \'이게 내가 원한 게 아닌데?\'라는 말에 처음부터 다시 만드는 일이 엄청 많았어. 그래서 \'처음부터 뭘 만들지 제대로 정리하고 관리하자!\'는 필요성이 생긴 거야.','집 지을 때 설계도 없이 그냥 벽 쌓으면 나중에 방 위치가 이상해도 이미 늦잖아. 요구사항 관리는 바로 그 설계도를 꼼꼼히 작성하고 모두가 같은 설계도를 보게 만드는 과정이야. 이렇게 하면 돈도 아끼고, 마감일도 지키고, 고객도 만족하는 결과물이 나오는 거지.','요구사항 관리 = \'요미납\' 기억해! \'요\'구사항 잘 관리하면 → \'미\'스커뮤니케이션 없고 → \'납\'기·예산 초과 없다! 🏠')"><div class="card-title">요구사항 관리의 중요성</div><div class="card-preview">🧠 요구사항 관리 = '요미납' 기억해! '요'구사항 잘 관리하면 → '…</div></div><div class="card" onclick="openModal('요구사항 관리의 목적','옛날에 개발자들이 고객 말을 대충 듣고 소프트웨어를 만들었다가 \'내가 원한 게 이게 아닌데?\'라는 말을 엄청 들었어. 그래서 처음부터 고객이 뭘 원하는지 정확히 파악하고 관리하는 방법이 필요해진 거야.','예를 들어 친구가 \'케이크 만들어줘\'라고 했을 때, 어떤 맛인지, 몇 명이 먹는지, 언제까지 필요한지를 미리 다 물어봐야 실패 없이 만들 수 있잖아. 요구사항 관리도 똑같이 고객이 원하는 걸 처음에 정확히 파악해서, 정해진 시간 안에 만족스러운 프로그램을 만드는 게 목적이야.','🎯 \'고.정.품\' 세 글자만 기억해! → 고객 만족 + 정해진 일정 + 품질 높은 소프트웨어!')"><div class="card-title">요구사항 관리의 목적</div><div class="card-preview">🧠 🎯 '고.정.품' 세 글자만 기억해! → 고객 만족 + 정해진 일정 …</div></div><div class="card" onclick="openModal('요구사항 관리 공정','소프트웨어를 만들다 보면 고객이 원하는 게 뭔지 중간에 바뀌거나 처음부터 제대로 파악을 못 해서 완성된 프로그램이 전혀 다른 물건이 되는 문제가 생겼어. 그래서 \'처음부터 끝까지 요구사항을 체계적으로 관리하자!\'는 흐름이 생긴 거야.','친구한테 케이크를 만들어달라고 부탁한다고 생각해봐. 처음에 \'딸기 케이크\'라고 했는데 나중에 \'초코로 바꿔줘\'라고 하면 만드는 사람은 엄청 혼란스럽겠지? 요구사항 관리 공정은 이걸 방지하려고, 처음에 뭘 원하는지 캐내고(추출) → 우선순위 정하고(분석) → 문서로 딱 정리해서(명세) → 중간에 바뀌면 기록하고 추적하는(변경관리) 4단계 절차야.','추분명변! \'추(추출) → 분(분석) → 명(명세) → 변(변경관리)\' — \'추분명변, 요구사항은 추분명변!\' 순서대로만 기억하면 돼!')"><div class="card-title">요구사항 관리 공정</div><div class="card-preview">🧠 추분명변! '추(추출) → 분(분석) → 명(명세) → 변(변경관리)…</div></div><div class="card" onclick="openModal('요구사항 관리 원칙','옛날에 개발자들이 고객이 원하는 게 뭔지 제대로 파악 못하고 개발했다가 나중에 \'이거 내가 원한 게 아닌데?\'라는 말을 듣고 처음부터 다시 만드는 일이 너무 많았어. 그래서 \'처음부터 요구사항을 제대로 정리하고, 바뀌면 체계적으로 관리하자!\'는 원칙이 생긴 거야.','음식점을 새로 열 때를 상상해봐. 손님(고객)이 원하는 메뉴를 먼저 파악하고(우선순위), 주인·요리사·직원 모두 메뉴판에 동의한 다음(동의 획득), 식당의 정확한 콘셉트를 정하고(목표 식별), 나중에 메뉴가 바뀌면 \'변경 회의\'를 열어서 어떤 영향이 있는지 따져보고(변경 분석), 각 단계마다 \'확정된 메뉴판\'을 보관해두는(베이스라인) 거야. 요구사항 관리도 이처럼 처음부터 끝까지 질서 있게 챙기는 과정이야.','🎵 \'우동목변기\' 로 외워봐! → 우(선순위) 동(의획득) 목(표식별) 변(경관리위원회) 기(baseline=기준선) — \'우동 목욕탕에서 변기에 앉았다\' 이미지로 기억해!')"><div class="card-title">요구사항 관리 원칙</div><div class="card-preview">🧠 🎵 '우동목변기' 로 외워봐! → 우(선순위) 동(의획득) 목(표식별…</div></div></div></div>
+<div class="section-group" data-chapter="3"><div class="section-label">요구사항 명세</div><div class="card-grid"><div class="card" onclick="openModal('요구사항 명세 기법','소프트웨어를 만들기 전에 \'뭘 만들어야 하는지\' 글로 정리해야 하는데, 사람마다 쓰는 방식이 달라서 나중에 개발자랑 고객이 서로 다르게 이해하는 문제가 생겼어. 그래서 \'요구사항을 어떻게 정리할지\' 방법을 딱 정해놓은 게 바로 요구사항 명세 기법이야.','요구사항 명세 기법은 크게 두 가지야. \'정형 명세\'는 수학 공식처럼 딱딱하고 정확하게 쓰는 방식이고(VDM, Z, FSM 등), \'비정형 명세\'는 그림이나 표, 일반 글처럼 사람이 읽기 쉽게 쓰는 방식이야(SADT, Use Case, 결정 테이블 등). 예를 들어 요리 레시피를 \'계란 2개, 소금 5g\'처럼 정확하게 쓰면 정형, \'계란 약간에 소금 조금\'처럼 편하게 쓰면 비정형이라고 생각하면 돼!','【정형=수학자, 비정형=이야기꾼】 → \'정확한 수학자(VDM·Z·FSM)\' vs \'그림 그리는 이야기꾼(SADT·UseCase·ER)\' — 딱딱하냐 부드럽냐로 구분!')"><div class="card-title">요구사항 명세 기법</div><div class="card-preview">🧠 【정형=수학자, 비정형=이야기꾼】 → '정확한 수학자(VDM·Z·FS…</div></div><div class="card" onclick="openModal('요구사항 명세 원칙 및 주요 내용','옛날에 개발자들이 고객이 원하는 걸 제대로 못 알아듣고 엉뚱한 프로그램을 만들어버리는 일이 엄청 많았어. 그래서 \'IEEE\'라는 전문가 단체가 \'요구사항을 이렇게 정리하면 실수 없이 만들 수 있어!\'라는 기준을 만든 거야.','요구사항 명세란 고객이 원하는 걸 문서로 정리하는 건데, 이게 엉터리면 프로그램도 엉터리가 돼. 예를 들어 \'버튼을 누르면 빠르게 작동해야 해\'라고 쓰면 \'빠르게\'가 얼마나 빠른 건지 몰라서 문제가 생기지. 그래서 검증 가능한지, 수정 가능한지, 명확한지, 정확한지, 추적 가능한지, 일관성 있는지, 완전한지, 해석이 같은지, 이해하기 쉬운지 — 이 9가지 원칙으로 요구사항을 꼼꼼히 체크하는 거야.','검수명정추일완해이 → \'검사(검증)하러 수(수정)명(명확)정(정확)한 추(추적)일(일관)완(완전)한 해(해석)이(이해)야기\' — 앞 글자만 따서 \'검수명정추일완해이\'로 외워봐!')"><div class="card-title">요구사항 명세 원칙 및 주요 내용</div><div class="card-preview">🧠 검수명정추일완해이 → '검사(검증)하러 수(수정)명(명확)정(정확)한…</div></div></div></div>
+<div class="section-group" data-chapter="4"><div class="section-label">형상관리 도구</div><div class="card-grid"><div class="card" onclick="openModal('형상관리 도구','옛날에 여러 명이 같은 코드 파일을 수정하다가 서로 덮어써서 작업이 날아가는 사고가 자주 일어났어. 그래서 \'누가 언제 뭘 바꿨는지\' 기록하고 충돌을 막아주는 도구가 필요해졌지.','형상관리 도구는 구글 드라이브랑 비슷한데, 코드 전용 타임머신이라고 생각하면 돼. 파일을 저장할 때마다 변경 내역을 전부 기록해두니까 \'3일 전 버전으로 되돌려줘!\' 하면 바로 가능하고, 여러 명이 동시에 작업해도 서로 충돌 없이 합칠 수 있어. 크게 \'중앙 서버 한 곳에 저장하는 방식(SVN)\'이랑 \'각자 컴퓨터에도 전체 기록을 갖고 있는 방식(Git)\'으로 나뉘어.','형상관리 도구 = \'중Git분\' → 중앙저장소(SVN), Git(분산저장소) — \'중간은 SVN, 깃(Git)은 분산!\' 이렇게 외워봐!')"><div class="card-title">형상관리 도구</div><div class="card-preview">🧠 형상관리 도구 = '중Git분' → 중앙저장소(SVN), Git(분산…</div></div><div class="card" onclick="openModal('분산형 저장소(Git)','옛날에는 코드를 딱 한 곳(중앙 서버)에만 저장했는데, 그 서버가 고장나면 모든 코드가 날아가는 대참사가 벌어졌어. 그래서 \'한 곳에만 맡기지 말고, 모두가 전체 코드를 각자 갖고 있자!\'는 아이디어로 분산형 저장소가 탄생했지.','마치 학교 모둠 과제할 때, 조장 한 명만 파일 갖고 있으면 조장 컴퓨터 고장나면 끝장이잖아. 그래서 모둠원 전원이 파일 전체를 자기 컴퓨터에 저장해두는 거야. Git은 바로 이런 방식으로, 개발자 각자의 컴퓨터에 코드 전체가 저장되고, 각자 다른 버전(Branch)으로 작업하다가 나중에 합칠 수 있어.','🌳 \'모두가 통째로 복사\' → Git = 각자 PC가 곧 서버! / \'서버 터져도? 내 컴퓨터에 다 있어~\' 로 기억해!')"><div class="card-title">분산형 저장소(Git)</div><div class="card-preview">🧠 🌳 '모두가 통째로 복사' → Git = 각자 PC가 곧 서버! / …</div></div></div></div>
+<div class="section-group" data-chapter="4"><div class="section-label">소프트웨어 형상관리의 개요</div><div class="card-grid"><div class="card" onclick="openModal('형상관리의 정의','옛날에 여러 명이 함께 소프트웨어를 만들다 보니 누가 어떤 부분을 바꿨는지 몰라서 파일이 뒤죽박죽 엉망이 되는 일이 많았어. 그래서 \'변경 내용을 체계적으로 추적하고 관리하자!\'는 필요성에서 형상관리가 생겨났어.','형상관리는 소프트웨어를 만들면서 생기는 모든 파일(코드, 문서, 데이터)을 \'누가, 언제, 뭘, 왜 바꿨는지\' 기록하고 관리하는 활동이야. 마치 구글 문서에서 \'수정 기록 보기\'로 누가 언제 어떤 내용을 고쳤는지 다 볼 수 있는 것과 똑같아. 덕분에 문제가 생겼을 때 원인을 찾기 쉽고, 잘못되면 이전 버전으로 되돌릴 수도 있어.','형상관리 = \'형사가 변경 현장을 관리한다\' → 형사처럼 변경 원인 추적, 증거(파일) 보관, 관련자(담당자)에게 통보!')"><div class="card-title">형상관리의 정의</div><div class="card-preview">🧠 형상관리 = '형사가 변경 현장을 관리한다' → 형사처럼 변경 원인 …</div></div></div></div>
+<div class="section-group" data-chapter="4"><div class="section-label">형상관리 개념도 및 구성 요소</div><div class="card-grid"><div class="card" onclick="openModal('형상관리의 개념도','옛날에 여러 명이 같은 코드를 동시에 수정하다가 서로의 작업이 뒤섞여서 누가 뭘 바꿨는지 아무도 몰라 프로젝트가 엉망이 된 적이 많았어. 그래서 \'누가, 언제, 무엇을, 왜 바꿨는지\'를 체계적으로 기록하고 관리하는 방법이 필요해졌지.','형상관리는 마치 구글 드라이브에서 문서 수정 기록을 남기는 것과 같아. 팀원 여러 명이 하나의 문서를 고칠 때, 누가 언제 어느 부분을 바꿨는지 기록이 남고, 문제가 생기면 이전 버전으로 되돌릴 수 있잖아. 형상관리도 똑같이 소프트웨어의 모든 변경 내용을 기록하고, 버전을 관리하고, 문제가 생기면 이전 상태로 복구할 수 있게 해주는 전체 활동이야.','형상관리 = \'형사가 증거 관리\'! 형사가 사건 증거를 \'언제·누가·왜\' 바꿨는지 철저히 기록하듯이, 형상관리도 코드 변경을 빠짐없이 기록하고 추적한다고 기억해!')"><div class="card-title">형상관리의 개념도</div><div class="card-preview">🧠 형상관리 = '형사가 증거 관리'! 형사가 사건 증거를 '언제·누가·…</div></div><div class="card" onclick="openModal('형상관리의 구성요소','옛날에 여러 개발자가 같은 프로그램을 동시에 수정하다가 \'누가 언제 뭘 바꿨는지\' 몰라서 엉망이 된 적이 많았어. 그래서 소프트웨어의 변경 내역을 체계적으로 관리하는 방법이 필요해졌어.','형상관리는 마치 학교 공용 구글 문서를 여럿이 쓸 때 \'버전 기록\'으로 누가 언제 뭘 고쳤는지 추적하는 것과 같아. 구성요소는 크게 4가지야: 변경 기준점인 \'기준선\', 관리할 대상인 \'형상항목\', 실제로 만들어진 결과물인 \'형상제품\', 그리고 이 모든 정보를 모은 \'형상정보\'야. 형상정보는 식별 → 통제 → 감사 → 기록 순서로 활동이 이루어져.','기항제정 → \'기\'준선, \'항\'목, \'제\'품, \'정\'보 — \'기항제정, 출발 준비 완료!\' 라고 외워봐 (비행기 기항지 느낌으로!)')"><div class="card-title">형상관리의 구성요소</div><div class="card-preview">🧠 기항제정 → '기'준선, '항'목, '제'품, '정'보 — '기항제정…</div></div><div class="card" onclick="openModal('형상관리 고려사항','옛날에 여러 개발자가 같은 코드를 동시에 수정하다가 서로의 작업이 뒤섞여서 프로그램이 망가지는 일이 자주 있었어. 특히 이미 실제로 사용 중인 소프트웨어를 건드릴 땐 더 조심해야 했기 때문에, 변경을 체계적으로 관리하는 규칙이 필요해졌어.','형상관리는 마치 병원에서 환자 수술 기록을 꼼꼼히 관리하는 것과 같아. 이미 운영 중인 소프트웨어는 실제로 사람들이 쓰고 있는 \'살아있는 환자\'니까, 함부로 건드리면 큰일 나잖아. 그래서 H(Hardware, 하드웨어 환경), S(Software, 소프트웨어 구성), E(Environment, 운영 환경) 세 가지를 신중하게 따져보고, 절대 Con(Conflict, 충돌)이 나지 않도록 조심해야 해.','운영 중인 소프트웨어는 \'병원 중환자실\' — HSE(하·소·환) 건드릴 땐 Con(충돌) 조심! → \'H·S·E, Con 조심해!\' 세 글자 외우고 \'Con(충돌) 나면 큰일 난다\'고 기억해!')"><div class="card-title">형상관리 고려사항</div><div class="card-preview">🧠 운영 중인 소프트웨어는 '병원 중환자실' — HSE(하·소·환) 건드…</div></div></div></div>
+<div class="section-group" data-chapter="4"><div class="section-label">오픈소스 소프트웨어 라이선스</div><div class="card-grid"><div class="card" onclick="openModal('오픈소스 소프트웨어 라이선스 비교','옛날에 프로그래머들이 자기가 만든 코드를 공유하고 싶었는데, 아무런 규칙 없이 공유하다 보니 누군가 그걸 몰래 가져다 돈 버는 데만 쓰는 문제가 생겼어. 그래서 \'공유는 하되, 이런 조건은 지켜야 해!\'라는 약속 문서들이 생기기 시작했고, 그게 바로 오픈소스 라이선스야.','오픈소스 라이선스는 \'내 레시피 공개할게, 대신 네가 개량하면 너도 공개해야 해!\'처럼 코드를 공유할 때 붙이는 조건표야. 모든 오픈소스는 공통적으로 무료 사용, 코드 보기, 수정, 배포가 다 되는데, 차이점은 \'네가 이걸 써서 만든 것도 공개해야 하냐\'와 \'돈 받는 프로그램이랑 합칠 수 있냐\'야. GPL은 가장 엄격해서 GPL 코드를 쓰면 네 코드까지 전부 공개해야 하고, 돈 받는 독점 소프트웨어랑 합치는 것도 안 돼.','GPL = \'공개 Pull 강제!\' → GPL 쓰면 네 코드까지 전부 끌려나와서(Pull) 공개 강제! 가장 엄격한 라이선스!')"><div class="card-title">오픈소스 소프트웨어 라이선스 비교</div><div class="card-preview">🧠 GPL = '공개 Pull 강제!' → GPL 쓰면 네 코드까지 전부…</div></div><div class="card" onclick="openModal('오픈소스 소프트웨어 라이선스 활용을 위한 고려사항','옛날에는 소프트웨어를 공짜로 가져다 썼다가 나중에 \'이거 우리 규칙 어겼으니 소송이야!\'라는 황당한 상황이 종종 생겼어. 그래서 오픈소스를 안전하게 쓰려면 미리 규칙을 꼼꼼히 확인해야 한다는 인식이 생겼지.','오픈소스는 \'무료로 쓸 수 있는 레시피\'라고 생각해봐. 근데 어떤 레시피는 \'네가 이걸로 음식 팔면, 레시피도 공개해야 해\'라는 조건이 붙어 있거든. 그러니까 회사에서 오픈소스를 쓸 때는 \'이 레시피 조건이 우리 사업에 괜찮은지\', \'앞으로도 계속 관리될 레시피인지\'를 먼저 확인하고 쓰기로 결정해야 해.','오픈소스 쓰기 전에 \'조건 확인 → 사업 영향 → 미래 계획\' = \'조사미\' 세 글자만 기억해! 조건 보고, 사업에 맞는지 보고, 미래에도 쓸 수 있는지 봐!')"><div class="card-title">오픈소스 소프트웨어 라이선스 활용을 위한 고려사항</div><div class="card-preview">🧠 오픈소스 쓰기 전에 '조건 확인 → 사업 영향 → 미래 계획' = '…</div></div></div></div>
+<div class="section-group" data-chapter="4"><div class="section-label">오픈소스 소프트웨어 개념</div><div class="card-grid"><div class="card" onclick="openModal('오픈소스 소프트웨어 정의','옛날에는 프로그래머들이 서로 코드를 자유롭게 나눠 쓰며 발전시켰는데, 1980년대부터 회사들이 \'우리 프로그램 함부로 보거나 고치면 안 돼!\'라며 돈을 받고 잠가버리기 시작했어. 이에 화가 난 리처드 스톨만이 \'소프트웨어는 모두가 자유롭게 써야 해!\'라며 반기를 들고 자유소프트웨어재단(FSF)을 만든 게 오픈소스의 시작이야.','오픈소스 소프트웨어는 마치 레시피가 공개된 음식점 같아. 요리법(소스코드)을 누구나 볼 수 있고, 그걸 가져다가 내 입맛대로 바꿔서 써도 되는 거지. 단, \'원래 만든 사람 이름은 지우면 안 돼\' 같은 기본 예의(라이선스 규칙)는 지켜야 해.','오픈소스 = \'열려있어, 공짜야, 고쳐써!\' → **열공고** 3글자만 기억해!')"><div class="card-title">오픈소스 소프트웨어 정의</div><div class="card-preview">🧠 오픈소스 = '열려있어, 공짜야, 고쳐써!' → **열공고** 3글자…</div></div><div class="card" onclick="openModal('오픈소스 소프트웨어 라이선스 정의','옛날에 개발자들이 코드를 무료로 공개했더니, 어떤 사람들이 그걸 몰래 가져다가 자기 돈벌이에 쓰면서 원작자한테는 아무 공도 안 돌리는 문제가 생겼어. 그래서 \'공짜로 써도 되는데, 대신 이 규칙은 꼭 지켜라!\'는 약속서가 필요해진 거야.','오픈소스 라이선스는 쉽게 말해 \'공짜 레시피 공유 규칙\'이야. 예를 들어 누군가 케이크 레시피를 공개하면서 \'써도 되는데, 네가 이 레시피로 새 레시피 만들면 그것도 공개해야 해!\'라고 조건을 단 것처럼, 코드를 공개할 때 지켜야 할 규칙을 정해둔 거야. 이 규칙을 어기면 저작권법 위반으로 법적 책임을 질 수 있어.','GPL, LGPL, BSD, MPL → \'공(GPL)짜지만 Lesser(LGPL)해도 BSD(배포)하면 Mozilla(MPL)도 따라온다\' — 앞글자만 따서 **\'공짜 레시피는 버섯 피자\'** (GPL-LGPL-BSD-MPL = ㄱ-ㄹ-ㅂ-ㅍ)')"><div class="card-title">오픈소스 소프트웨어 라이선스 정의</div><div class="card-preview">🧠 GPL, LGPL, BSD, MPL → '공(GPL)짜지만 Lesse…</div></div></div></div>
+<div class="section-group" data-chapter="5"><div class="section-label">소프트웨어 유지보수의 개념과 유형</div><div class="card-grid"><div class="card" onclick="openModal('소프트웨어 유지보수의 정의','옛날에 프로그램을 한 번 만들면 끝인 줄 알았는데, 막상 사람들이 쓰다 보니 버그도 생기고 환경도 바뀌고 새로운 기능도 필요해졌어. 그래서 \'만들고 나서도 계속 관리해야 한다\'는 개념이 필요하게 된 거야.','소프트웨어 유지보수는 자동차를 산 다음에 하는 \'차 관리\'랑 똑같아. 차를 샀다고 끝이 아니라 기름도 넣고, 고장 나면 수리하고, 새 기능(블랙박스 등)도 추가하잖아. 소프트웨어도 고객한테 넘긴 후에 오류를 고치고, 성능을 높이고, 달라진 환경에 맞게 계속 손봐주는 작업이야. 쉽게 말해 \'프로그램의 사후관리\'라고 생각하면 돼!','유지보수 = \'납품 후 오·성·환\' → 오류 수정, 성능 향상, 환경 적응! \'오성환 선수처럼 납품 후에도 계속 뛴다!\' 🏃')"><div class="card-title">소프트웨어 유지보수의 정의</div><div class="card-preview">🧠 유지보수 = '납품 후 오·성·환' → 오류 수정, 성능 향상, 환경…</div></div><div class="card" onclick="openModal('소프트웨어 유지보수의 목적','옛날에 프로그램을 한 번 만들면 끝인 줄 알았는데, 시간이 지나면서 버그도 생기고 윈도우 버전도 바뀌고 사용자 요구도 달라지면서 \'만든 후 관리\'가 필수라는 걸 깨달았어. 그래서 소프트웨어를 오래, 잘 쓰려면 꾸준히 손봐줘야 한다는 개념이 생긴 거야.','소프트웨어 유지보수는 자동차 정기점검이랑 똑같아. 차 샀다고 끝이 아니라 엔진오일도 갈고(성능 개선), 고장난 부분 고치고(하자보수), 새 도로 규정에 맞게 업그레이드(새 환경 적응)하잖아. 프로그램도 마찬가지로 출시 후에 계속 고치고 발전시켜야 오래 쓸 수 있어.','유지보수 목적 = \'성하새예\' → 🔧성능 개선, 🐛하자보수, 🌍새 환경 적응, 🛡️예방! \'성하새예\' 네 글자만 기억해!')"><div class="card-title">소프트웨어 유지보수의 목적</div><div class="card-preview">🧠 유지보수 목적 = '성하새예' → 🔧성능 개선, 🐛하자보수, 🌍새 환…</div></div><div class="card" onclick="openModal('소프트웨어 유지보수의 종류','소프트웨어를 만들고 나서 그냥 내버려두면 버그도 생기고, 세상이 바뀌면 맞지 않는 부분도 생기고, 새로운 기능이 필요해지기도 했어. 그래서 \'어떤 이유로, 언제, 무엇을 고칠지\' 체계적으로 나눠서 관리하는 방법이 필요해졌지.','소프트웨어 유지보수는 크게 \'왜 고치냐(사유)\', \'언제 고치냐(시간)\', \'뭘 고치냐(대상)\' 이 세 가지 기준으로 나눌 수 있어. 예를 들어 앱에서 오류가 터지면 \'수정\', 스마트폰 OS가 바뀌면 \'적응\', 새 기능을 추가하면 \'완전화\' 유지보수인 거야. 시간 기준으로는 정기적으로 점검하는 \'계획\', 미리 막는 \'예방\', 급하게 고치는 \'응급\'으로 나뉘어.','사유는 \'수적완(수정·적응·완전화)\' → \'수적완!\' 하고 외쳐! 시간은 \'계예응(계획·예방·응급)\' → \'계획 없이 예방도 없고 응급만 남는다!\' 로 기억해봐!')"><div class="card-title">소프트웨어 유지보수의 종류</div><div class="card-preview">🧠 사유는 '수적완(수정·적응·완전화)' → '수적완!' 하고 외쳐! 시…</div></div></div></div>
+<div class="section-group" data-chapter="5"><div class="section-label">소프트웨어 유지보수 활동</div><div class="card-grid"><div class="card" onclick="openModal('SW 유지보수 절차','옛날에 프로그램을 만들고 나서 버그가 생기거나 기능을 바꿔야 할 때, 아무 규칙 없이 막 고치다 보니 오히려 더 망가지는 일이 많았어. 그래서 \'고칠 때도 순서대로 체계적으로 하자!\'는 약속이 생긴 거야.','SW 유지보수 절차는 앱에 문제가 생겼을 때 고치는 순서야. 마치 병원 가는 것처럼 → ① 증상 접수(문제 요청 접수) → ② 진단(문제 분석) → ③ 수술(코드 수정) → ④ 퇴원 전 검사(테스트) → ⑤ 퇴원(배포 및 완료 확인) 순서로 진행돼. 이 순서를 지켜야 고치다가 다른 곳을 망가뜨리는 실수를 막을 수 있어.','병원 순서로 외워! \'접분수테완\' → 접수 → 분석 → 수정 → 테스트 → 완료! \'아파서 접수했더니 분석하고 수술(수정)하고 테스트하고 완료!\' 🏥')"><div class="card-title">SW 유지보수 절차</div><div class="card-preview">🧠 병원 순서로 외워! '접분수테완' → 접수 → 분석 → 수정 → 테스…</div></div><div class="card" onclick="openModal('소프트웨어 조직 유형','옛날에는 소프트웨어를 만들면 회사가 코드를 꽁꽁 숨기고 돈 받고 팔았는데, \'왜 우리끼리 코드 공유하면서 같이 발전시키면 안 되지?\'라는 생각을 가진 개발자들이 모이기 시작했어. 그래서 코드를 공개하는 그룹이냐, 비공개로 운영하는 그룹이냐에 따라 소프트웨어 조직 유형이 나뉘게 된 거야.','소프트웨어 조직 유형은 크게 \'오픈소스\'와 \'클로즈드소스\' 두 가지로 나뉘어. 오픈소스는 레시피를 공개해서 누구나 요리를 따라 만들고 개선할 수 있는 것처럼, 코드를 누구나 보고 수정하고 나눌 수 있게 공개한 거야. 반대로 클로즈드소스는 맥도날드 비밀 소스처럼 레시피를 절대 공개 안 하고 완성된 제품만 파는 방식이지.','오픈소스 = \'오픈(open)=열려있다\' → 문이 활짝 열린 집 🏠, 클로즈드소스 = \'잠긴 금고 🔒\' — 열린 집 vs 잠긴 금고!')"><div class="card-title">소프트웨어 조직 유형</div><div class="card-preview">🧠 오픈소스 = '오픈(open)=열려있다' → 문이 활짝 열린 집 🏠,…</div></div><div class="card" onclick="openModal('오픈소스 소프트웨어','옛날에는 프로그램을 만들면 코드를 꽁꽁 숨겨서 돈 내고 사야만 쓸 수 있었어. 근데 \'왜 우리끼리 코드 공유하면서 같이 발전시키면 안 돼?\'라고 생각한 개발자들이 모여서 코드를 공개하는 문화를 만들기 시작했지.','오픈소스는 레시피를 공개한 요리책 같은 거야. 보통 식당은 레시피를 절대 안 알려주지만, 오픈소스는 \'이 코드 마음껏 보고, 고치고, 나눠써!\'라고 하는 거거든. 예를 들어 안드로이드폰의 기반이 되는 코드도 오픈소스라 전 세계 개발자들이 함께 고치고 발전시키고 있어.','오픈소스 = \'오픈(열려있는) 주방(소스코드)\' → 누구나 들어와서 레시피 보고 요리해도 OK!')"><div class="card-title">오픈소스 소프트웨어</div><div class="card-preview">🧠 오픈소스 = '오픈(열려있는) 주방(소스코드)' → 누구나 들어와서 …</div></div><div class="card" onclick="openModal('오픈소스 소프트웨어 라이선스 정의','옛날에 프로그램 코드는 회사 비밀처럼 꽁꽁 숨겨져 있어서, 다른 사람이 그 코드를 보거나 고칠 수가 없었어. 그러다 보니 개발자들이 \'우리 같이 코드 공유하면서 더 좋은 프로그램 만들자!\'는 생각으로 오픈소스 문화가 생겨났고, 그걸 규칙화한 게 바로 오픈소스 라이선스야.','오픈소스 라이선스란 \'이 코드 공짜로 써도 되는데, 이런 규칙은 꼭 지켜!\'라고 적어둔 사용 설명서야. 예를 들어 어떤 라이선스는 \'코드 고쳐서 써도 되는데, 네가 고친 코드도 똑같이 공개해야 해\'라는 조건을 달기도 해. 마치 친구한테 레시피 알려줄 때 \'써도 되는데 너도 다른 사람한테 알려줘야 해\'라고 조건 거는 것과 같아.','오픈소스 라이선스 = \'공짜지만 조건 있어!\' → 줄여서 **공조있** (공짜 + 조건 + 있어) 으로 기억해!')"><div class="card-title">오픈소스 소프트웨어 라이선스 정의</div><div class="card-preview">🧠 오픈소스 라이선스 = '공짜지만 조건 있어!' → 줄여서 **공조있*…</div></div></div></div>
+<div class="section-group" data-chapter="6"><div class="section-label">소프트웨어 재사용</div><div class="card-grid"><div class="card" onclick="openModal('소프트웨어 재사용(Reuse) 개요','옛날에 개발자들이 비슷한 기능을 만들 때마다 매번 처음부터 다시 코드를 짜야 해서 시간이랑 돈이 엄청 낭비됐어. 그래서 \'이미 잘 만들어놓은 코드, 그냥 다시 쓰면 안 되나?\' 라는 생각에서 재사용 개념이 나왔어.','레고 블록 생각해봐! 집 만들 때 쓴 블록을 나중에 자동차 만들 때도 또 쓸 수 있잖아. 소프트웨어 재사용도 똑같아 — 이미 잘 만들어서 검증된 코드 블록을 새 프로그램 만들 때 그대로 가져다 쓰는 거야. 이러면 처음부터 만드는 것보다 훨씬 빠르고, 이미 검증된 거라 오류도 적어!','재사용의 3대 목표 → \'신확생\' 🔁 (신뢰성 - 이미 검증됨 / 확장성 - 검증된 기능으로 늘리기 쉬움 / 생산성 - 비용·시간 절약)')"><div class="card-title">소프트웨어 재사용(Reuse) 개요</div><div class="card-preview">🧠 재사용의 3대 목표 → '신확생' 🔁 (신뢰성 - 이미 검증됨 / 확…</div></div><div class="card" onclick="openModal('소프트웨어 재사용의 대상','옛날에는 프로그램 만들 때마다 처음부터 다 새로 짰는데, 그러다 보니 시간도 엄청 걸리고 비용도 낭비됐어. 그래서 \'이미 잘 만들어진 걸 다시 쓰면 어떨까?\' 하는 생각에서 재사용 개념이 생겼어.','소프트웨어 재사용이란 레고 블록처럼 이미 만들어진 부품을 다시 활용하는 거야. 재사용할 수 있는 대상은 크게 세 가지인데, 설계 정보(어떻게 만들지 계획한 것), 프로그램 코드(실제로 짠 코딩), 그리고 기타(사용 설명서나 조사 결과 같은 문서들)야. 즉, 코드뿐만 아니라 계획서, 설명서까지 전부 재사용 대상이 될 수 있어!','재사용 대상 = \'설·코·기\' 👉 설계정보, 코드, 기타문서 — \'설코기 먹듯 재사용한다!\' 🍖')"><div class="card-title">소프트웨어 재사용의 대상</div><div class="card-preview">🧠 재사용 대상 = '설·코·기' 👉 설계정보, 코드, 기타문서 — '설…</div></div><div class="card" onclick="openModal('소프트웨어 재사용의 원칙','옛날에는 프로그램을 만들 때마다 같은 기능을 처음부터 새로 만들었어. 그러다 보니 시간도 엄청 걸리고 오류도 계속 생기니까, \'한번 잘 만든 코드는 다시 쓸 수 있게 하자!\'는 원칙이 생겼어.','레고 블록을 생각해봐! 블록 하나하나가 어떤 세트에서도 끼워 맞출 수 있고, 설명서도 잘 붙어 있고, 튼튼하잖아. 소프트웨어 재사용도 똑같이, 만든 코드 조각이 어떤 컴퓨터나 프로그램에서도 잘 붙고(하드웨어·소프트웨어 독립), 기능 설명이 친절하게 적혀 있고(자기문서화), 많은 사람들이 믿고 쓸 수 있어야(신뢰성) 진짜 재사용 가능한 코드야.','🔑 \'일모하소자일신\' → 일반성, 모듈성, 하드웨어독립성, 소프트웨어독립성, 자기문서화, 일반성(공통성), 신뢰성! \'일모하소자일신\' = \'일하소자, 일신(날마다 새롭게)\' 처럼 외워봐!')"><div class="card-title">소프트웨어 재사용의 원칙</div><div class="card-preview">🧠 🔑 '일모하소자일신' → 일반성, 모듈성, 하드웨어독립성, 소프트웨어…</div></div><div class="card" onclick="openModal('실무에서 재사용 구현의 문제점','옛날에 개발자들이 \'이미 만든 코드 또 쓰면 되지!\'라고 생각했는데, 막상 현장에서 가져다 쓰려니 서로 맞지 않거나 찾기도 어렵고 믿을 수 없는 코드들이 넘쳐났어. 그래서 그냥 재사용하면 된다는 생각 자체는 맞는데, 현실에서 잘 안 되는 이유들을 정리하고 해결책을 마련할 필요가 생겼어.','레고 부품을 재활용한다고 생각해봐. 근데 부품이 어디 있는지 목록도 없고, 크기가 제각각이고, 어느 세트 거랑 호환되는지도 모른다면 그냥 새로 만드는 게 낫겠지? 소프트웨어도 똑같아서 재사용하려면 \'잘 정리된 부품 창고(라이브러리)\', \'맞는 크기 규격(Granularity)\', \'자동으로 찾아주는 도구\'가 필요해. 결국 기술만이 아니라 조직 문화랑 경영진 지원까지 다 갖춰져야 진짜 재사용이 가능해.','장애요인 해결책은 \'새라자능조\' — 새로운 방법론, 라이브러리 구축, 자동화 도구, 능동적 경영, 조직 변화! \'새 라면 자동으로 능숙한 조리사가 끓여준다\'고 외워봐!')"><div class="card-title">실무에서 재사용 구현의 문제점</div><div class="card-preview">🧠 장애요인 해결책은 '새라자능조' — 새로운 방법론, 라이브러리 구축,…</div></div><div class="card" onclick="openModal('소프트웨어 재사용의 효과','옛날에 개발자들이 프로그램을 만들 때마다 처음부터 모든 코드를 새로 짜야 했는데, 이게 너무 시간도 오래 걸리고 돈도 많이 들었어. 그래서 \'이미 잘 만들어진 코드를 다시 활용하면 어떨까?\' 하는 생각에서 소프트웨어 재사용 개념이 생겨났어.','레고 블록을 생각해봐! 집을 만들 때 쓴 레고 블록을 분해해서 자동차 만들 때 또 쓸 수 있잖아. 소프트웨어 재사용도 똑같아 — 예전에 만든 로그인 기능, 결제 기능 같은 코드 조각들을 새 프로그램에 가져다 쓰는 거야. 이렇게 하면 개발 시간이 줄고, 이미 검증된 코드를 쓰니까 오류도 적어지고, 비용도 절약되는 효과가 있어!','재사용 효과 = \'시오비\' 3총사! 🎯 **시**간 단축 + **오**류 감소 + **비**용 절약 — \'시오비, 시오비!\' 하고 외쳐봐!')"><div class="card-title">소프트웨어 재사용의 효과</div><div class="card-preview">🧠 재사용 효과 = '시오비' 3총사! 🎯 **시**간 단축 + **오*…</div></div><div class="card" onclick="openModal('역공학의 장점','옛날에 만들어진 프로그램들은 설계 문서가 없거나 잃어버린 경우가 많았어. 그래서 이미 완성된 프로그램을 뜯어보면서 \'이게 어떻게 만들어진 거지?\'를 역으로 파악하는 방법이 필요해졌어.','역공학은 완성된 레고 작품을 보고 \'어떤 블록을 어떻게 조립했는지\' 설명서를 새로 만드는 것과 같아. 기존 프로그램 코드를 분석해서 설계도를 다시 뽑아내고, 그걸 창고(Repository)에 잘 보관해두면 나중에 수정하거나 업그레이드할 때 훨씬 편해져. 특히 오래된 데이터베이스를 새 시스템으로 옮길 때도 이 방법으로 구조를 파악해서 안전하게 이전할 수 있어.','역공학 = \'완성품 → 설명서\' / 레고 완성작 보고 조립 설명서 역으로 만들기! \'역(逆)으로 공(工)부해서 학(學)습한다\' — 거꾸로 분석해서 설계도 복원!')"><div class="card-title">역공학의 장점</div><div class="card-preview">🧠 역공학 = '완성품 → 설명서' / 레고 완성작 보고 조립 설명서 역…</div></div></div></div>
+<div class="section-group" data-chapter="6"><div class="section-label">자료구조(Data Structure)</div><div class="card-grid"><div class="card" onclick="openModal('정의','컴퓨터가 엄청난 양의 데이터를 다루게 되면서, 그냥 막 쌓아두면 나중에 찾거나 쓸 때 너무 느리고 힘들었어. 그래서 데이터를 용도에 맞게 잘 정리해서 저장하는 방법이 필요해졌고, 그게 바로 자료구조야!','자료구조는 컴퓨터가 데이터를 저장하는 \'정리 방식\'이야. 예를 들어 책을 그냥 방바닥에 던져두면 찾기 힘들지만, 책장에 종류별로 꽂아두면 쉽게 찾잖아? 자료구조도 똑같이 데이터를 줄 세우거나(선형구조), 나무처럼 가지를 뻗거나(비선형구조) 하는 방식으로 체계적으로 정리하는 거야.','자료구조 = \'선(선형) 비(비선형)\' → \'선배한테 잘 보여라!\' 선형은 일렬로 줄 선 것, 비선형은 삐뚤빼뚤 나무처럼 퍼진 것!')"><div class="card-title">정의</div><div class="card-preview">🧠 자료구조 = '선(선형) 비(비선형)' → '선배한테 잘 보여라!' …</div></div><div class="card" onclick="openModal('스택과 큐','옛날에 프로그램이 데이터를 저장하고 꺼낼 때 순서를 어떻게 관리할지 고민이 많았어. 그래서 \'어떤 순서로 넣고 꺼낼 것인가\'에 따라 스택과 큐라는 두 가지 방식을 만들게 됐어.','스택은 접시 쌓기야 — 밑에서부터 쌓고 꺼낼 땐 맨 위부터 꺼내지(나중에 넣은 게 먼저 나와, LIFO). 큐는 편의점 계산대 줄 서기야 — 먼저 줄 선 사람이 먼저 계산하고 나가지(먼저 넣은 게 먼저 나와, FIFO). 즉, 스택은 \'뒤로가기 버튼\'처럼 가장 최근 것을 되돌릴 때 쓰고, 큐는 \'순서대로 처리\'할 때 써.','스택 = 접시 스택(Stack) → \'S\'는 쌓는다! 나중에 올린 접시 먼저 뺀다 (LIFO: Last In First Out) / 큐 = Queue(줄) → 편의점 줄처럼 먼저 온 사람이 먼저 나간다 (FIFO: First In First Out) ✨ 기억법: \'스택=접시, 큐=줄서기\'')"><div class="card-title">스택과 큐</div><div class="card-preview">🧠 스택 = 접시 스택(Stack) → 'S'는 쌓는다! 나중에 올린 접…</div></div><div class="card" onclick="openModal('트리와 그래프','컴퓨터가 데이터를 저장할 때 단순히 줄 세우는 것만으로는 \'부모-자식 관계\'나 \'친구 관계\'처럼 복잡한 연결을 표현하기 어려웠어. 그래서 계층 관계는 트리로, 복잡한 다대다 관계는 그래프로 표현하는 방법이 생겨났어.','트리는 회사 조직도처럼 사장 밑에 부장, 부장 밑에 과장이 있는 \'위아래 계층 구조\'야. 반면 그래프는 카카오톡 친구 목록처럼 나와 친구, 친구와 친구가 서로 얽혀 있는 \'거미줄 구조\'인데, 지하철 노선도나 내비게이션 최단경로 찾기가 딱 그래프를 이용한 거야.','트리는 \'족보(위→아래)\', 그래프는 \'친구관계(나↔너↔걔)\' — 족보는 위에서 아래로만 내려가지만, 친구는 서로서로 연결되잖아!')"><div class="card-title">트리와 그래프</div><div class="card-preview">🧠 트리는 '족보(위→아래)', 그래프는 '친구관계(나↔너↔걔)' — 족…</div></div><div class="card" onclick="openModal('자료구조의 선택 기준','옛날에 개발자들이 데이터를 막 아무렇게나 저장했더니 찾는 데 너무 오래 걸리고 메모리도 낭비되는 문제가 생겼어. 그래서 \'어떤 상황에 어떤 방식으로 데이터를 담을지\' 기준을 딱 정하게 된 거야.','자료구조 선택은 마치 물건을 어디에 보관할지 고르는 것과 같아. 옷은 서랍에, 책은 책장에, 신발은 신발장에 넣듯이 — 빠르게 꺼내야 하면 배열, 줄 서서 차례로 처리해야 하면 큐, 뒤로 돌아가야 하면 스택, 연결 관계를 표현해야 하면 그래프를 쓰는 거야. 처리 속도, 데이터 크기, 활용 목적 이 3가지를 따져서 딱 맞는 자료구조를 골라야 해.','🧠 \'리스배큐데그\' 로 외워! → 리스트(DB인덱스), 스택(뒤로가기/Undo), 배열(정렬탐색), 큐(줄서기/프린터), 데크(스택+큐 합체), 그래프(네트워크지도) — 순서대로 \'리스배큐데그~\' 한 번만 읊으면 끝!')"><div class="card-title">자료구조의 선택 기준</div><div class="card-preview">🧠 🧠 '리스배큐데그' 로 외워! → 리스트(DB인덱스), 스택(뒤로가기…</div></div><div class="card" onclick="openModal('알고리즘 개요','옛날에 복잡한 수학 문제나 반복 작업을 사람마다 제각각 다른 방식으로 풀다 보니 결과가 달라지고 효율도 엉망이었어. 그래서 \'누가 해도 같은 결과가 나오는 명확한 풀이 순서\'를 정리할 필요가 생겼어!','알고리즘은 요리 레시피랑 똑같아. 재료(입력)를 넣고, 순서대로 조리 단계를 따라가면(처리), 완성된 요리(출력)가 나오는 거야. 단, 좋은 레시피는 \'적당히\'가 아니라 \'3분 볶는다\'처럼 누가 봐도 명확하고, 끝없이 반복되지 않고 반드시 완성 단계에서 끝나야 해.','알고리즘 5조건 → \'입출명유효\' 로 외워! (입력 - 출력 - 명확성 - 유한성 - 효과성) \'입출명유효\' = \'입 출이는 명품 유한한 효자다\' 🍱')"><div class="card-title">알고리즘 개요</div><div class="card-preview">🧠 알고리즘 5조건 → '입출명유효' 로 외워! (입력 - 출력 - 명확…</div></div><div class="card" onclick="openModal('알고리즘 분석 기준','옛날에 프로그래머들이 코드를 짜고 나서 \'이 코드가 과연 좋은 코드인가?\'를 판단할 기준이 없어서 혼란스러웠어. 그래서 알고리즘을 평가하는 공통 기준들을 딱 정해두게 됐지!','알고리즘을 평가하는 기준은 크게 5가지야. 정확성(답이 맞냐), 명확성(단계가 헷갈리지 않냐), 효율성(빠르고 메모리 적게 쓰냐), 입출력(재료 넣으면 결과 나오냐), 유한성(언젠간 끝나냐)으로 볼 수 있어. 예를 들어 라면 레시피도 \'재료가 명확하고, 순서가 헷갈리지 않고, 빠르게 끝나고, 맛있게 완성되면\' 좋은 레시피인 것처럼 알고리즘도 똑같이 평가해!','**\'정명효입유\'** → 정확히 명확하게 효율적으로 입출력하고 유한하게 끝내자! (정·명·효·입·유 다섯 글자만 기억해!)')"><div class="card-title">알고리즘 분석 기준</div><div class="card-preview">🧠 **'정명효입유'** → 정확히 명확하게 효율적으로 입출력하고 유한하…</div></div><div class="card" onclick="openModal('검색 알고리즘','옛날에 컴퓨터에 데이터가 많아지면서 \'내가 원하는 정보를 어떻게 빠르게 찾지?\'라는 문제가 생겼어. 그래서 데이터를 효율적으로 찾는 다양한 방법들을 연구하게 됐는데, 그게 바로 검색 알고리즘이야.','도서관에서 책을 찾는다고 상상해봐. 선형 검색은 첫 번째 책부터 한 권씩 순서대로 훑어보는 방법이고, 제어 검색은 책이 가나다순으로 정렬되어 있을 때 중간부터 찾아서 범위를 좁혀가는 똑똑한 방법이야. 데이터가 정렬되어 있느냐 없느냐에 따라 어떤 방법을 쓸지 선택하는 거지!','📚 \'정렬 없으면 처음부터 줄 세워 찾고(선형), 정렬 있으면 반 잘라 찾아라(제어)\' — 정렬 유무가 핵심!')"><div class="card-title">검색 알고리즘</div><div class="card-preview">🧠 📚 '정렬 없으면 처음부터 줄 세워 찾고(선형), 정렬 있으면 반 잘…</div></div><div class="card" onclick="openModal('그래프 탐색 알고리즘','옛날에 지도나 회로도처럼 복잡하게 연결된 것들을 컴퓨터로 탐색해야 할 일이 많아졌어. 그런데 아무 순서 없이 뒤지면 같은 곳을 계속 다시 방문하거나 빠뜨리는 문제가 생겨서 체계적인 방법이 필요했어.','그래프 탐색은 지하철 노선도에서 출발역부터 모든 역을 빠짐없이 한 번씩 방문하는 것과 같아. 그 중 깊이 우선 탐색(DFS)은 미로 찾기할 때 한 방향으로 막힐 때까지 쭉 들어가다가 막히면 갈림길로 되돌아와서 다른 길을 시도하는 방식이야. 마치 실타래를 풀며 들어가다가 막히면 실을 따라 되돌아오는 것처럼 동작해.','DFS = \'막히면 되돌아!\' - 깊이(Depth) 파고들다 막히면(F=Fail) 되돌아서(S=Step back) 다시 시도!')"><div class="card-title">그래프 탐색 알고리즘</div><div class="card-preview">🧠 DFS = '막히면 되돌아!' - 깊이(Depth) 파고들다 막히면(…</div></div><div class="card" onclick="openModal('최소 신장 트리','옛날에 여러 도시를 전선이나 도로로 연결할 때, 모든 곳을 이으면서도 공사 비용을 최대한 아끼고 싶었어. 그래서 \'어떻게 하면 모든 곳을 연결하되 가장 적은 비용으로 할 수 있을까?\'라는 문제를 풀기 위해 이 개념이 생겼어.','친구 10명이 모두 카톡으로 연결되려면 케이블을 최소 몇 개 깔아야 할까? 최소 신장 트리는 모든 친구를 연결하되, 가장 싼 케이블들만 골라서 연결하는 방법이야. 단, 빙글빙글 도는 루프(사이클)가 생기면 낭비니까 그건 절대 만들지 않아.','🌳 \'최소 비용으로 모두 연결, 단 돌아가는 길은 NO!\' → 크루스칼은 \'싼 것부터 줍기\', 프림은 \'가까운 곳부터 뻗기\'')"><div class="card-title">최소 신장 트리</div><div class="card-preview">🧠 🌳 '최소 비용으로 모두 연결, 단 돌아가는 길은 NO!' → 크루스…</div></div></div></div>
+
+</div>
+
+<div class="fb-wrap" id="fb-content"><div class="fb-title">💻 소프트웨어 개발</div><div class="fb-spine"><div class="fb-branch left"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch0')"><span class="fb-arr">▶</span>소프트웨어 공학 기초<span class="fb-cnt">12개</span></div><div class="fb-sec-blocks" id="fb_ch0"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec0_0')"><span class="fb-arr">▶</span>소프트웨어 공학의 배경과 목적 <em>3</em></div><div class="fb-con-list" id="fb_sec0_0"><span class="fb-con" onclick="openModal('소프트웨어 공학 소개','옛날에 프로그래머 한 명이 혼자 간단한 프로그램을 만들 때는 그냥 머릿속으로 생각하면서 만들어도 됐어. 근데 프로그램이 점점 복잡해지고 여러 사람이 함께 만들어야 하는 상황이 오자, 아무 계획 없이 만들다가 완전 엉망이 되는 사태가 자꾸 발생한 거야!','소프트웨어 공학은 쉽게 말해 \'프로그램을 망하지 않게 만드는 체계적인 방법론\'이야. 집 지을 때 설계도 없이 막 짓다간 무너지잖아? 소프트웨어도 마찬가지로 \'뭘 만들지 분석 → 설계 → 개발 → 테스트 → 유지보수\' 순서대로 계획적으로 진행하는 거야. 핵심은 좋은 과정(Process)과 잘 짜인 조직(Organization), 이 두 가지를 갖추는 것!','🏠 \'집 짓기 PO\': Process(과정)와 Organization(조직), 이 두 개만 기억해! → \'PO 없으면 소프트웨어 폭망(POOR)\'')">소프트웨어 공학 소개</span><span class="fb-con" onclick="openModal('소프트웨어 공학 배경','1960년대에 컴퓨터가 퍼지면서 소프트웨어 만들어달라는 요청이 폭발적으로 늘었는데, 만들 줄 아는 사람도 부족하고 체계적인 방법도 없어서 프로젝트가 줄줄이 실패했어. 이 대혼란을 \'소프트웨어의 위기\'라고 부르고, 이걸 해결하려고 소프트웨어 공학이 본격적으로 탄생하게 된 거야.','소프트웨어 공학은 쉽게 말해 \'건물 짓는 설계도와 공사 규칙\'이라고 생각하면 돼. 집 지을 때 그냥 막 쌓으면 무너지잖아? 소프트웨어도 마찬가지로 체계적인 순서와 규칙 없이 만들면 망하는 거야. 그래서 \'어떻게 하면 소프트웨어를 안 망하고 잘 만들 수 있을까?\'를 연구하는 게 바로 소프트웨어 공학이야.','**위기 → 공학** 스토리로 기억해! \'60년대 소프트웨어 위기(危機) → 공학(工學)으로 극복!\' — 위기가 없었으면 공학도 없었다! \'위기 낳은 공학\' 딱 이것만 기억해 😤')">소프트웨어 공학 배경</span><span class="fb-con" onclick="openModal('소프트웨어 공학의 4가지 중요요소','옛날에 프로그래머들이 그냥 감으로 소프트웨어를 만들다 보니 완성도 못 하거나 엉망진창인 결과물이 나오는 일이 너무 많았어. 그래서 \'어떻게 하면 제대로, 제때, 싸게 만들 수 있을까?\'를 연구하다가 소프트웨어 공학이 탄생했고, 핵심 요소 4가지를 정리하게 됐어.','소프트웨어를 잘 만들려면 4가지가 필요해 — \'방법(어떻게 만들지)\', \'도구(뭘 써서 만들지)\', \'절차(어떤 순서로 만들지)\', \'사람(누가 만들지)\'. 예를 들어 집 짓는 것처럼, 설계 방법도 알아야 하고, 망치·드릴 같은 도구도 있어야 하고, 기초→뼈대→지붕 순서도 지켜야 하고, 결국 일 할 사람도 있어야 하잖아. 이 4가지가 딱 맞아야 좋은 소프트웨어가 제때, 예산 안에서 나올 수 있어.','🧠 \'방도절사\' — **방**법, **도**구, **절**차, **사**람! \'방도 없고 절이 없으면 사람도 못 만든다\' 라고 외워봐!')">소프트웨어 공학의 4가지 중요요소</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec0_1')"><span class="fb-arr">▶</span>소프트웨어 개발 생명주기 <em>6</em></div><div class="fb-con-list" id="fb_sec0_1"><span class="fb-con" onclick="openModal('정의','옛날에 프로그램을 만들 때 그냥 생각나는 대로 코딩했다가 나중에 엉망진창이 되는 경우가 많았어. 그래서 \'아, 순서대로 단계를 정해놓고 만들자!\' 하고 생긴 개념이 바로 소프트웨어 생명주기야.','소프트웨어 생명주기는 프로그램이 태어나서 죽을 때까지의 과정이야. 마치 집을 지을 때 \'이 땅에 집 지어도 될까?(타당성) → 언제 지을까?(계획) → 뭐가 필요하지?(분석) → 어떻게 생기게 할까?(설계) → 실제로 짓기(구현) → 문제없나 확인(테스트) → 사람들이 살기(운용) → 고치고 수리하기(유지보수)\' 순서로 진행되는 것과 똑같아.','🎵 \'타-계-분-설-구-테-운-유\' → **\'타계분설구테운유\'** = \'**타**고난 **계**획대로 **분**명히 **설**계하고 **구**현한 뒤 **테**스트, **운**용, **유**지!\'라고 외워봐!')">정의</span><span class="fb-con" onclick="openModal('목적','옛날에 팀으로 프로그램을 만들다 보니 각자 다른 방향으로 일하다가 결국 엉망진창이 되는 문제가 생겼어. 그래서 \'우리가 왜 이걸 만드는지\' 명확히 정하고 시작하자는 개념이 생긴 거야!','소풍을 가는데 목적지를 안 정하면 다들 다른 곳으로 걸어가서 뿔뿔이 흩어지잖아. 소프트웨어 프로젝트의 \'목적\'도 똑같이 \'우리가 이 프로그램으로 무엇을 이루려는지\' 딱 정해놓는 거야. 목적이 명확해야 팀원 모두가 같은 방향으로 힘을 모을 수 있어!','목적 = \'목\'표 지점을 \'적\'어라! ✏️ → 안 적으면 다들 딴 데 감!')">목적</span><span class="fb-con" onclick="openModal('소프트웨어 생명주기 선정','옛날에 소프트웨어를 만들 때 그냥 무작정 개발했다가 중간에 요구사항이 바뀌거나 실패하는 경우가 너무 많았어. 그래서 \'프로젝트 상황에 맞는 개발 순서와 방식을 미리 골라서 쓰자!\'는 필요성이 생긴 거야.','소프트웨어 생명주기 선정은 쉽게 말해 \'집 짓기 방식 고르기\'야. 집을 지을 때 설계도 다 그리고 짓는 방식도 있고, 일단 작은 모형 먼저 만들어보는 방식도 있잖아. 마찬가지로 소프트웨어도 프로젝트의 위험도나 불확실성에 따라 폭포수, 프로토타입, 나선형 같은 개발 방식 중에서 가장 잘 맞는 걸 골라 쓰는 거야. 잘못된 방식을 고르면 시간도 돈도 다 날리니까 처음에 신중하게 선택하는 게 정말 중요해!','🌀 \'폭→프→나→애\' 로 외워! (폭포수 → 프로토타입 → 나선형 → 애자일) \'폭풍 프로 나선 애인\' — 폭풍같은 프로젝트엔 나선형 애인(방식)을 골라라!')">소프트웨어 생명주기 선정</span><span class="fb-con" onclick="openModal('소프트웨어 생명주기 모델 종류','옛날에 소프트웨어를 만들다 보니 \'어떤 순서로 개발해야 하지?\'라는 혼란이 생겼어. 그래서 프로젝트 상황에 맞게 골라 쓸 수 있는 여러 가지 개발 순서 틀(모델)들이 만들어졌어.','소프트웨어 생명주기 모델은 \'집 짓는 설계도\'같은 거야. 어떤 집은 설계를 완벽하게 다 짜고 짓고(폭포수 모델), 어떤 집은 먼저 작게 짓고 확인받고 또 고치고(V모델, 나선형 모델) 하는 것처럼, 프로젝트 상황에 따라 가장 잘 맞는 순서 틀을 골라서 쓰는 거야. 요구사항이 처음부터 명확하면 폭포수나 V모델처럼 단계별로 딱딱 진행하는 게 유리해.','모델 고르기 = 옷 고르기! \'날씨(프로젝트 상황)에 맞는 옷(모델)을 입어라\' — 요구사항이 명확하면 정장(V모델/폭포수), 계속 바뀌면 레이어드(나선형/애자일)!')">소프트웨어 생명주기 모델 종류</span><span class="fb-con" onclick="openModal('소프트웨어 개발 방법론 비교','옛날에는 소프트웨어를 만드는 방식이 제각각이라 팀마다 다른 방법으로 개발하다 보니 협업이 너무 어려웠어. 그래서 \'우리 이 방식으로 통일해서 만들자!\'하고 체계적인 개발 방법론들이 하나씩 생겨나게 됐어.','소프트웨어 개발 방법론은 쉽게 말해 \'집 짓는 설계 방식\'이야. 구조적 방법론은 \'일 순서대로 차근차근 짓기\', 정보공학 방법론은 \'데이터(재료) 중심으로 짓기\', 객체지향 방법론은 \'레고 블록처럼 부품 만들어서 조립하기\', CBD 방법론은 \'이미 만들어진 부품(컴포넌트)을 재사용해서 빠르게 조립하기\'야.','구정객CBD → \'구정(舊正)에 객(손님)이 CBD(커피)를 마신다\' 🎄구조적-정보공학-객체지향-CBD 순서로 기억! 각각의 핵심은 구=업무순서, 정=데이터, 객=클래스/레고, C=재사용부품')">소프트웨어 개발 방법론 비교</span><span class="fb-con" onclick="openModal('소프트웨어 개발 단계','옛날에 개발자들이 아무 계획 없이 무작정 코딩부터 시작했다가 나중에 \'이거 고객이 원하는 게 아니었어!\' 하면서 처음부터 다시 만드는 일이 너무 많았어. 그래서 사람들이 \'순서대로 단계를 나눠서 개발하자!\'고 정리한 게 바로 이 소프트웨어 개발 단계야.','집 짓는 것과 똑같아. 먼저 \'방이 몇 개 필요해?\'(요구사항 분석) → \'설계도 그리기\'(설계) → \'실제로 벽돌 쌓기\'(구현/코딩) → \'문이 제대로 열리나 확인하기\'(테스팅) 순서로 진행돼. 이 순서를 안 지키면 벽 다 세우고 나서 \'창문 위치가 잘못됐네\' 하고 허무는 것처럼, 시간과 돈이 몇 배로 낭비되는 거야.','요설구테 → \'요\'리사(요구사항) \'설\'거지(설계) \'구\'매(구현) \'테\'이블(테스팅) — 요리하고, 설거지하고, 재료 구매하고, 테이블 차리면 밥상 완성! 순서가 이상하면 밥상이 엉망이 되는 것처럼 개발도 순서가 중요해!')">소프트웨어 개발 단계</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec0_2')"><span class="fb-arr">▶</span>애자일 개발 방법론 <em>3</em></div><div class="fb-con-list" id="fb_sec0_2"><span class="fb-con" onclick="openModal('애자일 방법론 종류','옛날에는 소프트웨어를 만들 때 계획을 엄청 꼼꼼히 세우고 순서대로 만들었는데, 중간에 고객 요구사항이 바뀌면 처음부터 다시 해야 하는 문제가 생겼어. 그래서 \'더 유연하고 빠르게 만들자!\'는 애자일 선언문이 나왔고, 이를 실천하는 다양한 방법론들이 등장하게 됐어.','애자일 방법론은 요리 레시피처럼 \'어떻게 유연하게 개발할지\'에 대한 구체적인 방법들이야. 스크럼은 팀원들이 매일 짧게 모여 진행상황을 점검하는 방식이고, XP(익스트림 프로그래밍)는 켄트 벡이 만든 코드 품질에 집중하는 방식이야. 린은 도요타 공장에서 낭비를 줄이던 방식을 소프트웨어에 적용한 거라서, \'필요한 것만, 빠르게\'가 핵심이야.','애자일 방법론 3대장 → \'스X린\' 🎮 스크럼(Scrum) + X(XP, 켄트벡) + 린(Lean, 도요타) — \'스크럼하다가 X(극한)으로 린(lean·날씬하게) 만든다!\'')">애자일 방법론 종류</span><span class="fb-con" onclick="openModal('애자일 개발 방법론 XP','옛날에는 소프트웨어 개발할 때 계획을 엄청 꼼꼼히 짜고 몇 년씩 개발했는데, 막상 완성하면 고객이 원하는 게 달라져서 다 쓸모없어지는 일이 많았어. 그래서 1990년대 후반에 켄트 벡이라는 개발자가 \'그냥 조금씩 빠르게 만들고 계속 고쳐나가자!\'는 방식을 만들게 됐어.','XP는 마치 레고 블록 조립하듯이 소프트웨어를 조금씩 만들고, 바로바로 테스트하고, 문제 있으면 즉시 고치는 방식이야. 예를 들어 친구랑 같이 숙제할 때 다 끝내고 검토하는 게 아니라, 한 문제 풀고 바로 맞는지 확인하면서 진행하는 것처럼! 특히 소규모 팀에서 빠르게 결과물을 만들어야 할 때 딱 맞는 방법이야.','XP = \'극한(eXtreme) 빨리빨리\' → 만들고✅ 테스트하고✅ 고치고✅ 반복! 엑스(X)자로 계속 교차하며 앞으로 나간다고 기억해!')">애자일 개발 방법론 XP</span><span class="fb-con" onclick="openModal('스크럼','옛날에 소프트웨어 개발할 때 계획을 처음에 다 세워두고 개발했는데, 중간에 요구사항이 바뀌면 처음부터 다시 해야 하는 큰 문제가 있었어. 그래서 \'조금씩 빠르게 만들고, 계속 수정하자!\'는 방식이 필요해졌고 스크럼이 탄생했어.','스크럼은 럭비 경기에서 선수들이 모여 전략 짜는 것처럼, 개발팀이 짧은 기간(보통 2주) 동안 목표를 정해서 함께 달리는 방식이야. 예를 들어 앱을 만들 때 \'이번 2주는 로그인 기능만 완성하자!\'처럼 작은 목표를 반복해서 완성해 나가는 거야. 팀에는 제품 책임자(뭘 만들지 결정), 스크럼 마스터(팀이 잘 달리도록 도와주는 사람), 개발팀 이렇게 3가지 역할이 있어.','스크럼 = \'스\'프린트(짧게 달리기) + \'크\'게 3가지 역할 + \'럼\'비처럼 팀이 뭉쳐서! → \'스크럼은 짧게짧게 팀플!\'')">스크럼</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch right"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch1')"><span class="fb-arr">▶</span>소프트웨어 설계 & 아키텍처<span class="fb-cnt">21개</span></div><div class="fb-sec-blocks" id="fb_ch1"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec1_0')"><span class="fb-arr">▶</span>소프트웨어 설계 원리 <em>5</em></div><div class="fb-con-list" id="fb_sec1_0"><span class="fb-con" onclick="openModal('정보 은닉','옛날에 여러 개발자가 함께 코드를 짤 때, 한 사람이 내부 코드를 바꾸면 다른 사람의 코드까지 줄줄이 고장나는 문제가 생겼어. 그래서 \'내 방 안은 내가 알아서 할게, 너는 문(인터페이스)으로만 소통해\'라는 규칙이 필요해진 거야.','카페 키오스크를 생각해봐. 우리는 버튼만 누르면 되고, 기계 안에서 커피가 어떻게 만들어지는지 알 필요가 없잖아. 정보 은닉도 똑같아. 모듈 안에서 뭔가 바뀌어도 밖에서는 그냥 버튼(인터페이스)만 누르면 되니까, 다른 모듈에 영향이 안 가는 거야. 덕분에 한 부분을 고쳐도 다른 부분이 망가지지 않아서 훨씬 안전하게 개발할 수 있어.','🔒 \'내 방은 잠금, 문으로만 소통\' — 방(모듈) 내부는 자물쇠로 잠그고, 문(인터페이스)으로만 연락한다고 기억해!')">정보 은닉</span><span class="fb-con" onclick="openModal('단계적 정제','옛날에 프로그래머들이 처음부터 복잡한 코드를 한 번에 짜려다 보니 너무 어렵고 오류도 많이 생겼어. 그래서 \'일단 큰 그림부터 그리고, 점점 세부적으로 쪼개가자!\'는 방식이 필요해졌어.','레고로 집 만드는 걸 상상해봐. 처음엔 \'집 만들기\'라고만 생각하다가, \'지붕, 벽, 문\'으로 나누고, 또 \'지붕은 빨간 블록 3줄\'처럼 점점 구체적으로 쪼개가잖아. 단계적 정제가 딱 그거야 — 큰 덩어리를 계속 잘게 잘라서 실제로 만들 수 있을 만큼 작게 만드는 과정이야. 추상적인 것(큰 그림) → 구체적인 것(세부 코드) 순서로 내려간다고 생각하면 돼.','🔍 \'큰→작→작→작\' — \'큰 문제를 작게, 또 작게, 또 작게!\' 줌인(Zoom-in) 카메라처럼 점점 확대해서 세부사항을 보여준다고 기억해!')">단계적 정제</span><span class="fb-con" onclick="openModal('모듈화','옛날에는 프로그램을 하나의 거대한 덩어리로 짰는데, 나중에 고치거나 기능을 추가하려면 전체를 다 뒤져야 해서 너무 힘들었어. 그래서 \'차라리 처음부터 작은 조각들로 나눠서 만들자!\'는 생각이 나온 거야.','레고 블록 생각해봐! 집 전체를 하나의 덩어리로 만들면 문 하나 고치려고 집 전체를 부숴야 하잖아. 근데 레고처럼 블록 단위로 만들면 문 블록만 쏙 빼서 고치면 끝이야. 모듈화가 딱 그거야 — 큰 프로그램을 작은 기능 단위 블록들로 쪼개서 만드는 것!','모듈화 = \'모아서 쪼개기\' → 🧩 레고처럼 조립/분리 가능!')">모듈화</span><span class="fb-con" onclick="openModal('응집도','옛날에 프로그램을 짤 때 관련 없는 기능들을 한 덩어리에 마구 쑤셔넣다 보니 나중에 고치거나 이해하기가 너무 힘들었어. 그래서 \'비슷한 기능끼리 얼마나 잘 모여 있는가\'를 측정하는 기준이 필요해졌고, 그게 바로 응집도야.','응집도는 한 모듈(기능 묶음) 안에 있는 것들이 얼마나 찰떡궁합인지를 나타내. 예를 들어 \'주방\'이라는 공간에 냉장고, 가스레인지, 칼, 도마가 있으면 모두 요리라는 하나의 목적으로 뭉쳐 있으니 응집도가 높은 거야. 반대로 주방에 변기, 소파, 책상까지 있으면 \'이게 뭐 하는 공간이야?\' 싶잖아 — 그게 응집도가 낮은 거야.','응집도는 \'같은 팀, 같은 목표!\' — 팀원이 모두 같은 포지션(목적)으로 뭉쳐 있을수록 응집도 UP! 뿔뿔이 흩어지면 응집도 DOWN!')">응집도</span><span class="fb-con" onclick="openModal('결합도','옛날에 프로그램이 커지면서 여러 부품(모듈)들이 서로 너무 복잡하게 얽혀있어서, 한 부품을 고치면 다른 부품들이 줄줄이 망가지는 문제가 생겼어. 그래서 \'얼마나 서로 얽혀있나\'를 측정하는 기준이 필요해졌고, 그게 바로 결합도야.','결합도는 레고 블록들이 서로 얼마나 찰싹 붙어있는지를 나타내는 거야. 블록들이 너무 꽉 붙어있으면(결합도 높음) 하나만 바꾸려 해도 다른 것들까지 다 분해해야 하고, 반대로 블록들이 딱 필요한 만큼만 연결되어 있으면(결합도 낮음) 하나만 쏙 빼서 고치고 다시 끼울 수 있어. 그래서 좋은 프로그램은 결합도가 낮을수록 좋아!','결합도는 \'찐따로!\' — 찐하게 붙을수록(결합도 높을수록) 따로 고치기 힘들다! 낮을수록 Good!')">결합도</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec1_1')"><span class="fb-arr">▶</span>소프트웨어 아키텍처 스타일 <em>5</em></div><div class="fb-con-list" id="fb_sec1_1"><span class="fb-con" onclick="openModal('MVC(Model - View-Controller) 구조','옛날에 개발자들이 코드를 짤 때 데이터 처리, 화면 표시, 사용자 입력을 한 곳에 다 뒤섞어서 썼더니 나중에 수정할 때 어디를 고쳐야 할지 몰라서 엄청 혼란스러웠어. 그래서 역할을 딱 3가지로 나눠서 관리하자는 아이디어가 나온 거야.','학교 급식을 생각해봐! 영양사 선생님(Model)이 메뉴와 재료를 결정하고, 식판에 담긴 음식(View)이 학생 눈에 보이고, 조리사(Controller)가 영양사 지시를 받아 음식을 만들어서 식판에 올려주는 거야. 이렇게 역할이 나뉘어 있으니까 메뉴만 바꾸고 싶으면 영양사한테만 말하면 되고, 식판 디자인만 바꾸고 싶으면 식판만 바꾸면 돼서 서로 영향을 최소화할 수 있어.','📌 \'M(메뉴) - V(보여줘) - C(조리사)\' → 데이터는 Model이 갖고, 눈에 보이는 건 View, 둘 사이를 연결하는 건 Controller! \'MVC = 메뉴·뷰·컨트롤러\' 세 글자만 기억해!')">MVC(Model - View-Controller) 구조</span><span class="fb-con" onclick="openModal('클라이언트-서버 모델','옛날에는 모든 컴퓨터가 각자 따로 놀아서 정보를 나누려면 USB나 디스크를 직접 들고 다녀야 했어. 그래서 한 곳에 정보를 모아두고 여러 사람이 필요할 때마다 요청해서 꺼내 쓰는 방식이 필요해졌지!','식당을 생각해봐! 손님(클라이언트)이 \'짜장면 주세요~\' 하고 주문하면, 주방(서버)이 음식을 만들어서 가져다 주잖아. 손님은 여러 명일 수 있지만 주방은 하나고, 손님은 요리법을 몰라도 그냥 주문만 하면 돼. 인터넷에서 유튜브 영상을 볼 때도 똑같이 내 폰(클라이언트)이 유튜브 컴퓨터(서버)한테 \'이 영상 줘!\' 하고 요청하는 거야!','**\'손님은 요청, 주방은 응답!\'** — 클라이언트(손님) → 요청 → 서버(주방) → 응답 → 클라이언트(손님) 이 흐름만 기억해!')">클라이언트-서버 모델</span><span class="fb-con" onclick="openModal('계층 구조','옛날에 프로그램이 커지면서 어디서 문제가 생겼는지 찾기가 너무 힘들었어. 그래서 역할별로 층층이 나눠서 관리하면 훨씬 쉽겠다는 생각에서 계층 구조가 탄생했지!','계층 구조는 마치 햄버거 같아. 빵, 패티, 야채, 소스가 각자 역할이 있고 순서대로 쌓여 있잖아. 네트워크도 똑같이 7층으로 나눠져 있어서, 문제가 생기면 \'몇 층짜리 빵이 문제야?\' 이렇게 층별로 딱 찾아낼 수 있어. 덕분에 고치기도 쉽고, 같은 규격이라 어떤 장비든 서로 맞춰 쓸 수 있어!','🍔 \'햄버거 7층 건물\' - 7층짜리 햄버거 빌딩! 각 층은 자기 일만 하고, 문제 나면 층별로 확인! \'7층 햄버거는 층층이 해결~\'')">계층 구조</span><span class="fb-con" onclick="openModal('컨텍스트(Context) 모델','소프트웨어를 만들기 전에 \'우리가 뭘 만들어야 하지?\'를 정리하지 않으면 범위가 끝도 없이 커지는 문제가 생겼어. 그래서 개발 시작 전에 시스템의 울타리를 딱 그어서 \'여기까지만 우리 거야!\'를 명확히 하는 방법이 필요해졌지.','컨텍스트 모델은 우리 동네 지도에서 \'우리 아파트 단지\' 영역을 동그라미로 표시하는 것과 같아. 동그라미 안은 우리가 만들 시스템이고, 동그라미 밖은 외부 세계(사용자, 다른 시스템 등)야. 이 모델은 그 경계선에서 뭐가 들어오고 나가는지(입출력)만 딱 보여줘서, 팀 전체가 \'우리가 만들 것\'과 \'우리가 안 만들 것\'을 헷갈리지 않게 해줘.','컨텍스트 = \'컨\'테이너 속 \'텍\'스트처럼, 박스(경계) 안에 시스템을 가두고 밖에서 뭐가 드나드는지 본다! → \'경계 박스 + 입출력\'')">컨텍스트(Context) 모델</span><span class="fb-con" onclick="openModal('패키지 다이어그램','소프트웨어가 점점 커지면서 수백 개의 기능들이 뒤죽박죽 섞여 있어서 어디에 뭐가 있는지 찾기도 힘들고 관리하기도 너무 어려워졌어. 그래서 관련 있는 기능들끼리 묶어서 덩어리로 관리하고, 그 덩어리들 사이의 관계를 그림으로 표현할 필요가 생겼지!','학교 사물함 생각해봐! 체육 용품은 체육 사물함, 미술 용품은 미술 사물함처럼 관련 있는 것들끼리 묶어놓잖아. 패키지 다이어그램은 소프트웨어를 이런 사물함(패키지)들로 나눠서, 각 사물함 안에 뭐가 들었는지는 숨기고 사물함들끼리 어떻게 연결되어 있는지만 그림으로 보여주는 거야. 이렇게 하면 전체 구조를 한눈에 파악할 수 있고, 사물함끼리 연결이 적을수록 더 깔끔하고 좋은 설계야!','패키지 다이어그램 = \'패묶숨관\' → 패(패키지로) 묶(관련 기능 묶고) 숨(내부는 숨기고) 관(관계만 그림으로 표현)!')">패키지 다이어그램</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec1_2')"><span class="fb-arr">▶</span>소프트웨어 아키텍처 설계 <em>2</em></div><div class="fb-con-list" id="fb_sec1_2"><span class="fb-con" onclick="openModal('소프트웨어 아키텍처 개요','옛날에 개발자들이 코드를 막 짜다 보니 나중에 기능 하나 고치면 다른 곳이 와르르 무너지는 문제가 생겼어. 그래서 \'처음부터 설계도를 잘 그려두자!\'는 생각으로 소프트웨어 아키텍처 개념이 등장했어.','소프트웨어 아키텍처는 건물 짓기 전에 그리는 설계도랑 똑같아. 방을 몇 개 만들고, 어디에 문을 달고, 배선은 어떻게 할지 미리 정해두는 것처럼, 프로그램도 어떤 부분이 어떤 역할을 하고 서로 어떻게 연결될지 큰 그림을 먼저 그려두는 거야. 이 설계도가 잘 되어 있으면 나중에 기능을 추가하거나 고칠 때 훨씬 쉽고 안전하게 작업할 수 있어.','아키텍처 = \'아, 키(key)가 설계도!\' → 소프트웨어의 핵심 열쇠🔑는 미리 그린 설계도!')">소프트웨어 아키텍처 개요</span><span class="fb-con" onclick="openModal('소프트웨어 아키텍처 설계 절차','옛날에 개발자들이 설계도 없이 무작정 코드부터 짜다가 나중에 고치려면 전부 다 뜯어고쳐야 하는 대참사가 반복됐어. 그래서 집 짓기 전에 설계도를 먼저 그리듯이, 소프트웨어도 체계적인 설계 순서를 정하게 된 거야.','소프트웨어 아키텍처 설계 절차는 집을 짓는 과정이랑 똑같아. \'어떤 집이 필요해?(요구사항 파악)\' → \'전체 구조를 스케치해(아키텍처 결정)\' → \'각 방의 역할을 정해(컴포넌트 설계)\' → \'방들이 서로 어떻게 연결될지 정해(인터페이스 설계)\' → \'설계가 맞는지 검토해(검증)\' 순서로 진행되는 거야. 이 순서를 지켜야 나중에 벽 뚫고 배관 다시 까는 불상사를 막을 수 있어.','요아컴인검 → \'요아, 컴인검?\' 으로 외워! 요(요구사항) 아(아키텍처 결정) 컴(컴포넌트 설계) 인(인터페이스 설계) 검(검증) — \'야, 요아야, 컴퓨터 인터넷 검색해봐!\' 문장으로 순서를 기억해봐!')">소프트웨어 아키텍처 설계 절차</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec1_3')"><span class="fb-arr">▶</span>소프트웨어 아키텍처 설계 표현 방법 <em>5</em></div><div class="fb-con-list" id="fb_sec1_3"><span class="fb-con" onclick="openModal('컨텍스트 모델','옛날에 프로그램을 만들 때 \'이 프로그램이 세상의 어떤 부분을 담당하는지\' 경계가 불명확해서 개발자들이 뭘 만들어야 할지 헷갈리는 문제가 있었어. 그래서 \'우리 프로그램이 어디서 시작하고 어디서 끝나는지\'를 한눈에 보여주는 지도가 필요해졌지.','컨텍스트 모델은 우리가 만들 프로그램을 동네 지도의 \'우리 집\'처럼 딱 하나의 동그라미로 표시하고, 그 주변에 연결된 학교·마트·은행처럼 외부에서 관계 맺는 것들을 그려놓은 그림이야. 쉽게 말해 \'우리 프로그램은 이런 것들과 연결되고, 이 경계 안쪽만 우리가 만든다\'는 걸 보여주는 큰 그림이지. 개발 시작 전에 범위를 딱 정해두는 설계도 역할을 해.','🗺️ \'컨텍스트 = 경계 지도\' → 컨(경계)텍(테두리)스트(스타트 전에 그린다) — 개발 시작 전, 우리 프로그램의 울타리를 그리는 것!')">컨텍스트 모델</span><span class="fb-con" onclick="openModal('컴포넌트 다이어그램','프로그램이 커질수록 어떤 부품이 어떤 부품과 연결되어 있는지 한눈에 파악하기가 너무 어려워졌어. 그래서 레고 조립 설명서처럼 소프트웨어의 부품들과 연결 관계를 그림으로 표현하는 방법이 필요해졌어.','컴포넌트 다이어그램은 소프트웨어를 레고 블록처럼 나눠서, 각 블록(부품)이 어떻게 생겼고 서로 어떻게 연결되는지 보여주는 설계 그림이야. 예를 들어 쇼핑몰 앱을 만들 때 \'로그인 부품\', \'결제 부품\', \'장바구니 부품\'이 서로 어떻게 이어지는지 한눈에 보여주는 거야. 개발자들이 전체 구조를 미리 파악하고 각자 맡은 부품을 만들 수 있도록 도와주는 설계도야.','🧩 \'컴포넌트 = 레고 블록 설계도\' — \'컴\'퓨터 부품을 \'포\'장해서 \'넌\'트(연결)한 그림! 레고 박스 뒷면 조립 설명서를 떠올려봐!')">컴포넌트 다이어그램</span><span class="fb-con" onclick="openModal('패키지 다이어그램','프로그램이 커지면서 수백 개의 클래스들이 뒤죽박죽 섞여서 어디에 뭐가 있는지 찾기가 너무 힘들어졌어. 그래서 관련된 클래스들끼리 묶어서 한눈에 구조를 보여주는 지도 같은 게 필요해졌지.','패키지 다이어그램은 마치 학교 서랍장 정리랑 똑같아. 수학 관련 건 1번 서랍, 영어 관련 건 2번 서랍처럼 비슷한 클래스들을 폴더(패키지)로 묶어서 보여주는 거야. 그리고 각 폴더끼리 어떻게 연결되고 의존하는지를 화살표로 표시해줘서 전체 프로그램 구조를 한눈에 파악할 수 있어.','📦 \'패키지 = 택배 박스\' — 관련된 물건(클래스)끼리 같은 박스에 담고, 박스끼리 화살표로 배송 관계를 표시한다!')">패키지 다이어그램</span><span class="fb-con" onclick="openModal('사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점','옛날에는 프로그램이 그냥 \'작동만 하면 된다\'는 식으로 만들어졌는데, 사람들이 쓰다 보니 \'기능은 있는데 너무 불편해!\'라는 불만이 폭발했어. 그래서 \'어떻게 보여줄까(UI)\'와 \'어떻게 느끼게 할까(UX)\'를 따로 나눠서 생각하게 된 거야.','UI는 눈에 보이는 \'옷\'이고, UX는 그 옷을 입었을 때의 \'기분\'이야. 예를 들어 카페에서 음료 주문할 때 키오스크 화면에 보이는 버튼과 글씨가 UI고, 주문하면서 \'쉽다~\' 또는 \'너무 복잡해!\'라고 느끼는 전체 경험이 UX인 거야. 즉, UI가 예뻐도 UX가 불편하면 망한 거고, 둘 다 좋아야 사람들이 계속 쓰게 돼!','UI = 눈👀 (보이는 것), UX = 마음💓 (느끼는 것) → \'눈은 UI, 마음은 UX!\' 딱 이것만 기억해!')">사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점</span><span class="fb-con" onclick="openModal('컴파일러 언어','옛날에 컴퓨터는 사람이 쓴 코드를 바로 못 알아들어서 매번 한 줄씩 해석하다 보니 너무 느렸어. 그래서 \'그냥 실행 전에 코드 전체를 한 번에 컴퓨터 언어로 번역해두자!\'는 아이디어로 컴파일러 언어가 생겼어.','컴파일러 언어는 요리로 치면 \'레시피 전체를 미리 번역해서 요리책으로 만들어두는 것\'이야. 번역하는 데 시간이 좀 걸리지만, 한 번 만들어두면 나중에 요리할 때는 엄청 빠르게 할 수 있어. C나 C++ 같은 언어가 여기에 해당하는데, 게임이나 빠른 프로그램 만들 때 자주 써.','컴파일러 = \'컴 미리 파!\' → 실행 전에 미리 다 번역(파)해두는 언어!')">컴파일러 언어</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec1_4')"><span class="fb-arr">▶</span>구조적 설계 방법 <em>1</em></div><div class="fb-con-list" id="fb_sec1_4"><span class="fb-con" onclick="openModal('트랜잭션흐름 중심 설계(Transaction Flow-Oriented Design)','옛날에 프로그램을 만들 때 입력이 들어오면 무조건 하나의 흐름으로만 처리했는데, 현실에서는 \'카드 결제\', \'현금 결제\', \'포인트 결제\'처럼 같은 입력이라도 상황에 따라 다른 길로 가야 하는 경우가 많았어. 그래서 입력을 받아서 여러 갈래 중 하나로 보내주는 설계 방식이 필요하게 된 거야.','편의점 계산대를 생각해봐. 손님이 물건을 가져오면(입력), 계산원이 결제 방식을 확인하고 \'현금이면 현금통으로, 카드면 카드기로, 상품권이면 상품권 처리로\' 각각 다른 길로 보내잖아. 트랜잭션 흐름 중심 설계가 딱 이거야 — 하나의 입력을 받아서 내용을 판단한 뒤, 여러 경로 중 딱 하나를 골라서 처리하는 방식이야. 여기서 \'계산원\'처럼 어떤 길로 보낼지 결정하는 핵심 지점을 \'트랜잭션 중심\'이라고 불러.','🚦 \'입력 → 판단 → 하나의 길 선택!\' — 교차로 신호등처럼 차(입력)가 오면, 신호(판단)를 보고, 직진/좌회전/우회전 중 딱 하나만 간다! \'입판하\' 로 기억해!')">트랜잭션흐름 중심 설계(Transaction Flow-Oriented Design)</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec1_5')"><span class="fb-arr">▶</span>객체 지향 설계와 원리 <em>1</em></div><div class="fb-con-list" id="fb_sec1_5"><span class="fb-con" onclick="openModal('객체와 클래스','옛날에 프로그래머들이 비슷한 정보를 가진 사람이나 물건을 하나하나 따로 만들다 보니 코드가 너무 길어지고 복잡해졌어. 그래서 \'비슷한 것들은 하나의 틀로 묶어버리자!\'는 생각에서 클래스와 객체 개념이 생겼어.','클래스는 붕어빵 틀이고, 객체는 그 틀로 찍어낸 붕어빵이야. 틀(클래스)은 \'반죽, 팥, 모양\'이라는 속성을 정의하고, 실제로 찍어낸 붕어빵(객체)마다 팥이 많거나 적거나 하는 고유한 값을 가지는 거지. 예를 들어 \'학생\'이라는 틀로 김철수(학번 956234, 전공 Math)와 이영희(학번 925462, 전공 CS)라는 서로 다른 붕어빵을 만드는 거야.','클래스 = 붕어빵 틀 🐟, 객체 = 붕어빵 🍞 → \'틀은 하나, 빵은 여러 개!\'')">객체와 클래스</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec1_6')"><span class="fb-arr">▶</span>디자인 패턴 <em>2</em></div><div class="fb-con-list" id="fb_sec1_6"><span class="fb-con" onclick="openModal('디자인 패턴 개념','옛날에 프로그래머들이 비슷한 문제를 만날 때마다 매번 처음부터 해결책을 고민하느라 시간을 엄청 낭비했어. 그래서 \'자주 나오는 문제들은 미리 검증된 해결법을 정리해두자!\'는 생각으로 디자인 패턴이 탄생했어.','요리 레시피랑 똑같아! 김치찌개를 처음 만들 때 레시피 보고 따라하면 실패 없이 맛있게 만들 수 있잖아. 디자인 패턴도 마찬가지로, 프로그래밍하다가 자주 만나는 문제 상황에 대해 \'이렇게 하면 잘 돼!\'라고 검증된 레시피를 모아둔 거야. 매번 새로 고민할 필요 없이 맞는 레시피 골라서 쓰면 되니까 훨씬 빠르고 안전하게 프로그램을 만들 수 있어.','디자인 패턴 = \'요리 레시피 책\' → 문제(재료) 만나면 → 레시피(패턴) 찾아서 → 바로 해결! 🍳')">디자인 패턴 개념</span><span class="fb-con" onclick="openModal('대표적인 디자인 패턴','프로그래머들이 비슷한 문제를 매번 처음부터 새로 해결하느라 시간을 엄청 낭비했어. 그래서 \'자주 나오는 문제 유형별로 검증된 해결책을 정리해두자!\'는 생각으로 디자인 패턴이 탄생했어.','디자인 패턴은 요리 레시피 같은 거야. 카레를 만들 때마다 재료 배합을 새로 연구하는 게 아니라 검증된 레시피를 쓰는 것처럼, 프로그램 개발할 때도 자주 등장하는 문제 유형마다 \'이렇게 만들면 잘 돼!\'하는 정해진 틀을 쓰는 거야. 크게 3가지 목적으로 나뉘는데, \'객체를 어떻게 만들지(생성)\', \'구조를 어떻게 짜지(구조)\', \'객체들이 어떻게 협력하지(행위)\'로 구분해서 쓰면 돼.','【생구행 패턴 삼형제】로 외워! \'생(생성)-구(구조)-행(행위)\' → 생성 패턴 대표는 \'A B F P S(아빠FPS)\' = Abstract Factory, Builder, Factory Method, Prototype, Singleton / 구조 패턴 대표는 \'A B(어브)\' = Adapter, Bridge!')">대표적인 디자인 패턴</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch left"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch2')"><span class="fb-arr">▶</span>UI/UX & 개발 도구<span class="fb-cnt">22개</span></div><div class="fb-sec-blocks" id="fb_ch2"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_0')"><span class="fb-arr">▶</span>사용자 인터페이스(User Interface) 개요 <em>2</em></div><div class="fb-con-list" id="fb_sec2_0"><span class="fb-con" onclick="openModal('일관성 필요','옛날에 큰 프로그램을 만들 때 여러 사람이 나눠서 화면을 만들다 보니, 어떤 버튼은 파란색, 어떤 버튼은 빨간색이고 위치도 제각각이 되는 문제가 생겼어. 사용자 입장에서는 같은 앱인데 화면마다 느낌이 달라서 너무 헷갈리고 불편했지.','예를 들어 맥도날드 매장이 전국에 수백 개인데, 어떤 매장은 계산대가 왼쪽, 어떤 매장은 오른쪽, 메뉴판 글씨도 제각각이라고 생각해봐. 손님 입장에서 너무 혼란스럽겠지? 그래서 미리 \'우리 매장은 이렇게 통일한다\'는 규칙을 정해두고, 나중에 다시 점검해서 규칙 안 지킨 곳을 고치는 거야. 소프트웨어도 똑같이, 여러 명이 만들어도 화면이 통일되어 보이도록 처음에 규칙을 정하고 나중에 검토해서 수정해야 해.','🍔 \'맥도날드는 전 세계 어디서나 같은 느낌!\' → 규칙 먼저 정하고(표준화) → 나중에 점검(검토)! \'정하고 → 점검\' 두 글자만 기억해!')">일관성 필요</span><span class="fb-con" onclick="openModal('사용자 중심 설계','옛날에 프로그램들은 개발자 편의대로만 만들어져서, 일반 사람들이 쓰려면 두꺼운 설명서를 달달 외워야 했어. 그러다 보니 \'좋은 기능이 있어도 쓰기 너무 어려워서 아무도 안 쓰는\' 문제가 생겨서, 아예 처음부터 사용자 입장에서 설계하자는 개념이 나왔어.','식당으로 생각해봐. 주방장 편한 대로 메뉴판을 요리 온도 순서로 정렬하면 손님은 엄청 헷갈리잖아. 사용자 중심 설계는 손님(사용자)이 쉽게 주문하고, 실수로 엉뚱한 걸 시켰을 때 \'이거 맞아요?\' 하고 확인해주고, 잘못 시켰으면 취소도 되게 해주는 식당처럼 만드는 거야. 즉, 프로그램이 사용자한테 맞춰주는 거지, 사용자가 프로그램에 맞추는 게 아니야.','✋ \'제어-학습-피드백-실수방지\' → 줄여서 \'제학피실\' → \'제발 학생 피해서 실수하지 마!\' 로 외워봐. 사용자가 제어할 수 있고, 쉽게 학습하고, 피드백 받고, 실수해도 괜찮게 만드는 것!')">사용자 중심 설계</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_1')"><span class="fb-arr">▶</span>사용자 경험(User Experience) 개요 <em>4</em></div><div class="fb-con-list" id="fb_sec2_1"><span class="fb-con" onclick="openModal('사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점','옛날에 앱이나 웹사이트를 만들 때 \'그냥 예쁘게만 만들면 되지~\' 했는데, 막상 써보면 버튼이 어디 있는지도 모르고 불편해서 사람들이 안 쓰는 문제가 생겼어. 그래서 \'어떻게 보여줄까(UI)\'와 \'사용자가 어떻게 느끼고 경험하는가(UX)\'를 따로 나눠서 연구하게 됐어.','UI는 \'그릇\'이고 UX는 \'음식 맛\'이라고 생각해봐. 예쁜 그릇(UI)에 음식을 담아도, 음식이 맛없으면(UX) 손님은 실망하잖아. 반대로 맛은 끝내주는데 그릇이 지저분하면 그것도 별로고. 즉, UI는 눈에 보이는 버튼·색깔·화면 디자인 그 자체이고, UX는 그걸 사용하면서 \'편하다, 불편하다, 기분 좋다\' 같이 사용자가 전체적으로 느끼는 경험이야.','UI = 이미지(눈에 보이는 것), UX = 이모지(😊😡 느낌과 감정) — \'UI는 눈, UX는 맘\'으로 기억해!')">사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점</span><span class="fb-con" onclick="openModal('MAKE - 아이디어를 제품으로 전환','옛날에는 좋은 아이디어가 있어도 머릿속에만 있으면 다른 사람한테 설명하기가 너무 힘들었어. 그래서 아이디어를 실제로 눈에 보이는 결과물로 만들어가는 단계별 도구들이 필요해졌어.','아이디어를 제품으로 만드는 과정은 집 짓기랑 똑같아. 먼저 공사 일정표랑 팀원 역할을 정하고(GitHub, Trello), 그 다음 설계 도면을 그리고(Visio, moqups), 마지막으로 실제 집 모양 미니어처를 만들어보는 거야(Photoshop, Sketch). 이렇게 3단계를 거치면 머릿속 아이디어가 진짜 제품처럼 눈에 보이게 돼!','**\'관 설 프\'** 로 외워! 👉 **관**리(GitHub/Trello) → **설**계(Visio/moqups) → **프**로토타입(Photoshop/Sketch) / \'관설프\' = 관리하고, 설계하고, 프로토 만들자!')">MAKE - 아이디어를 제품으로 전환</span><span class="fb-con" onclick="openModal('Check-사용자 분석 및 대응방법 확인','웹사이트나 앱을 만들었는데 사용자들이 어디서 헷갈려하고 어디서 그냥 꺼버리는지 알 수가 없어서 답답했어. 그래서 사용자들의 행동을 실시간으로 추적하고 분석하는 도구들이 생기게 됐어.','내 가게에 CCTV 달고 손님들이 어떤 진열대 앞에서 오래 서있는지, 어디서 그냥 나가버리는지 관찰하는 거랑 똑같아. 시각적 분석(Beusable, Clicktale)은 화면 어디를 많이 클릭하는지 열지도로 보여주고, 구글 애널리틱스 같은 수치 분석은 몇 명이 방문했는지 숫자로 보여줘. A/B 테스트는 간판 두 가지 버전을 만들어서 어느 쪽이 손님을 더 많이 끄는지 실험해보는 거고, 사용자 녹화는 손님 동선을 영상으로 다시 돌려보는 거야.','📸 \'시수AB녹\' - 시각적 분석 → 수치 분석 → A/B테스트 → 녹화! 사용자 분석 4단계를 \'시수AB녹\' 한 단어로 기억해!')">Check-사용자 분석 및 대응방법 확인</span><span class="fb-con" onclick="openModal('-시장의 피드백 지속확인','옛날에는 개발자들이 몇 년씩 열심히 만들어서 출시했는데, 막상 사용자들이 \'이거 불편해요, 안 써요\'라고 해서 망하는 경우가 많았어. 그래서 \'만들면서도 계속 사람들 반응을 확인하자!\'는 생각이 생긴 거야.','음식점 사장님이 새 메뉴를 만들 때 손님한테 맛 좀 봐달라고 계속 물어보는 것처럼, 앱이나 서비스를 만들면서도 사용자들한테 \'이거 어때요? 불편한 데 없어요?\'를 계속 확인하는 거야. 설문도 돌리고, 채팅으로 물어보고, 심지어 화면에서 마우스가 어디로 움직이는지까지 추적해서 사람들이 어디서 헷갈려하는지 파악하는 거지.','사온원원 — **사**용자 모집 → **온**라인 설문 → **원**하는 피드백 수집 → **원**격 테스트, 이 4단계를 계속 반복하면서 시장 반응을 확인한다고 기억해!')">-시장의 피드백 지속확인</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_2')"><span class="fb-arr">▶</span>프로그래밍 언어의 개요 <em>7</em></div><div class="fb-con-list" id="fb_sec2_2"><span class="fb-con" onclick="openModal('프로그래밍 언어 개념','옛날에 컴퓨터는 0과 1로만 이루어진 기계어만 알아들을 수 있었는데, 사람이 직접 0101010 이런 걸 쓰는 건 너무 힘들었어. 그래서 사람도 읽기 쉽고 컴퓨터도 이해할 수 있도록 다양한 프로그래밍 언어들이 만들어지게 됐어.','프로그래밍 언어는 사람과 컴퓨터가 대화하는 \'통역사\' 같은 거야. 저급언어는 컴퓨터 입장에서 바로 알아듣는 말(0과 1, 기계어)이라 빠르지만 사람이 쓰기 너무 어렵고, 고급언어는 사람이 쓰기 편한 영어 비슷한 말인데 컴파일러나 인터프리터라는 번역기가 컴퓨터 말로 바꿔줘. 마치 한국어로 말하면 통역사가 외국인한테 전달해주는 것처럼!','저급 = 저(컴퓨터) 급(급하게 바로 실행), 고급 = 고(고상하게 사람이 읽기 편함) — \'저급은 컴퓨터 친화적, 고급은 사람 친화적!\'')">프로그래밍 언어 개념</span><span class="fb-con" onclick="openModal('인터프리터 언어','옛날에 프로그램을 실행하려면 코드 전체를 한 번에 기계어로 번역한 다음에야 실행할 수 있었는데, 이러면 오류 하나 고칠 때마다 전체를 다시 번역해야 해서 너무 불편했어. 그래서 \'번역하면서 동시에 바로 실행하는\' 방식이 필요해졌지.','인터프리터 언어는 마치 동시통역사 같아. 영어 연설을 끝까지 다 듣고 번역하는 게 아니라, 한 문장 듣고 바로 번역해서 전달하는 것처럼, 코드를 한 줄 읽고 바로 실행하는 방식이야. 덕분에 코드를 고치면 바로바로 결과를 확인할 수 있어서 개발할 때 편리하지만, 실행할 때마다 매번 번역을 새로 해야 해서 속도는 좀 느려.','인터프리터 = \'인터\'(inter, 사이사이) → 줄 사이사이마다 바로바로 번역+실행! 동시통역사처럼 한 줄씩 바로바로!')">인터프리터 언어</span><span class="fb-con" onclick="openModal('컴파일러 언어','옛날에 컴퓨터는 0과 1로만 이루어진 기계어만 알아들었는데, 사람이 직접 0과 1로 프로그램을 짜는 건 너무 힘들었어. 그래서 사람이 읽기 쉬운 언어로 코드를 짜면, 컴퓨터가 알아들을 수 있게 자동으로 번역해주는 도구가 필요해졌어.','컴파일러 언어는 마치 \'번역가\'랑 똑같아. 네가 한국어로 편지를 쓰면, 번역가가 그걸 영어로 통째로 다 번역해준 다음에 상대방한테 전달하는 것처럼, 컴파일러도 사람이 쓴 코드를 컴퓨터가 이해하는 기계어로 한 번에 전부 번역해줘. 번역을 한 번만 해두면 그 다음부터는 번역된 결과물을 바로 쓰니까 실행 속도가 엄청 빠른 게 장점이야.','컴파일러 = \'통째로 번역 → 빠름, but 뚱뚱함\' — 번역은 한 방에 끝나서 빠르지만, 기계어로 바꾸면 코드가 뚱뚱하게 불어나서 메모리를 많이 먹어!')">컴파일러 언어</span><span class="fb-con" onclick="openModal('언어','옛날에 컴퓨터를 움직이는 운영체제를 만들려면 기계어로 직접 짜야 해서 엄청 힘들었어. 그래서 1970년대에 벨 연구소의 데니스 리치가 사람도 읽기 쉽고 컴퓨터도 빠르게 실행할 수 있는 C언어를 딱 만들어낸 거야.','C언어는 요리 레시피처럼 \'1번 재료 준비 → 2번 볶기 → 3번 담기\' 이런 식으로 순서대로 실행되는 언어야. 요즘 우리가 쓰는 아이폰, 안드로이드 운영체제도 거의 C언어로 만들어졌을 만큼 빠르고 강력한데, 대신 메모리(재료 창고)를 직접 관리해야 해서 Java보다 좀 더 꼼꼼하게 신경 써야 해.','C언어 = \'빠른 치타(C)\' 🐆 — 치타는 엄청 빠르지만(실행속도 빠름) 사냥감을 직접 잡아야 해(메모리 직접 관리). Java는 동물원에서 밥 주는 것처럼 편하지만, C는 야생이라 스스로 다 해야 한다고 기억해!')">언어</span><span class="fb-con" onclick="openModal('C++ 언어','옛날에 C언어로 프로그램을 만들었는데, 프로그램이 점점 커지다 보니 코드가 너무 복잡해지고 관리가 엄청 힘들어졌어. 그래서 C언어의 빠른 속도는 유지하면서 코드를 더 체계적으로 묶어서 관리할 수 있게 만든 게 바로 C++야.','C++는 레고 블록 만들기라고 생각해봐. 그냥 C언어가 부품을 하나하나 따로 만드는 거라면, C++는 부품들을 \'세트 박스(클래스)\'에 넣어서 관리하는 거야. 그 세트 박스는 다른 박스한테 설계도를 물려줄 수도 있고(상속), 박스 안이 어떻게 생겼는지 몰라도 그냥 버튼만 눌러서 쓸 수 있어(캡슐화). 덕분에 한 번 만든 박스를 여러 곳에서 재활용할 수 있어서 대형 프로그램 만들 때 딱이야!','C++ = C에서 ++(1 증가)! → C보다 딱 한 단계 업그레이드된 언어, \'클래스\'라는 박스가 추가됐다고 기억해!')">C++ 언어</span><span class="fb-con" onclick="openModal('Java 언어','옛날에 프로그램을 만들면 윈도우에서만 되거나 맥에서만 되는 문제가 있었어. 그래서 \'어디서든 똑같이 돌아가는 언어\'가 필요했고, 1995년에 Java가 그 해답으로 등장했어.','Java는 마치 \'만능 번역기\'야. 네가 한국어로 편지를 쓰면 그 번역기가 미국 사람한테는 영어로, 일본 사람한테는 일본어로 자동으로 바꿔주는 것처럼, Java로 짠 프로그램은 윈도우든 맥이든 어떤 컴퓨터에서도 똑같이 실행돼. 그래서 웹사이트, 앱, 스마트폰까지 정말 다양한 곳에서 쓰이는 인기 언어가 됐어.','☕ Java = \'카페 어디서나 커피\' → 어느 카페(컴퓨터)를 가도 커피(프로그램)맛이 똑같다! \'Write Once, Run Anywhere(한 번 써서, 어디서나 실행)\'')">Java 언어</span><span class="fb-con" onclick="openModal('JavaScript 언어','옛날에 웹페이지는 그냥 글자랑 그림만 보여주는 정적인 종이 같은 존재였어. 사람들이 \'버튼 누르면 뭔가 움직이고, 클릭하면 반응하는 살아있는 웹페이지 만들고 싶다!\'고 해서 JavaScript가 탄생했어.','JavaScript는 웹페이지에 \'움직임\'을 불어넣는 마법 같은 언어야. 예를 들어 쇼핑몰에서 버튼 누르면 장바구니 숫자가 바뀌거나, 팝업창이 뜨거나, 사진이 슬라이드 되는 것들이 다 JavaScript가 하는 일이야. 요즘은 웹뿐만 아니라 서버, 앱 개발까지 쓰일 정도로 완전 만능 언어가 됐어.','JS = \'잠깐! 살아있네!\' → 정적인 웹페이지에 생명을 불어넣는 언어! React, Node, Angular 다 JS 가족🫂')">JavaScript 언어</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_3')"><span class="fb-arr">▶</span>소프트웨어 개발 프레임워크 <em>2</em></div><div class="fb-con-list" id="fb_sec2_3"><span class="fb-con" onclick="openModal('소프트웨어 개발 프레임워크 개념','옛날에는 개발자들이 프로그램을 만들 때 필요한 기능을 처음부터 끝까지 전부 직접 만들어야 해서 시간이 엄청 오래 걸렸어. 똑같은 코드를 여러 사람이 따로따로 반복해서 만드는 비효율적인 상황이 계속되다 보니, \'자주 쓰는 건 미리 만들어두고 공유하자!\'는 생각에서 프레임워크가 탄생했어.','프레임워크는 집을 지을 때의 \'기본 뼈대(골조)\'라고 생각하면 돼. 건설회사가 벽, 기둥, 지붕 뼈대를 미리 세워놓으면, 입주자는 벽지 색깔이나 가구 배치 같은 내 취향대로 꾸미는 것에만 집중할 수 있잖아. 개발자도 프레임워크가 로그인, 데이터 저장 같은 기본 기능을 미리 갖춰놔 주면, 실제 서비스의 핵심 기능 만드는 것에만 집중할 수 있어서 훨씬 빠르고 일관성 있게 개발할 수 있어.','프레임워크 = \'집 뼈대\'! 👉 \'뼈대는 내가 줄게, 살은 네가 붙여!\' — 뼈대(기본 구조)는 프레임워크가, 살(비즈니스 로직)은 개발자가!')">소프트웨어 개발 프레임워크 개념</span><span class="fb-con" onclick="openModal('전자정부 표준프레임워크','옛날에 정부 시스템을 만들 때마다 개발자들이 기본적인 기능을 매번 처음부터 새로 만들어야 해서 시간도 돈도 엄청 낭비됐어. 그래서 \'어차피 다 필요한 공통 기능은 미리 만들어두고 같이 쓰자!\'는 생각으로 이 프레임워크가 탄생했지.','레고 세트라고 생각해봐. 집을 지을 때 벽돌, 창문, 문 같은 기본 부품이 이미 다 만들어져 있으면, 우리는 그냥 조립해서 \'내 방만의 특별한 인테리어\'만 추가하면 되잖아. 전자정부 표준프레임워크가 딱 그 레고 기본 부품 세트야. 개발자들은 로그인, 게시판 같은 공통 기능은 이미 만들어진 걸 가져다 쓰고, 자기 서비스만의 특별한 기능만 새로 만들면 돼.','🏛️ \'정부 레고\' → 정부가 레고 기본 세트(공통기능)를 미리 만들어줬으니, 나는 내 작품(고유기능)만 만들면 끝!')">전자정부 표준프레임워크</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_4')"><span class="fb-arr">▶</span>통합개발환경(IDE) <em>3</em></div><div class="fb-con-list" id="fb_sec2_4"><span class="fb-con" onclick="openModal('통합개발환경(IDE) 개념','옛날에는 코드 짜는 프로그램, 오류 찾는 프로그램, 실행 파일 만드는 프로그램을 각각 따로 켜서 왔다갔다 해야 했어. 그게 너무 불편하니까 \'그냥 다 한 곳에 모아버리자!\'해서 IDE가 탄생한 거야.','IDE는 요리사의 주방이라고 생각하면 돼. 칼(편집기), 불(컴파일러), 맛 보기(디버거)가 한 주방에 다 갖춰져 있어서 왔다갔다 안 해도 되는 거지. 비주얼 스튜디오, 이클립스 같은 게 대표적인 IDE인데, 코드 작성부터 오류 찾기, 완성 프로그램 배포까지 한 프로그램 안에서 전부 해결할 수 있어.','IDE = \'이 다 있어!\' — 편집, 디버깅, 컴파일 이 다 있어!')">통합개발환경(IDE) 개념</span><span class="fb-con" onclick="openModal('소프트웨어 빌드(Software Build)','옛날에 개발자들이 코드를 다 짜고 나서 \'이제 실행해볼까?\' 했더니 파일이 너무 많고 복잡해서 어떻게 합쳐야 할지 몰라 엄청 고생했어. 그래서 \'코드를 실행 가능한 프로그램으로 자동으로 만들어주는 과정\'이 필요해졌지.','빌드는 레고 설명서랑 부품들(소스 코드)을 가져다가 완성된 레고 작품(실행 가능한 프로그램)으로 조립해주는 과정이야. 예를 들어 카카오톡 개발자들이 코드를 짜면, 빌드를 통해 우리가 폰에서 설치하고 쓸 수 있는 앱 파일이 만들어지는 거지. 매일 빌드(Daily Build)를 하면 문제가 생겼을 때 일찍 발견할 수 있어서 나중에 큰 사고를 막을 수 있어.','빌드 = \'부품을 일단 드디어 완성!\' — 코드 부품들을 모아서 드디어 실행 가능한 완성품으로 만드는 것!')">소프트웨어 빌드(Software Build)</span><span class="fb-con" onclick="openModal('소프트웨어 배포','옛날에 개발자가 코드를 완성해도 다른 사람 컴퓨터에서 실행이 안 되거나, 업데이트할 때마다 하나하나 손으로 설치해줘야 하는 번거로움이 있었어. 그래서 \'어떻게 하면 완성된 프로그램을 사람들이 쉽게 쓸 수 있게 전달할까?\'를 체계적으로 정리한 게 바로 소프트웨어 배포야.','소프트웨어 배포는 쉽게 말해 \'음식 배달\' 같은 거야. 요리사(개발자)가 음식(프로그램)을 만들면, 그걸 포장하고(빌드), 배달하고(릴리스), 손님 집에 차려주고(설치), 필요하면 메뉴를 바꾸고(업데이트), 나중에 치우는(삭제/은퇴) 전체 과정이 다 배포야. 즉, 프로그램이 완성된 순간부터 사람들이 쓰고, 쓰다가 없애는 것까지 모든 단계를 말하는 거지.','배포 = \'릴설적업삭은\' → 릴리스 → 설치 → 적응 → 업데이트 → 삭제 → 은퇴! \'릴설적업삭은\'을 \'릴(리)설(리)적업삭은\'으로 리듬감 있게 외워봐!')">소프트웨어 배포</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_5')"><span class="fb-arr">▶</span>소프트웨어 개발도구와 프로그래밍 언어의 기술 동향 <em>2</em></div><div class="fb-con-list" id="fb_sec2_5"><span class="fb-con" onclick="openModal('소프트웨어 개발도구의 기술 동향','옛날에는 개발자들이 코드를 짜고, 오류를 찾고, 테스트하는 걸 전부 손으로 일일이 했어서 시간이 엄청 오래 걸렸어. 그래서 \'이걸 자동으로 도와주는 도구가 있으면 얼마나 좋을까?\'라는 생각에서 다양한 개발 도구들이 만들어지고 계속 발전해왔어.','소프트웨어 개발도구 기술 동향이란, 요즘 개발자들이 어떤 최신 도구를 쓰는지에 관한 흐름이야. 예를 들어 요즘은 AI가 코드를 자동으로 짜주거나(GitHub Copilot), 클라우드에서 바로 개발할 수 있고(Cloud IDE), 여러 명이 동시에 같은 코드를 수정할 수 있는 협업 도구도 생겼어. 쉽게 말해 \'혼자 손으로 다 하던 것\'에서 \'AI랑 팀이 함께 자동으로 빠르게 하는 것\'으로 바뀌는 흐름이야.','🔑 \'AI클자저\' 로 외워! → AI(AI 코딩 도우미) + 클(클라우드 개발환경) + 자(자동화 빌드/테스트) + 저(저코드/노코드 도구) — 요즘 개발도구 트렌드 4총사!')">소프트웨어 개발도구의 기술 동향</span><span class="fb-con" onclick="openModal('프로그래밍 언어 기술 동향','옛날에는 컴퓨터한테 일 시키려면 기계어로 직접 0과 1을 입력해야 했는데, 그게 너무 힘드니까 사람이 읽기 쉬운 언어들이 하나씩 만들어지기 시작했어. 시대가 바뀌면서 AI, 앱, 웹 등 새로운 분야가 생길 때마다 거기에 맞는 새로운 언어나 트렌드가 계속 등장하게 된 거야.','프로그래밍 언어 트렌드는 마치 \'유행하는 음식\'처럼 시대마다 인기 있는 게 달라져. 예전엔 C, Java가 대세였다면, 요즘은 파이썬(AI/데이터), 코틀린(앱), 타입스크립트(웹)가 핫하고, 클라우드랑 AI 쪽이 급성장하면서 관련 언어들이 주목받고 있어. 쉽게 말해 \'지금 어떤 일을 많이 하느냐\'에 따라 잘 나가는 언어가 바뀌는 거야.','🎵 \'P-J-K-T\' → 파이썬·자바·코틀린·타입스크립트! \'피자 주문 카톡 타닥\' 으로 외워봐 😄 (피=Python, 자=Java, 카=Kotlin, 타=TypeScript)')">프로그래밍 언어 기술 동향</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_6')"><span class="fb-arr">▶</span>개발프레임워크와 소프트웨어 아키텍처 기술 동향 <em>2</em></div><div class="fb-con-list" id="fb_sec2_6"><span class="fb-con" onclick="openModal('소프트웨어 개발도구의 기술 동향','옛날에는 개발자들이 메모장 같은 곳에 코드를 직접 타이핑하고, 실수를 찾으려면 처음부터 끝까지 눈으로 다 읽어야 했어. 그러다 보니 \'이걸 자동으로 도와주는 도구가 있으면 얼마나 좋을까?\' 하는 필요에서 점점 똑똑한 개발 도구들이 생겨나기 시작한 거야.','요즘 소프트웨어 개발 도구의 트렌드는 크게 4가지야. 첫째, AI가 코드를 대신 짜주는 \'자동완성·AI 코딩 도우미(예: GitHub Copilot)\', 둘째, 내 컴퓨터 대신 인터넷 어디서든 개발할 수 있는 \'클라우드 개발 환경\', 셋째, 코드 없이 블록 조립하듯 앱을 만드는 \'로우코드·노코드 도구\', 넷째, 여러 명이 동시에 같은 코드를 구글 문서처럼 함께 편집하는 \'협업 중심 도구\'야. 쉽게 말하면 개발 도구가 점점 더 빠르고, 쉽고, 함께 쓰는 방향으로 진화하고 있어.','**\'아클로협\'** 으로 외워! → **아**I 자동화, **클**라우드 개발, **로**우코드/노코드, **협**업 도구 — \'아, 클라우드에서 로봇이랑 협업한다!\' 라고 한 문장으로 기억해봐!')">소프트웨어 개발도구의 기술 동향</span><span class="fb-con" onclick="openModal('소프트웨어아키텍처 기술 동향','옛날에는 프로그램을 그냥 한 덩어리로 만들었는데, 규모가 커지면서 수정 하나 잘못하면 전체가 망가지는 문제가 생겼어. 그래서 \'어떻게 하면 소프트웨어를 더 잘 설계할 수 있을까?\' 하는 고민에서 다양한 아키텍처 방식들이 등장하게 된 거야.','소프트웨어 아키텍처는 건물 설계도 같은 거야. 집을 지을 때 방을 어떻게 나누고 연결할지 미리 계획하듯이, 프로그램도 기능들을 어떻게 나누고 연결할지 설계하는 거거든. 요즘 트렌드는 크게 4가지야: 레고블록처럼 기능을 잘게 나누는 \'마이크로서비스\', 클라우드 중심의 \'클라우드 네이티브\', AI를 접목한 \'지능형 아키텍처\', 그리고 보안을 처음부터 설계에 넣는 \'제로 트러스트\' 방식이야.','🏠 \'마클지제\' - 마이크로서비스(레고처럼 조각), 클라우드(구름 위에), 지능형(AI 두뇌), 제로트러스트(아무도 믿지 마!) → \'마켓에서 클지(클지?) 제발 사지마\' 로 외워봐!')">소프트웨어아키텍처 기술 동향</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch right"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch3')"><span class="fb-arr">▶</span>품질 & 요구사항<span class="fb-cnt">15개</span></div><div class="fb-sec-blocks" id="fb_ch3"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec3_0')"><span class="fb-arr">▶</span>테스팅 개념 및 프로세스 <em>5</em></div><div class="fb-con-list" id="fb_sec3_0"><span class="fb-con" onclick="openModal('테스팅 개념','옛날에 프로그램을 만들고 나서 오류를 뒤늦게 발견하면 고치는 데 엄청난 돈과 시간이 들었어. 그래서 미리미리 문제를 찾아내는 체계적인 방법이 필요하게 됐지.','테스팅은 쉽게 말해 \'출시 전 제품 검사\'야. 예를 들어 새 스마트폰을 팔기 전에 떨어뜨려도 되는지, 배터리는 잘 가는지 미리 테스트하는 것처럼, 소프트웨어도 실제 사용자한테 주기 전에 문제가 없는지 확인하는 거야. 단, 살충제를 계속 같은 걸로 뿌리면 벌레가 내성이 생기듯이, 똑같은 테스트만 반복하면 새로운 오류를 못 잡으니까 테스트 방법도 계속 바꿔줘야 해!','테스팅 3불(不) 법칙 → \'무완반\' 🚫 : 무결함 증명 불가, 완벽한 테스팅 불가, 반복 테스트는 효과 없다!')">테스팅 개념</span><span class="fb-con" onclick="openModal('테스팅 프로세스','옛날에 개발자들이 프로그램을 만들고 나서 \'대충 돌려보고 괜찮으면 출시\'하다 보니 나중에 엄청난 버그가 터지는 사고가 많았어. 그래서 테스트도 그냥 하는 게 아니라 순서와 규칙을 정해서 체계적으로 하자는 흐름이 생긴 거야.','테스팅 프로세스는 요리 레시피랑 똑같아. 요리할 때 \'재료 준비 → 조리 → 맛보기 → 완성 확인\' 순서가 있듯이, 소프트웨어 테스트도 \'계획 → 분석·설계 → 구현·실행 → 결과 보고 → 마감\' 순서로 진행돼. 순서를 안 지키면 뭘 테스트했는지도 모르고 버그를 놓치게 되니까, 레시피처럼 단계를 꼭 지켜야 하는 거야.','**\'계분구완마\'** — 계획 → 분석/설계 → 구현/실행 → 완료평가/리포팅 → 마감! \'계단 분리해서 구워 완전히 마무리\' 로 외워봐 😄')">테스팅 프로세스</span><span class="fb-con" onclick="openModal('테스트 설계','옛날에는 개발자가 대충 \'아 이거 될 것 같은데?\' 하고 프로그램을 출시했다가 엄청난 버그로 망하는 경우가 많았어. 그래서 \'체계적으로 어디를 어떻게 테스트할지 미리 계획 세우자!\'는 필요성이 생긴 거야.','테스트 설계는 마치 수학 시험 출제 계획서 같은 거야. 시험 문제(테스트 케이스)를 만들 때 \'어떤 문제를 낼지, 정답은 뭔지, 몇 점짜리인지\' 미리 정해두는 것처럼, 프로그램도 \'어떤 상황을 입력하면, 어떤 결과가 나와야 하는지\' 미리 설계해두는 거지. 이렇게 해야 나중에 \'이 부분은 테스트했나?\' 하는 불안 없이 꼼꼼하게 확인할 수 있어.','테스트 케이스 구성 = \'입사수기후\' 🎯 → 입력값, 사전조건, 수행절차, 기대결과, 후속조건! \'입사 수기 후기\' 처럼 외워봐!')">테스트 설계</span><span class="fb-con" onclick="openModal('테스팅 유형','소프트웨어를 다 만들고 나서 한꺼번에 테스트하면 어디서 문제가 생겼는지 찾기가 너무 힘들었어. 그래서 개발 단계마다 나눠서 테스트하는 방법이 생겨났어.','집을 지을 때 벽돌 하나하나 확인하고(단위 테스트), 방과 방이 잘 연결되는지 보고(통합 테스트), 집 전체가 제대로 돌아가는지 확인하고(시스템 테스트), 마지막으로 실제로 살 사람이 \'내가 원하던 집 맞아?\' 점검하는 것(인수 테스트)처럼 테스트도 단계별로 나눠서 해. 각 단계마다 누가 테스트하고, 무엇을 확인하고, 어떤 환경에서 할지가 다 달라.','🏠 \'단통시인\' - **단**위 → **통**합 → **시**스템 → **인**수, 벽돌 → 방연결 → 집전체 → 입주자확인 순서로 외워!')">테스팅 유형</span><span class="fb-con" onclick="openModal('테스팅 기법','옛날에 프로그램을 만들고 나서 \'어디가 잘못됐는지\' 찾는 게 너무 어려웠어. 그래서 사람들이 \'내부를 들여다보며 테스트하는 방법\'이랑 \'겉에서 결과만 보고 테스트하는 방법\' 두 가지로 나눠서 체계적으로 오류를 잡기 시작했어.','화이트박스 테스팅은 투명한 유리 상자처럼 내부 코드를 다 들여다보면서 \'이 길, 저 길 다 가봤나?\' 확인하는 거야. 블랙박스 테스팅은 검은 상자처럼 내부는 모르지만 \'버튼 누르면 제대로 된 결과 나오나?\' 겉에서 입력과 출력만 보고 테스트하는 거야. 쉽게 말해 화이트박스는 요리사가 레시피 보면서 맛 확인하는 거고, 블랙박스는 손님이 그냥 음식 먹어보고 맛있냐 없냐 판단하는 거지!','🤍화이트 = 속이 훤히 보이는 코드 해부! 🖤블랙 = 속은 몰라도 결과로 승부! → \'화이트는 속(코드), 블랙은 겉(결과)\'')">테스팅 기법</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec3_1')"><span class="fb-arr">▶</span>리팩토링 <em>3</em></div><div class="fb-con-list" id="fb_sec3_1"><span class="fb-con" onclick="openModal('리팩토링 개념','옛날에 개발자들이 기능 추가나 버그 수정을 반복하다 보니 코드가 스파게티처럼 뒤엉켜서 나중엔 본인도 못 알아보는 상황이 생겼어. 그래서 \'기능은 그대로 두고 코드 내부만 깔끔하게 정리하자!\'는 아이디어가 나온 거야.','리팩토링은 집 대청소랑 똑같아. 집에 있는 물건(기능)은 하나도 버리지 않으면서, 어질러진 방 구조만 깔끔하게 정리하는 거야. 겉에서 보면 똑같은 집인데 안은 훨씬 찾기 쉽고 편해지는 것처럼, 프로그램도 사용자 눈엔 똑같이 작동하지만 개발자 입장에선 훨씬 고치기 쉬운 코드가 되는 거지.','리팩토링 = \'리모델링\'! 건물 부수지 않고(기능 유지) 내부 인테리어만 바꾸는 것(구조 개선) → \'리(inside)모델링\'으로 기억해!')">리팩토링 개념</span><span class="fb-con" onclick="openModal('코드스멜(Code Smell) 개념','옛날에 개발자들이 코드를 빨리빨리 짜다 보니, 나중에 다른 사람이 그 코드를 보면 도대체 뭔 소린지 몰라서 수정도 못 하는 상황이 생겼어. 그래서 \'이런 패턴이 보이면 나쁜 코드다!\'라는 신호를 정리해서 코드스멜이라는 개념이 탄생했어.','코드스멜은 음식이 상하기 전에 나는 이상한 냄새랑 똑같아. 음식이 겉보기엔 멀쩡해 보여도 냄새가 나면 \'어, 이거 곧 썩겠다\' 싶잖아? 코드도 지금 당장 돌아가긴 하는데, 중복이 너무 많거나 한 곳에 너무 많은 기능이 몰려있으면 \'어, 이거 나중에 문제 생기겠다\'는 신호를 보내는 거야. 그 신호를 발견하면 코드를 깔끔하게 다시 정리(리팩토링)해줘야 해.','코드스멜 종류는 \'중·긴·방·과·두\' 로 외워! → 중복된 코드, 긴 메소드, 방대한 클래스, 과다한 매개변수, 두 가지 이유로 수정되는 클래스. \'중간 방과 후\'처럼 읽으면 바로 떠오르지?')">코드스멜(Code Smell) 개념</span><span class="fb-con" onclick="openModal('대표적인 리팩토링 기법','옛날에 개발자들이 코드를 계속 수정하다 보니 코드가 스파게티처럼 엉켜서 나중에 뭘 고치려면 다른 게 터지는 문제가 생겼어. 그래서 기능은 그대로 유지하면서 코드를 깔끔하게 정리하는 \'리팩토링 기법\'들이 만들어졌어.','리팩토링 기법은 방 청소하는 방법 모음집이라고 생각해봐. 예를 들어 \'메소드 추출(Extract Method)\'은 방 한쪽에 잡동사니가 너무 많으면 박스 하나 꺼내서 거기 담고 박스에 이름표 붙이는 거야. \'클래스 추출(Extract Class)\'은 짐이 너무 많은 방을 둘로 나눠서 각자 맡을 짐을 나눠 갖는 거고. 이렇게 하면 코드가 훨씬 찾기 쉽고 깔끔해져!','리팩토링 = \'추추이이\' 기억해! → 추출(Extract Method: 긴 코드 뽑아서 이름 붙이기), 추출(Extract Class: 역할 많은 클래스 쪼개기), 이동(기능 이동: 기능을 맞는 클래스로 옮기기), 이관(Replace Parameter: 매개변수 대신 직접 호출하게 바꾸기)')">대표적인 리팩토링 기법</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec3_2')"><span class="fb-arr">▶</span>요구사항 관리 <em>5</em></div><div class="fb-con-list" id="fb_sec3_2"><span class="fb-con" onclick="openModal('요구사항 관리의 정의','옛날에 개발자들이 고객이 원하는 걸 처음에 듣고 바로 만들었더니, 나중에 고객이 \'이거 내가 원한 게 아니야!\'라고 해서 다 뜯어고치는 사태가 자주 발생했어. 그래서 처음부터 원하는 걸 잘 정리하고, 중간에 바뀌어도 잘 추적해서 관리하는 방법이 필요해진 거야.','요구사항 관리는 식당 주문 과정이랑 똑같아. 손님이 \'김치찌개 해주세요\'라고 주문하면(요구사항 개발), 주방에서 실제로 김치찌개를 제대로 만들고 있는지 확인하고, 손님이 중간에 \'아, 순두부찌개로 바꿔주세요\'라고 해도 주문서를 업데이트해서 놓치지 않는 게(요구사항 관리) 핵심이야. 즉, \'정해진 것이 실제로 잘 반영되고 있는지 감시하고, 변경사항도 빠짐없이 챙기는 것\'이 요구사항 관리야.','요구사항 관리 = \'확·추\' 2글자만 기억해! 제대로 되고 있는지 \'확\'인하고, 변경사항을 \'추\'적한다!')">요구사항 관리의 정의</span><span class="fb-con" onclick="openModal('요구사항 관리의 중요성','옛날에 개발자들이 고객 말만 듣고 무작정 만들었다가 \'이게 내가 원한 게 아닌데?\'라는 말에 처음부터 다시 만드는 일이 엄청 많았어. 그래서 \'처음부터 뭘 만들지 제대로 정리하고 관리하자!\'는 필요성이 생긴 거야.','집 지을 때 설계도 없이 그냥 벽 쌓으면 나중에 방 위치가 이상해도 이미 늦잖아. 요구사항 관리는 바로 그 설계도를 꼼꼼히 작성하고 모두가 같은 설계도를 보게 만드는 과정이야. 이렇게 하면 돈도 아끼고, 마감일도 지키고, 고객도 만족하는 결과물이 나오는 거지.','요구사항 관리 = \'요미납\' 기억해! \'요\'구사항 잘 관리하면 → \'미\'스커뮤니케이션 없고 → \'납\'기·예산 초과 없다! 🏠')">요구사항 관리의 중요성</span><span class="fb-con" onclick="openModal('요구사항 관리의 목적','옛날에 개발자들이 고객 말을 대충 듣고 소프트웨어를 만들었다가 \'내가 원한 게 이게 아닌데?\'라는 말을 엄청 들었어. 그래서 처음부터 고객이 뭘 원하는지 정확히 파악하고 관리하는 방법이 필요해진 거야.','예를 들어 친구가 \'케이크 만들어줘\'라고 했을 때, 어떤 맛인지, 몇 명이 먹는지, 언제까지 필요한지를 미리 다 물어봐야 실패 없이 만들 수 있잖아. 요구사항 관리도 똑같이 고객이 원하는 걸 처음에 정확히 파악해서, 정해진 시간 안에 만족스러운 프로그램을 만드는 게 목적이야.','🎯 \'고.정.품\' 세 글자만 기억해! → 고객 만족 + 정해진 일정 + 품질 높은 소프트웨어!')">요구사항 관리의 목적</span><span class="fb-con" onclick="openModal('요구사항 관리 공정','소프트웨어를 만들다 보면 고객이 원하는 게 뭔지 중간에 바뀌거나 처음부터 제대로 파악을 못 해서 완성된 프로그램이 전혀 다른 물건이 되는 문제가 생겼어. 그래서 \'처음부터 끝까지 요구사항을 체계적으로 관리하자!\'는 흐름이 생긴 거야.','친구한테 케이크를 만들어달라고 부탁한다고 생각해봐. 처음에 \'딸기 케이크\'라고 했는데 나중에 \'초코로 바꿔줘\'라고 하면 만드는 사람은 엄청 혼란스럽겠지? 요구사항 관리 공정은 이걸 방지하려고, 처음에 뭘 원하는지 캐내고(추출) → 우선순위 정하고(분석) → 문서로 딱 정리해서(명세) → 중간에 바뀌면 기록하고 추적하는(변경관리) 4단계 절차야.','추분명변! \'추(추출) → 분(분석) → 명(명세) → 변(변경관리)\' — \'추분명변, 요구사항은 추분명변!\' 순서대로만 기억하면 돼!')">요구사항 관리 공정</span><span class="fb-con" onclick="openModal('요구사항 관리 원칙','옛날에 개발자들이 고객이 원하는 게 뭔지 제대로 파악 못하고 개발했다가 나중에 \'이거 내가 원한 게 아닌데?\'라는 말을 듣고 처음부터 다시 만드는 일이 너무 많았어. 그래서 \'처음부터 요구사항을 제대로 정리하고, 바뀌면 체계적으로 관리하자!\'는 원칙이 생긴 거야.','음식점을 새로 열 때를 상상해봐. 손님(고객)이 원하는 메뉴를 먼저 파악하고(우선순위), 주인·요리사·직원 모두 메뉴판에 동의한 다음(동의 획득), 식당의 정확한 콘셉트를 정하고(목표 식별), 나중에 메뉴가 바뀌면 \'변경 회의\'를 열어서 어떤 영향이 있는지 따져보고(변경 분석), 각 단계마다 \'확정된 메뉴판\'을 보관해두는(베이스라인) 거야. 요구사항 관리도 이처럼 처음부터 끝까지 질서 있게 챙기는 과정이야.','🎵 \'우동목변기\' 로 외워봐! → 우(선순위) 동(의획득) 목(표식별) 변(경관리위원회) 기(baseline=기준선) — \'우동 목욕탕에서 변기에 앉았다\' 이미지로 기억해!')">요구사항 관리 원칙</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec3_3')"><span class="fb-arr">▶</span>요구사항 명세 <em>2</em></div><div class="fb-con-list" id="fb_sec3_3"><span class="fb-con" onclick="openModal('요구사항 명세 기법','소프트웨어를 만들기 전에 \'뭘 만들어야 하는지\' 글로 정리해야 하는데, 사람마다 쓰는 방식이 달라서 나중에 개발자랑 고객이 서로 다르게 이해하는 문제가 생겼어. 그래서 \'요구사항을 어떻게 정리할지\' 방법을 딱 정해놓은 게 바로 요구사항 명세 기법이야.','요구사항 명세 기법은 크게 두 가지야. \'정형 명세\'는 수학 공식처럼 딱딱하고 정확하게 쓰는 방식이고(VDM, Z, FSM 등), \'비정형 명세\'는 그림이나 표, 일반 글처럼 사람이 읽기 쉽게 쓰는 방식이야(SADT, Use Case, 결정 테이블 등). 예를 들어 요리 레시피를 \'계란 2개, 소금 5g\'처럼 정확하게 쓰면 정형, \'계란 약간에 소금 조금\'처럼 편하게 쓰면 비정형이라고 생각하면 돼!','【정형=수학자, 비정형=이야기꾼】 → \'정확한 수학자(VDM·Z·FSM)\' vs \'그림 그리는 이야기꾼(SADT·UseCase·ER)\' — 딱딱하냐 부드럽냐로 구분!')">요구사항 명세 기법</span><span class="fb-con" onclick="openModal('요구사항 명세 원칙 및 주요 내용','옛날에 개발자들이 고객이 원하는 걸 제대로 못 알아듣고 엉뚱한 프로그램을 만들어버리는 일이 엄청 많았어. 그래서 \'IEEE\'라는 전문가 단체가 \'요구사항을 이렇게 정리하면 실수 없이 만들 수 있어!\'라는 기준을 만든 거야.','요구사항 명세란 고객이 원하는 걸 문서로 정리하는 건데, 이게 엉터리면 프로그램도 엉터리가 돼. 예를 들어 \'버튼을 누르면 빠르게 작동해야 해\'라고 쓰면 \'빠르게\'가 얼마나 빠른 건지 몰라서 문제가 생기지. 그래서 검증 가능한지, 수정 가능한지, 명확한지, 정확한지, 추적 가능한지, 일관성 있는지, 완전한지, 해석이 같은지, 이해하기 쉬운지 — 이 9가지 원칙으로 요구사항을 꼼꼼히 체크하는 거야.','검수명정추일완해이 → \'검사(검증)하러 수(수정)명(명확)정(정확)한 추(추적)일(일관)완(완전)한 해(해석)이(이해)야기\' — 앞 글자만 따서 \'검수명정추일완해이\'로 외워봐!')">요구사항 명세 원칙 및 주요 내용</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch left"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch4')"><span class="fb-arr">▶</span>형상관리 & 오픈소스<span class="fb-cnt">10개</span></div><div class="fb-sec-blocks" id="fb_ch4"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec4_0')"><span class="fb-arr">▶</span>형상관리 도구 <em>2</em></div><div class="fb-con-list" id="fb_sec4_0"><span class="fb-con" onclick="openModal('형상관리 도구','옛날에 여러 명이 같은 코드 파일을 수정하다가 서로 덮어써서 작업이 날아가는 사고가 자주 일어났어. 그래서 \'누가 언제 뭘 바꿨는지\' 기록하고 충돌을 막아주는 도구가 필요해졌지.','형상관리 도구는 구글 드라이브랑 비슷한데, 코드 전용 타임머신이라고 생각하면 돼. 파일을 저장할 때마다 변경 내역을 전부 기록해두니까 \'3일 전 버전으로 되돌려줘!\' 하면 바로 가능하고, 여러 명이 동시에 작업해도 서로 충돌 없이 합칠 수 있어. 크게 \'중앙 서버 한 곳에 저장하는 방식(SVN)\'이랑 \'각자 컴퓨터에도 전체 기록을 갖고 있는 방식(Git)\'으로 나뉘어.','형상관리 도구 = \'중Git분\' → 중앙저장소(SVN), Git(분산저장소) — \'중간은 SVN, 깃(Git)은 분산!\' 이렇게 외워봐!')">형상관리 도구</span><span class="fb-con" onclick="openModal('분산형 저장소(Git)','옛날에는 코드를 딱 한 곳(중앙 서버)에만 저장했는데, 그 서버가 고장나면 모든 코드가 날아가는 대참사가 벌어졌어. 그래서 \'한 곳에만 맡기지 말고, 모두가 전체 코드를 각자 갖고 있자!\'는 아이디어로 분산형 저장소가 탄생했지.','마치 학교 모둠 과제할 때, 조장 한 명만 파일 갖고 있으면 조장 컴퓨터 고장나면 끝장이잖아. 그래서 모둠원 전원이 파일 전체를 자기 컴퓨터에 저장해두는 거야. Git은 바로 이런 방식으로, 개발자 각자의 컴퓨터에 코드 전체가 저장되고, 각자 다른 버전(Branch)으로 작업하다가 나중에 합칠 수 있어.','🌳 \'모두가 통째로 복사\' → Git = 각자 PC가 곧 서버! / \'서버 터져도? 내 컴퓨터에 다 있어~\' 로 기억해!')">분산형 저장소(Git)</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec4_1')"><span class="fb-arr">▶</span>소프트웨어 형상관리의 개요 <em>1</em></div><div class="fb-con-list" id="fb_sec4_1"><span class="fb-con" onclick="openModal('형상관리의 정의','옛날에 여러 명이 함께 소프트웨어를 만들다 보니 누가 어떤 부분을 바꿨는지 몰라서 파일이 뒤죽박죽 엉망이 되는 일이 많았어. 그래서 \'변경 내용을 체계적으로 추적하고 관리하자!\'는 필요성에서 형상관리가 생겨났어.','형상관리는 소프트웨어를 만들면서 생기는 모든 파일(코드, 문서, 데이터)을 \'누가, 언제, 뭘, 왜 바꿨는지\' 기록하고 관리하는 활동이야. 마치 구글 문서에서 \'수정 기록 보기\'로 누가 언제 어떤 내용을 고쳤는지 다 볼 수 있는 것과 똑같아. 덕분에 문제가 생겼을 때 원인을 찾기 쉽고, 잘못되면 이전 버전으로 되돌릴 수도 있어.','형상관리 = \'형사가 변경 현장을 관리한다\' → 형사처럼 변경 원인 추적, 증거(파일) 보관, 관련자(담당자)에게 통보!')">형상관리의 정의</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec4_2')"><span class="fb-arr">▶</span>형상관리 개념도 및 구성 요소 <em>3</em></div><div class="fb-con-list" id="fb_sec4_2"><span class="fb-con" onclick="openModal('형상관리의 개념도','옛날에 여러 명이 같은 코드를 동시에 수정하다가 서로의 작업이 뒤섞여서 누가 뭘 바꿨는지 아무도 몰라 프로젝트가 엉망이 된 적이 많았어. 그래서 \'누가, 언제, 무엇을, 왜 바꿨는지\'를 체계적으로 기록하고 관리하는 방법이 필요해졌지.','형상관리는 마치 구글 드라이브에서 문서 수정 기록을 남기는 것과 같아. 팀원 여러 명이 하나의 문서를 고칠 때, 누가 언제 어느 부분을 바꿨는지 기록이 남고, 문제가 생기면 이전 버전으로 되돌릴 수 있잖아. 형상관리도 똑같이 소프트웨어의 모든 변경 내용을 기록하고, 버전을 관리하고, 문제가 생기면 이전 상태로 복구할 수 있게 해주는 전체 활동이야.','형상관리 = \'형사가 증거 관리\'! 형사가 사건 증거를 \'언제·누가·왜\' 바꿨는지 철저히 기록하듯이, 형상관리도 코드 변경을 빠짐없이 기록하고 추적한다고 기억해!')">형상관리의 개념도</span><span class="fb-con" onclick="openModal('형상관리의 구성요소','옛날에 여러 개발자가 같은 프로그램을 동시에 수정하다가 \'누가 언제 뭘 바꿨는지\' 몰라서 엉망이 된 적이 많았어. 그래서 소프트웨어의 변경 내역을 체계적으로 관리하는 방법이 필요해졌어.','형상관리는 마치 학교 공용 구글 문서를 여럿이 쓸 때 \'버전 기록\'으로 누가 언제 뭘 고쳤는지 추적하는 것과 같아. 구성요소는 크게 4가지야: 변경 기준점인 \'기준선\', 관리할 대상인 \'형상항목\', 실제로 만들어진 결과물인 \'형상제품\', 그리고 이 모든 정보를 모은 \'형상정보\'야. 형상정보는 식별 → 통제 → 감사 → 기록 순서로 활동이 이루어져.','기항제정 → \'기\'준선, \'항\'목, \'제\'품, \'정\'보 — \'기항제정, 출발 준비 완료!\' 라고 외워봐 (비행기 기항지 느낌으로!)')">형상관리의 구성요소</span><span class="fb-con" onclick="openModal('형상관리 고려사항','옛날에 여러 개발자가 같은 코드를 동시에 수정하다가 서로의 작업이 뒤섞여서 프로그램이 망가지는 일이 자주 있었어. 특히 이미 실제로 사용 중인 소프트웨어를 건드릴 땐 더 조심해야 했기 때문에, 변경을 체계적으로 관리하는 규칙이 필요해졌어.','형상관리는 마치 병원에서 환자 수술 기록을 꼼꼼히 관리하는 것과 같아. 이미 운영 중인 소프트웨어는 실제로 사람들이 쓰고 있는 \'살아있는 환자\'니까, 함부로 건드리면 큰일 나잖아. 그래서 H(Hardware, 하드웨어 환경), S(Software, 소프트웨어 구성), E(Environment, 운영 환경) 세 가지를 신중하게 따져보고, 절대 Con(Conflict, 충돌)이 나지 않도록 조심해야 해.','운영 중인 소프트웨어는 \'병원 중환자실\' — HSE(하·소·환) 건드릴 땐 Con(충돌) 조심! → \'H·S·E, Con 조심해!\' 세 글자 외우고 \'Con(충돌) 나면 큰일 난다\'고 기억해!')">형상관리 고려사항</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec4_3')"><span class="fb-arr">▶</span>오픈소스 소프트웨어 라이선스 <em>2</em></div><div class="fb-con-list" id="fb_sec4_3"><span class="fb-con" onclick="openModal('오픈소스 소프트웨어 라이선스 비교','옛날에 프로그래머들이 자기가 만든 코드를 공유하고 싶었는데, 아무런 규칙 없이 공유하다 보니 누군가 그걸 몰래 가져다 돈 버는 데만 쓰는 문제가 생겼어. 그래서 \'공유는 하되, 이런 조건은 지켜야 해!\'라는 약속 문서들이 생기기 시작했고, 그게 바로 오픈소스 라이선스야.','오픈소스 라이선스는 \'내 레시피 공개할게, 대신 네가 개량하면 너도 공개해야 해!\'처럼 코드를 공유할 때 붙이는 조건표야. 모든 오픈소스는 공통적으로 무료 사용, 코드 보기, 수정, 배포가 다 되는데, 차이점은 \'네가 이걸 써서 만든 것도 공개해야 하냐\'와 \'돈 받는 프로그램이랑 합칠 수 있냐\'야. GPL은 가장 엄격해서 GPL 코드를 쓰면 네 코드까지 전부 공개해야 하고, 돈 받는 독점 소프트웨어랑 합치는 것도 안 돼.','GPL = \'공개 Pull 강제!\' → GPL 쓰면 네 코드까지 전부 끌려나와서(Pull) 공개 강제! 가장 엄격한 라이선스!')">오픈소스 소프트웨어 라이선스 비교</span><span class="fb-con" onclick="openModal('오픈소스 소프트웨어 라이선스 활용을 위한 고려사항','옛날에는 소프트웨어를 공짜로 가져다 썼다가 나중에 \'이거 우리 규칙 어겼으니 소송이야!\'라는 황당한 상황이 종종 생겼어. 그래서 오픈소스를 안전하게 쓰려면 미리 규칙을 꼼꼼히 확인해야 한다는 인식이 생겼지.','오픈소스는 \'무료로 쓸 수 있는 레시피\'라고 생각해봐. 근데 어떤 레시피는 \'네가 이걸로 음식 팔면, 레시피도 공개해야 해\'라는 조건이 붙어 있거든. 그러니까 회사에서 오픈소스를 쓸 때는 \'이 레시피 조건이 우리 사업에 괜찮은지\', \'앞으로도 계속 관리될 레시피인지\'를 먼저 확인하고 쓰기로 결정해야 해.','오픈소스 쓰기 전에 \'조건 확인 → 사업 영향 → 미래 계획\' = \'조사미\' 세 글자만 기억해! 조건 보고, 사업에 맞는지 보고, 미래에도 쓸 수 있는지 봐!')">오픈소스 소프트웨어 라이선스 활용을 위한 고려사항</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec4_4')"><span class="fb-arr">▶</span>오픈소스 소프트웨어 개념 <em>2</em></div><div class="fb-con-list" id="fb_sec4_4"><span class="fb-con" onclick="openModal('오픈소스 소프트웨어 정의','옛날에는 프로그래머들이 서로 코드를 자유롭게 나눠 쓰며 발전시켰는데, 1980년대부터 회사들이 \'우리 프로그램 함부로 보거나 고치면 안 돼!\'라며 돈을 받고 잠가버리기 시작했어. 이에 화가 난 리처드 스톨만이 \'소프트웨어는 모두가 자유롭게 써야 해!\'라며 반기를 들고 자유소프트웨어재단(FSF)을 만든 게 오픈소스의 시작이야.','오픈소스 소프트웨어는 마치 레시피가 공개된 음식점 같아. 요리법(소스코드)을 누구나 볼 수 있고, 그걸 가져다가 내 입맛대로 바꿔서 써도 되는 거지. 단, \'원래 만든 사람 이름은 지우면 안 돼\' 같은 기본 예의(라이선스 규칙)는 지켜야 해.','오픈소스 = \'열려있어, 공짜야, 고쳐써!\' → **열공고** 3글자만 기억해!')">오픈소스 소프트웨어 정의</span><span class="fb-con" onclick="openModal('오픈소스 소프트웨어 라이선스 정의','옛날에 개발자들이 코드를 무료로 공개했더니, 어떤 사람들이 그걸 몰래 가져다가 자기 돈벌이에 쓰면서 원작자한테는 아무 공도 안 돌리는 문제가 생겼어. 그래서 \'공짜로 써도 되는데, 대신 이 규칙은 꼭 지켜라!\'는 약속서가 필요해진 거야.','오픈소스 라이선스는 쉽게 말해 \'공짜 레시피 공유 규칙\'이야. 예를 들어 누군가 케이크 레시피를 공개하면서 \'써도 되는데, 네가 이 레시피로 새 레시피 만들면 그것도 공개해야 해!\'라고 조건을 단 것처럼, 코드를 공개할 때 지켜야 할 규칙을 정해둔 거야. 이 규칙을 어기면 저작권법 위반으로 법적 책임을 질 수 있어.','GPL, LGPL, BSD, MPL → \'공(GPL)짜지만 Lesser(LGPL)해도 BSD(배포)하면 Mozilla(MPL)도 따라온다\' — 앞글자만 따서 **\'공짜 레시피는 버섯 피자\'** (GPL-LGPL-BSD-MPL = ㄱ-ㄹ-ㅂ-ㅍ)')">오픈소스 소프트웨어 라이선스 정의</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch right"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch5')"><span class="fb-arr">▶</span>소프트웨어 유지보수<span class="fb-cnt">7개</span></div><div class="fb-sec-blocks" id="fb_ch5"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec5_0')"><span class="fb-arr">▶</span>소프트웨어 유지보수의 개념과 유형 <em>3</em></div><div class="fb-con-list" id="fb_sec5_0"><span class="fb-con" onclick="openModal('소프트웨어 유지보수의 정의','옛날에 프로그램을 한 번 만들면 끝인 줄 알았는데, 막상 사람들이 쓰다 보니 버그도 생기고 환경도 바뀌고 새로운 기능도 필요해졌어. 그래서 \'만들고 나서도 계속 관리해야 한다\'는 개념이 필요하게 된 거야.','소프트웨어 유지보수는 자동차를 산 다음에 하는 \'차 관리\'랑 똑같아. 차를 샀다고 끝이 아니라 기름도 넣고, 고장 나면 수리하고, 새 기능(블랙박스 등)도 추가하잖아. 소프트웨어도 고객한테 넘긴 후에 오류를 고치고, 성능을 높이고, 달라진 환경에 맞게 계속 손봐주는 작업이야. 쉽게 말해 \'프로그램의 사후관리\'라고 생각하면 돼!','유지보수 = \'납품 후 오·성·환\' → 오류 수정, 성능 향상, 환경 적응! \'오성환 선수처럼 납품 후에도 계속 뛴다!\' 🏃')">소프트웨어 유지보수의 정의</span><span class="fb-con" onclick="openModal('소프트웨어 유지보수의 목적','옛날에 프로그램을 한 번 만들면 끝인 줄 알았는데, 시간이 지나면서 버그도 생기고 윈도우 버전도 바뀌고 사용자 요구도 달라지면서 \'만든 후 관리\'가 필수라는 걸 깨달았어. 그래서 소프트웨어를 오래, 잘 쓰려면 꾸준히 손봐줘야 한다는 개념이 생긴 거야.','소프트웨어 유지보수는 자동차 정기점검이랑 똑같아. 차 샀다고 끝이 아니라 엔진오일도 갈고(성능 개선), 고장난 부분 고치고(하자보수), 새 도로 규정에 맞게 업그레이드(새 환경 적응)하잖아. 프로그램도 마찬가지로 출시 후에 계속 고치고 발전시켜야 오래 쓸 수 있어.','유지보수 목적 = \'성하새예\' → 🔧성능 개선, 🐛하자보수, 🌍새 환경 적응, 🛡️예방! \'성하새예\' 네 글자만 기억해!')">소프트웨어 유지보수의 목적</span><span class="fb-con" onclick="openModal('소프트웨어 유지보수의 종류','소프트웨어를 만들고 나서 그냥 내버려두면 버그도 생기고, 세상이 바뀌면 맞지 않는 부분도 생기고, 새로운 기능이 필요해지기도 했어. 그래서 \'어떤 이유로, 언제, 무엇을 고칠지\' 체계적으로 나눠서 관리하는 방법이 필요해졌지.','소프트웨어 유지보수는 크게 \'왜 고치냐(사유)\', \'언제 고치냐(시간)\', \'뭘 고치냐(대상)\' 이 세 가지 기준으로 나눌 수 있어. 예를 들어 앱에서 오류가 터지면 \'수정\', 스마트폰 OS가 바뀌면 \'적응\', 새 기능을 추가하면 \'완전화\' 유지보수인 거야. 시간 기준으로는 정기적으로 점검하는 \'계획\', 미리 막는 \'예방\', 급하게 고치는 \'응급\'으로 나뉘어.','사유는 \'수적완(수정·적응·완전화)\' → \'수적완!\' 하고 외쳐! 시간은 \'계예응(계획·예방·응급)\' → \'계획 없이 예방도 없고 응급만 남는다!\' 로 기억해봐!')">소프트웨어 유지보수의 종류</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec5_1')"><span class="fb-arr">▶</span>소프트웨어 유지보수 활동 <em>4</em></div><div class="fb-con-list" id="fb_sec5_1"><span class="fb-con" onclick="openModal('SW 유지보수 절차','옛날에 프로그램을 만들고 나서 버그가 생기거나 기능을 바꿔야 할 때, 아무 규칙 없이 막 고치다 보니 오히려 더 망가지는 일이 많았어. 그래서 \'고칠 때도 순서대로 체계적으로 하자!\'는 약속이 생긴 거야.','SW 유지보수 절차는 앱에 문제가 생겼을 때 고치는 순서야. 마치 병원 가는 것처럼 → ① 증상 접수(문제 요청 접수) → ② 진단(문제 분석) → ③ 수술(코드 수정) → ④ 퇴원 전 검사(테스트) → ⑤ 퇴원(배포 및 완료 확인) 순서로 진행돼. 이 순서를 지켜야 고치다가 다른 곳을 망가뜨리는 실수를 막을 수 있어.','병원 순서로 외워! \'접분수테완\' → 접수 → 분석 → 수정 → 테스트 → 완료! \'아파서 접수했더니 분석하고 수술(수정)하고 테스트하고 완료!\' 🏥')">SW 유지보수 절차</span><span class="fb-con" onclick="openModal('소프트웨어 조직 유형','옛날에는 소프트웨어를 만들면 회사가 코드를 꽁꽁 숨기고 돈 받고 팔았는데, \'왜 우리끼리 코드 공유하면서 같이 발전시키면 안 되지?\'라는 생각을 가진 개발자들이 모이기 시작했어. 그래서 코드를 공개하는 그룹이냐, 비공개로 운영하는 그룹이냐에 따라 소프트웨어 조직 유형이 나뉘게 된 거야.','소프트웨어 조직 유형은 크게 \'오픈소스\'와 \'클로즈드소스\' 두 가지로 나뉘어. 오픈소스는 레시피를 공개해서 누구나 요리를 따라 만들고 개선할 수 있는 것처럼, 코드를 누구나 보고 수정하고 나눌 수 있게 공개한 거야. 반대로 클로즈드소스는 맥도날드 비밀 소스처럼 레시피를 절대 공개 안 하고 완성된 제품만 파는 방식이지.','오픈소스 = \'오픈(open)=열려있다\' → 문이 활짝 열린 집 🏠, 클로즈드소스 = \'잠긴 금고 🔒\' — 열린 집 vs 잠긴 금고!')">소프트웨어 조직 유형</span><span class="fb-con" onclick="openModal('오픈소스 소프트웨어','옛날에는 프로그램을 만들면 코드를 꽁꽁 숨겨서 돈 내고 사야만 쓸 수 있었어. 근데 \'왜 우리끼리 코드 공유하면서 같이 발전시키면 안 돼?\'라고 생각한 개발자들이 모여서 코드를 공개하는 문화를 만들기 시작했지.','오픈소스는 레시피를 공개한 요리책 같은 거야. 보통 식당은 레시피를 절대 안 알려주지만, 오픈소스는 \'이 코드 마음껏 보고, 고치고, 나눠써!\'라고 하는 거거든. 예를 들어 안드로이드폰의 기반이 되는 코드도 오픈소스라 전 세계 개발자들이 함께 고치고 발전시키고 있어.','오픈소스 = \'오픈(열려있는) 주방(소스코드)\' → 누구나 들어와서 레시피 보고 요리해도 OK!')">오픈소스 소프트웨어</span><span class="fb-con" onclick="openModal('오픈소스 소프트웨어 라이선스 정의','옛날에 프로그램 코드는 회사 비밀처럼 꽁꽁 숨겨져 있어서, 다른 사람이 그 코드를 보거나 고칠 수가 없었어. 그러다 보니 개발자들이 \'우리 같이 코드 공유하면서 더 좋은 프로그램 만들자!\'는 생각으로 오픈소스 문화가 생겨났고, 그걸 규칙화한 게 바로 오픈소스 라이선스야.','오픈소스 라이선스란 \'이 코드 공짜로 써도 되는데, 이런 규칙은 꼭 지켜!\'라고 적어둔 사용 설명서야. 예를 들어 어떤 라이선스는 \'코드 고쳐서 써도 되는데, 네가 고친 코드도 똑같이 공개해야 해\'라는 조건을 달기도 해. 마치 친구한테 레시피 알려줄 때 \'써도 되는데 너도 다른 사람한테 알려줘야 해\'라고 조건 거는 것과 같아.','오픈소스 라이선스 = \'공짜지만 조건 있어!\' → 줄여서 **공조있** (공짜 + 조건 + 있어) 으로 기억해!')">오픈소스 소프트웨어 라이선스 정의</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch left"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch6')"><span class="fb-arr">▶</span>재사용 & 자료구조<span class="fb-cnt">15개</span></div><div class="fb-sec-blocks" id="fb_ch6"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec6_0')"><span class="fb-arr">▶</span>소프트웨어 재사용 <em>6</em></div><div class="fb-con-list" id="fb_sec6_0"><span class="fb-con" onclick="openModal('소프트웨어 재사용(Reuse) 개요','옛날에 개발자들이 비슷한 기능을 만들 때마다 매번 처음부터 다시 코드를 짜야 해서 시간이랑 돈이 엄청 낭비됐어. 그래서 \'이미 잘 만들어놓은 코드, 그냥 다시 쓰면 안 되나?\' 라는 생각에서 재사용 개념이 나왔어.','레고 블록 생각해봐! 집 만들 때 쓴 블록을 나중에 자동차 만들 때도 또 쓸 수 있잖아. 소프트웨어 재사용도 똑같아 — 이미 잘 만들어서 검증된 코드 블록을 새 프로그램 만들 때 그대로 가져다 쓰는 거야. 이러면 처음부터 만드는 것보다 훨씬 빠르고, 이미 검증된 거라 오류도 적어!','재사용의 3대 목표 → \'신확생\' 🔁 (신뢰성 - 이미 검증됨 / 확장성 - 검증된 기능으로 늘리기 쉬움 / 생산성 - 비용·시간 절약)')">소프트웨어 재사용(Reuse) 개요</span><span class="fb-con" onclick="openModal('소프트웨어 재사용의 대상','옛날에는 프로그램 만들 때마다 처음부터 다 새로 짰는데, 그러다 보니 시간도 엄청 걸리고 비용도 낭비됐어. 그래서 \'이미 잘 만들어진 걸 다시 쓰면 어떨까?\' 하는 생각에서 재사용 개념이 생겼어.','소프트웨어 재사용이란 레고 블록처럼 이미 만들어진 부품을 다시 활용하는 거야. 재사용할 수 있는 대상은 크게 세 가지인데, 설계 정보(어떻게 만들지 계획한 것), 프로그램 코드(실제로 짠 코딩), 그리고 기타(사용 설명서나 조사 결과 같은 문서들)야. 즉, 코드뿐만 아니라 계획서, 설명서까지 전부 재사용 대상이 될 수 있어!','재사용 대상 = \'설·코·기\' 👉 설계정보, 코드, 기타문서 — \'설코기 먹듯 재사용한다!\' 🍖')">소프트웨어 재사용의 대상</span><span class="fb-con" onclick="openModal('소프트웨어 재사용의 원칙','옛날에는 프로그램을 만들 때마다 같은 기능을 처음부터 새로 만들었어. 그러다 보니 시간도 엄청 걸리고 오류도 계속 생기니까, \'한번 잘 만든 코드는 다시 쓸 수 있게 하자!\'는 원칙이 생겼어.','레고 블록을 생각해봐! 블록 하나하나가 어떤 세트에서도 끼워 맞출 수 있고, 설명서도 잘 붙어 있고, 튼튼하잖아. 소프트웨어 재사용도 똑같이, 만든 코드 조각이 어떤 컴퓨터나 프로그램에서도 잘 붙고(하드웨어·소프트웨어 독립), 기능 설명이 친절하게 적혀 있고(자기문서화), 많은 사람들이 믿고 쓸 수 있어야(신뢰성) 진짜 재사용 가능한 코드야.','🔑 \'일모하소자일신\' → 일반성, 모듈성, 하드웨어독립성, 소프트웨어독립성, 자기문서화, 일반성(공통성), 신뢰성! \'일모하소자일신\' = \'일하소자, 일신(날마다 새롭게)\' 처럼 외워봐!')">소프트웨어 재사용의 원칙</span><span class="fb-con" onclick="openModal('실무에서 재사용 구현의 문제점','옛날에 개발자들이 \'이미 만든 코드 또 쓰면 되지!\'라고 생각했는데, 막상 현장에서 가져다 쓰려니 서로 맞지 않거나 찾기도 어렵고 믿을 수 없는 코드들이 넘쳐났어. 그래서 그냥 재사용하면 된다는 생각 자체는 맞는데, 현실에서 잘 안 되는 이유들을 정리하고 해결책을 마련할 필요가 생겼어.','레고 부품을 재활용한다고 생각해봐. 근데 부품이 어디 있는지 목록도 없고, 크기가 제각각이고, 어느 세트 거랑 호환되는지도 모른다면 그냥 새로 만드는 게 낫겠지? 소프트웨어도 똑같아서 재사용하려면 \'잘 정리된 부품 창고(라이브러리)\', \'맞는 크기 규격(Granularity)\', \'자동으로 찾아주는 도구\'가 필요해. 결국 기술만이 아니라 조직 문화랑 경영진 지원까지 다 갖춰져야 진짜 재사용이 가능해.','장애요인 해결책은 \'새라자능조\' — 새로운 방법론, 라이브러리 구축, 자동화 도구, 능동적 경영, 조직 변화! \'새 라면 자동으로 능숙한 조리사가 끓여준다\'고 외워봐!')">실무에서 재사용 구현의 문제점</span><span class="fb-con" onclick="openModal('소프트웨어 재사용의 효과','옛날에 개발자들이 프로그램을 만들 때마다 처음부터 모든 코드를 새로 짜야 했는데, 이게 너무 시간도 오래 걸리고 돈도 많이 들었어. 그래서 \'이미 잘 만들어진 코드를 다시 활용하면 어떨까?\' 하는 생각에서 소프트웨어 재사용 개념이 생겨났어.','레고 블록을 생각해봐! 집을 만들 때 쓴 레고 블록을 분해해서 자동차 만들 때 또 쓸 수 있잖아. 소프트웨어 재사용도 똑같아 — 예전에 만든 로그인 기능, 결제 기능 같은 코드 조각들을 새 프로그램에 가져다 쓰는 거야. 이렇게 하면 개발 시간이 줄고, 이미 검증된 코드를 쓰니까 오류도 적어지고, 비용도 절약되는 효과가 있어!','재사용 효과 = \'시오비\' 3총사! 🎯 **시**간 단축 + **오**류 감소 + **비**용 절약 — \'시오비, 시오비!\' 하고 외쳐봐!')">소프트웨어 재사용의 효과</span><span class="fb-con" onclick="openModal('역공학의 장점','옛날에 만들어진 프로그램들은 설계 문서가 없거나 잃어버린 경우가 많았어. 그래서 이미 완성된 프로그램을 뜯어보면서 \'이게 어떻게 만들어진 거지?\'를 역으로 파악하는 방법이 필요해졌어.','역공학은 완성된 레고 작품을 보고 \'어떤 블록을 어떻게 조립했는지\' 설명서를 새로 만드는 것과 같아. 기존 프로그램 코드를 분석해서 설계도를 다시 뽑아내고, 그걸 창고(Repository)에 잘 보관해두면 나중에 수정하거나 업그레이드할 때 훨씬 편해져. 특히 오래된 데이터베이스를 새 시스템으로 옮길 때도 이 방법으로 구조를 파악해서 안전하게 이전할 수 있어.','역공학 = \'완성품 → 설명서\' / 레고 완성작 보고 조립 설명서 역으로 만들기! \'역(逆)으로 공(工)부해서 학(學)습한다\' — 거꾸로 분석해서 설계도 복원!')">역공학의 장점</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec6_1')"><span class="fb-arr">▶</span>자료구조(Data Structure) <em>9</em></div><div class="fb-con-list" id="fb_sec6_1"><span class="fb-con" onclick="openModal('정의','컴퓨터가 엄청난 양의 데이터를 다루게 되면서, 그냥 막 쌓아두면 나중에 찾거나 쓸 때 너무 느리고 힘들었어. 그래서 데이터를 용도에 맞게 잘 정리해서 저장하는 방법이 필요해졌고, 그게 바로 자료구조야!','자료구조는 컴퓨터가 데이터를 저장하는 \'정리 방식\'이야. 예를 들어 책을 그냥 방바닥에 던져두면 찾기 힘들지만, 책장에 종류별로 꽂아두면 쉽게 찾잖아? 자료구조도 똑같이 데이터를 줄 세우거나(선형구조), 나무처럼 가지를 뻗거나(비선형구조) 하는 방식으로 체계적으로 정리하는 거야.','자료구조 = \'선(선형) 비(비선형)\' → \'선배한테 잘 보여라!\' 선형은 일렬로 줄 선 것, 비선형은 삐뚤빼뚤 나무처럼 퍼진 것!')">정의</span><span class="fb-con" onclick="openModal('스택과 큐','옛날에 프로그램이 데이터를 저장하고 꺼낼 때 순서를 어떻게 관리할지 고민이 많았어. 그래서 \'어떤 순서로 넣고 꺼낼 것인가\'에 따라 스택과 큐라는 두 가지 방식을 만들게 됐어.','스택은 접시 쌓기야 — 밑에서부터 쌓고 꺼낼 땐 맨 위부터 꺼내지(나중에 넣은 게 먼저 나와, LIFO). 큐는 편의점 계산대 줄 서기야 — 먼저 줄 선 사람이 먼저 계산하고 나가지(먼저 넣은 게 먼저 나와, FIFO). 즉, 스택은 \'뒤로가기 버튼\'처럼 가장 최근 것을 되돌릴 때 쓰고, 큐는 \'순서대로 처리\'할 때 써.','스택 = 접시 스택(Stack) → \'S\'는 쌓는다! 나중에 올린 접시 먼저 뺀다 (LIFO: Last In First Out) / 큐 = Queue(줄) → 편의점 줄처럼 먼저 온 사람이 먼저 나간다 (FIFO: First In First Out) ✨ 기억법: \'스택=접시, 큐=줄서기\'')">스택과 큐</span><span class="fb-con" onclick="openModal('트리와 그래프','컴퓨터가 데이터를 저장할 때 단순히 줄 세우는 것만으로는 \'부모-자식 관계\'나 \'친구 관계\'처럼 복잡한 연결을 표현하기 어려웠어. 그래서 계층 관계는 트리로, 복잡한 다대다 관계는 그래프로 표현하는 방법이 생겨났어.','트리는 회사 조직도처럼 사장 밑에 부장, 부장 밑에 과장이 있는 \'위아래 계층 구조\'야. 반면 그래프는 카카오톡 친구 목록처럼 나와 친구, 친구와 친구가 서로 얽혀 있는 \'거미줄 구조\'인데, 지하철 노선도나 내비게이션 최단경로 찾기가 딱 그래프를 이용한 거야.','트리는 \'족보(위→아래)\', 그래프는 \'친구관계(나↔너↔걔)\' — 족보는 위에서 아래로만 내려가지만, 친구는 서로서로 연결되잖아!')">트리와 그래프</span><span class="fb-con" onclick="openModal('자료구조의 선택 기준','옛날에 개발자들이 데이터를 막 아무렇게나 저장했더니 찾는 데 너무 오래 걸리고 메모리도 낭비되는 문제가 생겼어. 그래서 \'어떤 상황에 어떤 방식으로 데이터를 담을지\' 기준을 딱 정하게 된 거야.','자료구조 선택은 마치 물건을 어디에 보관할지 고르는 것과 같아. 옷은 서랍에, 책은 책장에, 신발은 신발장에 넣듯이 — 빠르게 꺼내야 하면 배열, 줄 서서 차례로 처리해야 하면 큐, 뒤로 돌아가야 하면 스택, 연결 관계를 표현해야 하면 그래프를 쓰는 거야. 처리 속도, 데이터 크기, 활용 목적 이 3가지를 따져서 딱 맞는 자료구조를 골라야 해.','🧠 \'리스배큐데그\' 로 외워! → 리스트(DB인덱스), 스택(뒤로가기/Undo), 배열(정렬탐색), 큐(줄서기/프린터), 데크(스택+큐 합체), 그래프(네트워크지도) — 순서대로 \'리스배큐데그~\' 한 번만 읊으면 끝!')">자료구조의 선택 기준</span><span class="fb-con" onclick="openModal('알고리즘 개요','옛날에 복잡한 수학 문제나 반복 작업을 사람마다 제각각 다른 방식으로 풀다 보니 결과가 달라지고 효율도 엉망이었어. 그래서 \'누가 해도 같은 결과가 나오는 명확한 풀이 순서\'를 정리할 필요가 생겼어!','알고리즘은 요리 레시피랑 똑같아. 재료(입력)를 넣고, 순서대로 조리 단계를 따라가면(처리), 완성된 요리(출력)가 나오는 거야. 단, 좋은 레시피는 \'적당히\'가 아니라 \'3분 볶는다\'처럼 누가 봐도 명확하고, 끝없이 반복되지 않고 반드시 완성 단계에서 끝나야 해.','알고리즘 5조건 → \'입출명유효\' 로 외워! (입력 - 출력 - 명확성 - 유한성 - 효과성) \'입출명유효\' = \'입 출이는 명품 유한한 효자다\' 🍱')">알고리즘 개요</span><span class="fb-con" onclick="openModal('알고리즘 분석 기준','옛날에 프로그래머들이 코드를 짜고 나서 \'이 코드가 과연 좋은 코드인가?\'를 판단할 기준이 없어서 혼란스러웠어. 그래서 알고리즘을 평가하는 공통 기준들을 딱 정해두게 됐지!','알고리즘을 평가하는 기준은 크게 5가지야. 정확성(답이 맞냐), 명확성(단계가 헷갈리지 않냐), 효율성(빠르고 메모리 적게 쓰냐), 입출력(재료 넣으면 결과 나오냐), 유한성(언젠간 끝나냐)으로 볼 수 있어. 예를 들어 라면 레시피도 \'재료가 명확하고, 순서가 헷갈리지 않고, 빠르게 끝나고, 맛있게 완성되면\' 좋은 레시피인 것처럼 알고리즘도 똑같이 평가해!','**\'정명효입유\'** → 정확히 명확하게 효율적으로 입출력하고 유한하게 끝내자! (정·명·효·입·유 다섯 글자만 기억해!)')">알고리즘 분석 기준</span><span class="fb-con" onclick="openModal('검색 알고리즘','옛날에 컴퓨터에 데이터가 많아지면서 \'내가 원하는 정보를 어떻게 빠르게 찾지?\'라는 문제가 생겼어. 그래서 데이터를 효율적으로 찾는 다양한 방법들을 연구하게 됐는데, 그게 바로 검색 알고리즘이야.','도서관에서 책을 찾는다고 상상해봐. 선형 검색은 첫 번째 책부터 한 권씩 순서대로 훑어보는 방법이고, 제어 검색은 책이 가나다순으로 정렬되어 있을 때 중간부터 찾아서 범위를 좁혀가는 똑똑한 방법이야. 데이터가 정렬되어 있느냐 없느냐에 따라 어떤 방법을 쓸지 선택하는 거지!','📚 \'정렬 없으면 처음부터 줄 세워 찾고(선형), 정렬 있으면 반 잘라 찾아라(제어)\' — 정렬 유무가 핵심!')">검색 알고리즘</span><span class="fb-con" onclick="openModal('그래프 탐색 알고리즘','옛날에 지도나 회로도처럼 복잡하게 연결된 것들을 컴퓨터로 탐색해야 할 일이 많아졌어. 그런데 아무 순서 없이 뒤지면 같은 곳을 계속 다시 방문하거나 빠뜨리는 문제가 생겨서 체계적인 방법이 필요했어.','그래프 탐색은 지하철 노선도에서 출발역부터 모든 역을 빠짐없이 한 번씩 방문하는 것과 같아. 그 중 깊이 우선 탐색(DFS)은 미로 찾기할 때 한 방향으로 막힐 때까지 쭉 들어가다가 막히면 갈림길로 되돌아와서 다른 길을 시도하는 방식이야. 마치 실타래를 풀며 들어가다가 막히면 실을 따라 되돌아오는 것처럼 동작해.','DFS = \'막히면 되돌아!\' - 깊이(Depth) 파고들다 막히면(F=Fail) 되돌아서(S=Step back) 다시 시도!')">그래프 탐색 알고리즘</span><span class="fb-con" onclick="openModal('최소 신장 트리','옛날에 여러 도시를 전선이나 도로로 연결할 때, 모든 곳을 이으면서도 공사 비용을 최대한 아끼고 싶었어. 그래서 \'어떻게 하면 모든 곳을 연결하되 가장 적은 비용으로 할 수 있을까?\'라는 문제를 풀기 위해 이 개념이 생겼어.','친구 10명이 모두 카톡으로 연결되려면 케이블을 최소 몇 개 깔아야 할까? 최소 신장 트리는 모든 친구를 연결하되, 가장 싼 케이블들만 골라서 연결하는 방법이야. 단, 빙글빙글 도는 루프(사이클)가 생기면 낭비니까 그건 절대 만들지 않아.','🌳 \'최소 비용으로 모두 연결, 단 돌아가는 길은 NO!\' → 크루스칼은 \'싼 것부터 줍기\', 프림은 \'가까운 곳부터 뻗기\'')">최소 신장 트리</span></div></div></div></div><div class="fb-connector"></div></div></div><div class="fb-tail">▼</div></div>
+
+<!-- 모달 -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="m-title"></h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sec-bg">
+        <div class="sec-label">💡 왜 생겼어?</div>
+        <p id="m-bg"></p>
+      </div>
+      <div class="sec-expl">
+        <div class="sec-label">📖 무슨 뜻이야?</div>
+        <p id="m-expl"></p>
+      </div>
+      <div class="sec-mn">
+        <div class="sec-label">🧠 이렇게 외워!</div>
+        <p id="m-mn"></p>
+      </div>
+    </div>
   </div>
-  <div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">소프트웨어 설계 원리</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>다) 단계적 정제</li><li>가) 응집도 [열거형]</li><li>나) 결합도 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">정보 은닉</div>
-  <p class="sub-c">정보 은닉이란 각 모듈의 내부 내용을 감추고 인터퍼이스를 통해서만 메시지를 전달할 수 있도록 하는 개념으로 나부 정 보 BAS 제한하여 한 SS 또는 하부 시스템이 다른 모듈의 구현에 영향을 받지 않게 설계되는 것을 의미한다. 여를 들 어 설계 과정에 변경이 BASH 경우 그 영향이 최소한의 모듈들어만 미치도록 하는 것이다. 모듈이 외부와의 인터퍼이 Aol</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">단계적 정제</div>
-  <p class="sub-c">계적 정제는 프로그램의 구조에서 점차 모듈에 대한 세부 사항으로 내려가며 구체화된다. 정제 과정에서 추상화의 수준 낮아지며 각 기능은 분해되어 해결방안을 제시하게 된다. 정제는 많은 노력을 들이는 과정이며, 세부적인 GAS 가능 게 함으로써 시스템의 구현을 가능하게 한다 계는 높은 추상화 단계에서 낮은 추상화 단계로 가는 단계적 정제 과정이며, 문제기술에서</p>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">모듈화</div>
-  <p class="sub-c">모든 공학 분야에서 시스템을 구성 요소로 나누어 접근하는 경우가 대부분이다. 소프트웨어의 경우 이 구성 요소를 대표 하는 것이 모듈4/0046이라 할 수 있다. 소프트웨어의 SSS 프로그래밍 언어로 표현하면 흔히 서브루틴(64004006, 프 &amp;A\A, 함수-400000) 등으로 부른다. 시스템을 모듈화할 때는 oe! 접근 방법을 사용하여 기능 단위로 쪼 </p>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">응집도</div>
-  <p class="sub-c">응집도는 모듈 내부가 얼마나 강한 연관성으로 SAA 있는가를 나타내는 모듈 성숙도의 측정치이다. 즉, 모듈 내의 각 구 성 요소들이 공통의 목적을 달성하기 위하여 서로 얼마나 관련이 있는지 연관 정도를 나타내는 것이다. 응집도는 모듈 안 의 구성 요소들이 어울리는 ASE 나타내며, 구성 요소들을 묶어주는 시멘트(267600이다. 모듈내의 모든 요소들이 단일</p><ul class="bul"><li>모듈이 다수의 관련 기능을 가질 때 모듈 안의 구성 요소들이 그 기능을 순차적으로 수행할 경우의 응집도</li><li>유사한 SAS 갖거나 특성 형태로 분류되는 처리 요소들로 하나의 모듈이 형성되는 경우의 SUE</li><li>모듈 내부의 각 구성 요소들이 서로 관련 없는 요소로만 구성된 경우의 응집도</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">결합도</div>
-  <p class="sub-c">모듈들은 다른 모듈들과 연관 관계를 가진다. 결합도(204000|는 모듈 사이의 상호 연관성의 복잡도를 일컨는다. SS 사이의 상호 교류가 많고 서로의 의존이 많을수록 SSS 사이의 결합도는 높아지게 된다. 특히 인터퍼이스가 정확히 A 정되어 있지 않거나 기능이 정확히 니누어져 있지 않을 때 불필요한 인터퍼이스가 나타나 모듈 사이의 의존도는 높아지고 결합도</p><ul class="bul"><li>자료 결합도는 모듈 간의 인터페이스가 자료 요소로만 구성될 때의 결합도이다</li><li>어떤 모듈이 다른 SSS 호출하면서 매개 변수나 인수로 데이터를 넘겨주고, 호출받은 OSS 받은 데이터에 대한 처리</li><li>스탬프 결합도는 OS 간의 인터페이스로 배열이나 레코드 등의 자료 구조가 ASS 때의 결합도이다.</li><li>외부 결합도는 어떤 모듈에서 외부로 선언한 데이테변수(를 다른 모듈에서 참조할 때의 결합도이다.</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">소프트웨어 아키텍처 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>나) 소프트웨어 아키텍처 설계 절차</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">소프트웨어 아키텍처 개요</div>
-  
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">소프트웨어 아키텍처 설계 절차</div>
-  
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">소프트웨어 아키텍처 스타일</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">MVC(Model - View-Controller) 구조</div>
-  <p class="sub-c">MVC 구조는 GU 설계에 많이 활용되는 프레임워크로 한 객체의 여러 가지 표현이 서로 AS 작용하도록 지원하는 접근 법으로 한 객체의 표현이 수정되면 다른 모든 표현도 따라서 갱신된다. 이런 BIS 통해 수정이 던순회되며 재사용이 수 월해질 수 있다.</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">클라이언트-서버 모델</div>
-  <p class="sub-c">클라이언트-서버 SAS 서버와 클라이언트의 진합으로 구성되는 모델이다. 서비스를 요구하는 클라이언트와 서비스 세공하는 서배로 구성되어 있으며, 여러 클라이언트 인스턴스가 있을 수 있다. 일반적으로 클라이언트-서버 모델은 분산 시스템으로 구련되어 네트워크 시스템을 효과적으로 이용할 수 있다.</p>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">계층 구조</div>
-  <p class="sub-c">시스템을 여러 계층으로 구성하며, 각 계층은 특정 서비스를 제공하는 것으로 정의될 수 있다. 계층 TAS 적용하면 문제 oN Sod! 해결이 쉬워진다는 장점을 갖고 있다. 문제가 발생하는 SS 각 층마다 단계적으로 확인하면 되고, 장비가 표준화되어 상 호 호환이 가능하다. 국제표준기구인 SOO 개발한 네트워크 프로토콜의 08 7계층 구조 는 대표적인 계층 </p>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">컨텍스트(Context) 모델</div>
-  <p class="sub-c">소프트웨어 아키텍처 설계 표현 방법 요구사항 분석 큰 프로세스로 이해한 것이다. 이 모델은 우리가 개발해야 할 시스템의 영역을 기술하고, 시스템과 외부 경정 초기 시스템과 외부 환경의 경계를 정해야 한다. 컨텍스트 다이어그램은 분할되기 이전의 시스템을 하나의 환경과의 BAIS 결정하며, 외부와의 인터페이스를 제시하여 시스템의 입출력 데이터를 보여준다. 이 </p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">패키지 다이어그램</div>
-  <p class="sub-c">상언 다수의 사용자를 위해 개발된 소프트웨어 0 T CHS 흔하다. 브시스템을 구성하는 프로세스이며, 순차적 결합, 계층 며, 서브시스템이 패키지의 모습으로 나타나는 경우가 패키지로 정의되면 패키지 내부의 자세한 사항을 외부에 감추어 패키지 사이의 의존 관계를 최소화할 수 있다. 서 패키지는 기능적으로 관련 있는 a 모아 놓은 것이다. 서브시스템들 사이의 </p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">03</div>
-  <div><div class="row-title">소프트웨어 아키텍처 설계 표현 방법</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">컨텍스트 모델</div>
-  
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">컴포넌트 다이어그램</div>
-  
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">패키지 다이어그램</div>
-  <p class="sub-c">FZkkk BBBsB VI, 객체 지향 설계 01 객체 지향 분석과 모델링 개념 02 객체 지향 설계와 원리 가) 객체와 클래스 |) 2423SK Encapsulation) 다) Ats 라) CHS4 03 정적 모델링과 동적 모델링 가) 정적 모델링 나) 동적 모델링 04 디자인 패턴 거 가) 디자인 패턴 개념 나) 대표적인 디자인 패턴 &gt; VII. 사용자</p>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점</div>
-  <p class="sub-c">03 UI/UX 설계도구 가) MAKE -아이디어를 제품으로 전환 Lt) Check - ARSAt 분석 및 대응방법 확인 다) Think — A|ZfO| 피드백 지속확인 Vill, 프로그래밍 언어와 개발환경 01 프로그래밍 언어의 개요 가) 프로그래밍 언어 개념 나) 인터프리터 언어</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">컴파일러 언어</div>
-  <p class="sub-c">02 주요 프로그래밍 언어의 특징 가) (언어 나) C++ 언어 다) Java 언어 라) Python 언어 소프트웨어 개발 Of) JavaScript 언어 03 소프트웨어 개발 프레임워크 가) 소프트웨어 개발 프레임워크 개념 나) 스프링 프레임워크 다) 전자정부 표순프레임워크 04 통합개발환경(20ㅁ) 가) 통합개발환경(IDE) 개념 나) Cl(Contin</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">04</div>
-  <div><div class="row-title">형상관리 도구</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">형상관리 도구</div>
-  <p class="sub-c">아래 표는 대표적인 형상관리 도구의 종류와 적용 기술, 특징을 설명하고 있다. 대표적인 오픈 소스 형상관리 도구인 서브 버전과 Git 상용 도구인 마이크 로소프트사의 TFS(Team Foundation Server)ol] 대해 다음 장부터 설명한다. &lt;표 43) 형상관리도구 구분 도구 비고 Folder 공유 RCS, SCCS . Subversion(SVN)</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">분산형 저장소(Git)</div>
-  <p class="sub-c">&quot;과 분산형 HALA (Distributed Version Control System) 시스템은 클라이언트가 OA|St Snapshot 직접 다운받지 [ [A 전부를 복제한다. 서버에 문제가 생기면 클라이언트의 카피본으로 서버를 복원할 수 있다. 분산형 AAAS 드가 하나의 중앙 서버에만 저장되는 것이 아니라, 다수의 서버나 다수의 개발자 local PCO</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">소프트웨어 유지보수의 개념과 유형</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 소프트웨어 유지보수의 정의</li><li>나) 소프트웨어 유지보수의 목적</li><li>나) 소프트웨어 유지보수의 목적 [열거형]</li><li>다) 소프트웨어 유지보수의 종류</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">소프트웨어 유지보수의 정의</div>
-  <p class="sub-c">소프트웨어 유지보수는 921(0(800.0316 Development Life Cycle)의 마지막 단계로 소프트웨어의 MHS 연장시키는 운영 중심의 작업 단계이고, 오류의 수정, 원래의 요구를 정정, 기능과 수행력을 증진시키는 YAO AAS 말한다. 소프트웨어 가 고객에게 납품된 후 결함의 제거, 성능향상, 변화된 환경에 적응하도록 지리해 일련의 모든 소</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">소프트웨어 유지보수의 목적</div>
-  <p class="sub-c">소프트웨어 유지보수의 목적은 크게 소프트웨어의 성능 개선 및 하자보수에 있다, 또한 새로운 환경에서 동작할 수 있도 록 one 및 canons 예방하는 데 있다. 위에서도 언급을 하였지만 다음과 SE 이유들로 인하여 소프트웨어 유지보 스는 있어 매우 중요한 단계이다. AE 소프트웨어 생명주기의 효율성에 있</p><ul class="bul"><li>소프트웨어 개발 및 유지 전체 예산에서 기존 개발 비용보다 유지보수 비용이 현격히 증가</li><li>소프트웨어 복잡화에 따라 문서화 등의 관리업무가 증가</li><li>개발 기간에 비해 사용 기간이 길기 때문에 관리의 중요성이 강조됨</li><li>용역 개발보다 패키지 개발이 확산됨에 따라 유지보수 부문이 증가됨</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">소프트웨어 유지보수의 종류</div>
-  <p class="sub-c">소프트웨어 유지보수는 사유, 시간, 대상에 따라 분류될 수 있으며, 해당 분류 기준에 따라 계약이 진행되는 경우도 있다. &lt;표 44) 소프트웨어 유지보수의 분류 분류기준 종류 내용 수정유지보수 오류로 인한 유지보수, 처리, 수행, 구현 오류 식별 으에 의힌 사유에 의한 | 저응유지보수(40300/6! 데이터 환경과 인프라 환경 변화 적응을 위한 처리 완전화</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">소프트웨어 유지보수 활동</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) SW 유지보수 절차</li><li>나) 소프트웨어 조직 유형</li><li>나) 오픈소스 소프트웨어 라이선스 정의</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">SW 유지보수 절차</div>
-  
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">소프트웨어 조직 유형</div>
-  <p class="sub-c">제. 오 01 오픈 픈소스 소프트웨어 동 수 조직 ool 소스 소프트웨어 개념 a4 소프드귀</p>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">오픈소스 소프트웨어</div>
-  <p class="sub-c">트웨어 정의</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">오픈소스 소프트웨어 라이선스 정의</div>
-  
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">오픈소스 소프트웨어 라이선스</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>나) 오픈소스 소프트웨어 라이선스 비교</li><li>나) 오픈소스 소프트웨어 라이선스 비교 [열거형]</li><li>다) 오픈소스 소프트웨어 라이선스 활용을 위한 고려사항 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">오픈소스 소프트웨어 라이선스 비교</div>
-  <p class="sub-c">오픈소스 소프트웨어 라이선스는 무료 이용가능, 배포 허용가능, 소스코드 취득 가능, 소스코드 수정가능의 공통적인 특징 있으며 2차 저작물 재공개 의무와 독점적 소프트웨어와 결합가능여부에는 각각의 라이선스별 차이가 있다. 장 엄격한 라이선스는 GPLO| 독점적 소프트웨어와의 결합이 불가능한 조건을 명시하고 있다. GPLUME 독점 소프 웨어 코드와 GPL P</p><ul class="bul"><li>GPL 3.0의 소스코드를 사용자 제품에 포함시키거나 혹은 그와 함께 배포하는 경우에는 해당 소스에 설치정보를 함께</li><li>Ｌㄴ@33라이브러리에 응용프로그램을 링크시킬(006과 Dynamic Linking 2S) 경우 해당 응용프로그램의 AAS 공개할</li><li>특허의 경우 02. 과 동일하다.</li><li>수정 프로그램에 대한 소스코드의 Hadoop 요구하지 않기 때문에 상용소프트웨어에 무제한 사용이 가능하다.</li><li>소프트웨어를 배포하는 경우 저작권 표시, 보증책임이 없다는 표시 및 \/ㄱ에 의해 배포된다는 사실을 명시해야 한다.</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">오픈소스 소프트웨어 라이선스 활용을 위한 고려사항</div>
-  <p class="sub-c">개별기업에서 오픈소스 소프트웨어 라이선스를 활용하기 위해서는 오픈소스 소프트웨어의 BI. CYS 명확히 이해한 A 태에서 BS 여부 및 방향을 결정해야 한다. 주요 ASE 아래와 같다. 최신 기술 정보 및 문제점과 해결책이 커뮤니티를 통해 공유되므로 기술발전 속도가 빠르고 유연한 개발이 가능하다. akon 주요 단점은 아래와 같다. 활용을 위해서는 해당 소</p><ul class="bul"><li>웹 상에서 무료로 다운로드 및 소스코드 수정 ㆍ자배포가 가능한 특징으로 초기 개발 비용이 적게 요구된다.</li><li>주로 오픈 BY 또는 프로토콜을 사용하기 때문에 서로 CHE 소프트웨어 간 상호 연동성이 보장된다.</li><li>가발과정에서 수많은 우수한 개발자가 참여하기 때문에 독점 프로그램에 비해 비교적 안정적이다.</li><li>상용 프로그램에 비해 체계적인 SHB 갖고 있지 못한 단점이 있다.</li><li>자발적 참여를 바탕으로 월 상에서 자유롭게 개발되는 특징으로 개발 로드맨이 체계적이지 않다. 오픈소스 소프트웨어</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">소프트웨어 개발도구와 프로그래밍 언어의 기술 동향</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">소프트웨어 개발도구의 기술 동향</div>
-  
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">프로그래밍 언어 기술 동향</div>
-  <p class="sub-c">ost</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">개발프레임워크와 소프트웨어 아키텍처 기술 동향</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">소프트웨어 개발도구의 기술 동향</div>
-  
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">소프트웨어아키텍처 기술 동향</div>
-  <p class="sub-c">소프트웨어 개발</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">소프트웨어 공학의 배경과 목적</div><div class="row-ch">소프트웨어 공학 개요</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">소프트웨어</span><span class="kw">도구들이</span><span class="kw">소프트워어</span><span class="kw">다른</span><span class="kw">순서</span><span class="kw">종종</span><span class="kw">어떤</span><span class="kw">방법은</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>다) 소프트웨어 공학의 4가지 중요요소 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">소프트웨어 공학 소개</div>
-  <p class="sub-c">사항 분석에서투 터 유지보수에 이르기까지 다기능화 및 대규모화 되는 소프 트워머 성공적으로 개발하기 위해서는 요구 기법 등을 제공 전 과정에 걸쳐 예상되는 어려움을 해결하기 위한 체계적인 관리와 효율적 업 = 수행을 지원6 | 주는 기술, sie 소프트웨어 공학 7140] 적용이 무엇보다 필요하다. 효과적인 소프트웨어 ｌ지식을 갖 조직 및 흐름의 정의와 이</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">소프트웨어 공학 배경</div>
-  <p class="sub-c">Technology Tool Equi )식과 조직인력이 효율적으로 운영되기 위한 기반 인프라 기술(16070009//의 3가지 핵심 요소 공학 기술 ASS 위해서는 제계적인 업무 !력[26006(의 구성, 정의 를 균형 있고, 조 소프트웨어 공학의 변천사를 보면 1950년대는 소프트웨어 개발 프로젝트를 위해 하드웨어 공학과 유사한 소프트웨어 공 학 개념이 </p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">소프트웨어 공학의 4가지 중요요소</div>
-  <p class="sub-c">소프트웨어 공학은 “소프트웨어의 개발, 운용, 유지보수 SO 생명주기 전반을 쳐계적이고 서술적이며 정량적으로 다루는 학문&quot;이라고 정의되고 있다. 소프트웨어 공학의 4가지 중요 요소는 아래와 같으며, 이 4가지 요소를 통해 고품질의 소프트 웨어를 생산하고 주어진 비용과 일정에 딜리버리가 가능하다. 0 방법 관리와 같은 작업들로 구성 Oar 차는 방법과 STS</p><ul class="bul"><li>방법은 프로젝트 계획 수립과 추정, 시스템과 소프트웨어 분석, 자료구조, 프로그램 구조, 일고리즘, 코딩, 테스팅, 유지</li><li>종종 특수한 언어 중심(예: 객체 지향 방법) 또는 그래프 표기법을 도입</li><li>소프트웨어 품질에 대한 일련의 평가 기준을 도입</li><li>어떤 일을 수행할 때 생산성 혹은 일관성을 목적으로 시용하는 방법들을 자동화나 반자동화시켜 놓은 것을 일컬음</li><li>소프트워어 개발 생명주기 상에서 수많은 도구(예, 요구 관리 도구 모델링 도구 형상관리 도구, 변경 관리 도구)가 존재</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">소프트웨어 개발 생명주기</div><div class="row-ch">소프트웨어 공학 개요</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">사용자</span><span class="kw">변경사항은</span><span class="kw">소프트웨어</span><span class="kw">프로그램은</span><span class="kw">개발한</span><span class="kw">프로토타이핑은</span><span class="kw">전체</span><span class="kw">설계는</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 정의</li><li>나) 목적</li><li>라) 소프트웨어 생명주기 모델 종류</li><li>라) 소프트웨어 생명주기 모델 종류 [열거형]</li><li>나) 소프트웨어 개발 방법론 비교</li><li>다) 소프트웨어 개발 단계</li><li>다) 소프트웨어 개발 단계 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">정의</div>
-  <p class="sub-c">생명주기는 [타당성 검토 — 개발 계획 요구사항 분석 설계 … 구현 — 테스트 ㅡ 운용 — 유지보수:의 활동으로 구성된다.</p><ul class="bul"><li>사용자 환경 및 문제점 이해에서 시작하여 운용/유지 보수에 이르기까지의 모든 TYE 의미하며, 일반적인 소프트웨어</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">목적</div>
-  <p class="sub-c">프로젝트 관리 nuk!</p><ul class="bul"><li>프로젝트 비용 산정과 가발 계획 수립, 기본</li><li>용어의 표준화</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">소프트웨어 생명주기 선정</div>
-  <p class="sub-c">* 기업에서 프로젝트의 개발 프로세스를 테일러링하는데 중요한 활동 + NAG 개발의 리스크와 불확실성 및 이에 대한 이해를 바탕으로 수행 + 선택한 모델은 프로젝트에 존재하는 리스크/불확실성을 최소화시킬 수 있어야 Sf + ZEA 모델, 프로토타입[+00/06) 모델, AlsEvolutionary) 모델, ASA SS! 등이 대표적인 생명주기 모 Glo}</p>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">소프트웨어 생명주기 모델 종류</div>
-  <p class="sub-c">생명주기 모델의 예일뿐이다. 또한 프로젝트의 특성에 따라 생명주기 모델을 변경하여 사용할 수도 있다. 02 \ 모델 또한, 소프트웨어 개발에 대해 잘 알지 못하는 고객을 이해시키는 것이 용이하다. 시스템의 요구사항이 모두 식별되고 명확할 때 이상적인 생명주기 모델이다. 요구사항이 명확하지 않더라도 V 모델은 사용 가능하다. 그러나 프로젝트의 추정, 계획 및</p><ul class="bul"><li>생명주기 모델이 프로젝트에 적용 가능한 도든 생명주기 모델을 설명하고 있는 것은 아니다. 단지 가장 많이 ASSIS</li><li>본 모델은 프로젝트 관리자와 개발자에게 프로젝트 수행 동안 어떤 활동이 수행되어야 하는지 명확하게 보여주고 있다.</li><li>프로토타이핑은 시스템에 대한 이해 또는 리스크, 불확실성 요소와 같은 이슈를 해결하기 위해 시스템 SS 시스템의 일</li><li>\/ 모델에 프로토타이핑 기법을 추가함으로써 프로젝트의 불확실성 요소나 ABS 줄일 수 있다. 프로젝</li><li>변경사항은 기능에 대한 변경, 사용자 인터페이스에 대한 변경, 신뢰성, 성능향상 등의 비기능석 사항에 대한 변경을 포</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">소프트웨어 개발 방법론 비교</div>
-  <p class="sub-c">&lt;표 1&gt; 소프트웨어 개발 방법론 분 구조적 방법론 정보공학 방법론 객체 지향 방법론 680 방법론 j 재사용이 가능한 객체, 클래스 간의 BIB | rite) 가발/상용 개요 ㅣ 업무활동 중심의 방법론 | 데이터 중심의 방법론 식별하여 설계모델로 퀸포너트들을 Rett 변환하는 방법론 ee 소합하는 방법론 정의 - 요구분석 - 추상회 - 정보전략계획 지향 </p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">소프트웨어 개발 단계</div>
-  <p class="sub-c">소프트웨어 개발 활동은 소프트웨어 생명주기에 따라 정의된다. OD 요구사항 분석 초기에 요구사항을 잘 분석하여 정의하고 관리하기 위해 투자한다면 전체 소프트웨어 개발 기간과 비용의 초과, 품질 저 하를 미연에 방지할 수 있음 @ 설계 첫단 소에게 할당 + SAT 제대로 되지 않으면 시스템의 안정감 저하 :안정감 없는 시스템은 유지보수도 어려움 OTe 구현 </p><ul class="bul"><li>소프트웨어 개발에 있어서 가장 어려운 부분은 무엇을 개발할 것인가를 정확히 결정하는 것</li><li>소프트웨어 요구분석은 소프트웨어 개발의 실제적인 첫 단계로 사용자의 요구에 대하여 이하하는 단계</li><li>전체 가발 과정에서 개발 비용을 감소시킬 수 있는 결정적인 단계</li><li>소프트웨어 요구분석 과정을 개념적인 단계라 한다면, 설계 과정은 물리적 실현의 첫 단계</li><li>시스템 설계는 서브 시스템들로 이루어지는 시스템 FAS 결정, 서브 시스템들은 하드웨어나 소프트웨어 등의 구성요</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">04</div>
-  <div><div class="row-title">애자일 개발 방법론</div><div class="row-ch">소프트웨어 공학 개요</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">3기지</span><span class="kw">스토리</span><span class="kw">단순성:</span><span class="kw">투명상.</span><span class="kw">작은</span><span class="kw">스크럼(600400)</span><span class="kw">커뮤니케이션:</span><span class="kw">타임박싱:</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 애자일 방법론 종류</li><li>나) 애자일 개발 방법론 XP</li><li>나) 애자일 개발 방법론 XP [열거형]</li><li>다) 스크럼 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">애자일 방법론 종류</div>
-  <p class="sub-c">애자일 선언문이 나온 이후로 다양한 애자일 방법론이 등장하게 된다. 이 중에서 특히 세계적으로 널리 채택된 애자일 방법 BO 스크럼과 익스트림 프로그래밍(×)이다. 초창기에는 XPS 주로 사용하였지만 스크럼이 점차 인기를 끌면서 최근에는 일 조. au} 익스트림 . 조창 반적으로 스크럼과 XPS 함께 사용한다. 최근에는 도요타 시스템의 린 생산방식을 소프트</p><ul class="bul"><li>스크럼 Zl 슈와버/제프 서덜랜드</li><li>애자일 UP(Agile Unified Process, AUP), A= 앰블러</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">애자일 개발 방법론 XP</div>
-  <p class="sub-c">0) XP 개요 xP(extreme Programmingy= 1990년대 후반 켄트 벡(&lt;60| Beck)S 중심으로 여러 엔지니어들이 프로젝트를 진행하며 얻 었던 교훈을 기반으로 AAS! 방법론이다. 보통 중소규모 개발 조직에 적합한 경량화된 개발방식이다. XPO| 경우 테스트 주도 개발(100), 일일빌드(281) Build), 지속적인 SEKConti</p><ul class="bul"><li>작은 릴리즈: xP 주기의 마지막 단계이고 소규모로 빈번하게 배포하면 고객에게 여러 OSS 조기에 제공할 수 있다.</li><li>WAS: 팀 단위 소프트웨어 개발에서 가장 중요한 것은 의사소통이며, 실패한 프로젝트에서 볼 수 있는 전형적인 현</li><li>단순성: &quot;가능한 한 가장 단순한 것은 무엇인가?&quot;는 SSS 늘 갖는다. 불필요한 복잡성을 제거하여 설계를 단순하고 명</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">스크럼</div>
-  <p class="sub-c">01) 스크럼 개요 스크럼은 프로젝트 관리를 위한 애자일 방번론으로서 추정 케우지&amp;노니카 교수가 18501 및 조정 기반의 경 고한 “The New Product Development Game”0|2H= 기사를 그 기원으로 995년에 켄 슈와버와 제프 서덜랜드가 이 방법을 소프트웨어 개발에 소개하면서 스크럼이라 부르게 되었다. 스크럼에는 SA 관리기법의 대</p><ul class="bul"><li>3기지 미팅: 일일 ASA, 스프린트 계획 스프린트 리뷰</li><li>투명상. 프로젝트가 현재 어떤 상태인지 계획대로 진행되고 있는지 어떤 문제점을 가지고 있는지 정확히 파악하는 건 oF</li><li>타임박싱: ATES 진행하는데 들어가는 시간을 제한함으로써 프로젝트 진행어만 집중하는 것이 가능해진다. 일일 A</li><li>커뮤니케이션: 스크럼에서는 팀원 간 커뮤니케이션을 원활하게 하기 위해서 많은 노력을 기울인다. 일일 스크럼어서 개</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">소프트웨어 재사용</div><div class="row-ch">소프트웨어 공학 개요</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">관리자와</span><span class="kw">프로토타입[7005068)</span><span class="kw">재사용을</span><span class="kw">기본설계(3/96607</span><span class="kw">변경으로</span><span class="kw">생산성의</span><span class="kw">지속적인</span><span class="kw">소프트웨어</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 소프트웨어 재사용(Reuse) 개요 [열거형]</li><li>나) 소프트웨어 재사용의 대상 [열거형]</li><li>다) 소프트웨어 재사용의 원칙</li><li>라) 실무에서 재사용 구현의 문제점 [열거형]</li><li>사) 소프트웨어 재사용의 효과</li><li>사) 소프트웨어 재사용의 효과 [열거형]</li><li>다) 역공학의 장점</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">소프트웨어 재사용(Reuse) 개요</div>
-  <p class="sub-c">소프트웨어 재사용은 기존의 소프트웨어 또는 소프트웨어 지식을 활용해, 새로운 소프트웨어를 구축하는 일이다. 재사용가능 한 소프트워어나 소프트웨어 지식은 재사용가능한 자산이다. 자산에는 설계 요구명세, 검사 아키텍처 등도 포함된다. @ 소프트웨어 재사용 배경 소프트웨어 재사용 정의 반복적으로 사용하기에 적합하도록 구성하는 방법 의 품질과 생산성 및 신뢰성을 </p><ul class="bul"><li>소프트웨어 위기로 인한 품질 및 생산성 ts</li><li>소프트웨어 개발의 자동화 기술 발달로 CASE 도구 시용 확대</li><li>소프트웨어 개발 표준화 준수 및 품질확보 노력</li><li>소프트웨어 재사용이란 사용 소프트웨어 개발관련 지식(기능, 모듈, 구성 S/S 표준화하여 개발 MAIS 높이기 위하여</li><li>기존 개발 기능. 성능 및 BAS 인정받았던 소프트웨어의 전체 또는 일부분을 다시 사용하여 신규 개발되는 소프트웨어</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">소프트웨어 재사용의 대상</div>
-  <p class="sub-c">소프트웨어 재사용을 [의 대상 tO iol @ 설계 정보 + ALM|AI7{\(System Design) 터 정보 스템 데이터 = 사례(169. Cases) 소프트웨어 개발 ) @ 프로그램 코드 + 12 7124 © 기타 *사용자 지침서 0468 Documentation ) :타당성 조사방법 및 결과「[63901&quot;/ Studies )</p><ul class="bul"><li>기본설계(3/96607 Architecture)</li><li>모듈0400.46)</li><li>투자 대 효과 분석정보(709. Benefit Analysis )</li><li>프로토타입[7005068)</li><li>인력</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">소프트웨어 재사용의 원칙</div>
-  <p class="sub-c">(1 WBA Generaty): 특정 응용분야만이 아닌 일반적으로 활용될 수 있는 정도이어야 한다. © 모듈성(400481\/ 정보은닉과 추상화의 원칙으로 최소한의 결합도 및 최대한의 응진력을 갖도록 하는 특성이 있어야 한다. O 하드웨어 독립성: 가능한 실행 하드웨어 기종과 무관해야 한다. @ 00&quot; 214: OS 또는 DBMSSH= 무관하게 운영해야 한</p>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">실무에서 재사용 구현의 문제점</div>
-  <p class="sub-c">매 소프트웨어 재사용의 장애요인 및 대책 (1 소프트웨어 재사용의 장애요인 (2 소프트웨어 재사용의 장애요인 제거 대책 - 새로운 설계 및 개발 방법론의 활용 - 재사용 소프트웨어 라이브래리의 구축 - 자동화 도구886의 활용 - 능동적인 경영전략 - 조직의 변화 *체계화된 재사용 기반의 소프트웨어 개발 프로세스 HAS 문화 조성을 위한 저도 정착 + Ha</p><ul class="bul"><li>공통으로 사용할 수 있는 소프트웨어 모듈을 발견하기가 어렵다.</li><li>소프트웨어의 HAST} 부족하다.</li><li>소프트웨어 모듈의 내부 인터퍼이스 요구사항의 이해가 끈란하다.</li><li>변경으로 인한 부차적 영향으로 이해가 곤란하다.</li><li>재사용을 위한 소프트웨어 부품은 개발비가 더 들 수 있다.</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">사)</span>
-  <div class="sub-t">소프트웨어 재사용의 효과</div>
-  <p class="sub-c">노크 co TX = 프트웨어 공학의 한 분야로 이미 만들어진 시스템을 FOS 추석하여 처음의 문서나 설계기법 등의 자료를 어 내는 YS 말한다. 이것은 시스템을 이해하여 수정하는 소프트웨어 유지보수 단계에 수행하는 일련의 활동이다. 즉, Olt 는 문서를 만들어 내는 일로서 설계부터 순차석으로 수행하는 순공학에 상대되는 개념을 역공학이라 한다. 이러 공학의</p><ul class="bul"><li>소프트웨어 생산의 TCO 절감</li><li>시스템 개빌에 대한 정보공유 및 타 프로젝트의 신출물 공유</li><li>시스템 구조와 좋은 시스템 구촉방법에 대한 교육적 효과</li><li>파일 시스템으로 dip 업무를 관계형 데이터베이스로 재구축 하려는 경우</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">역공학의 장점</div>
-  <p class="sub-c">+ 기존 시스템 BEES Repositoryol] 보관하여 CASES! 사용을 용이하게 함 종류 설명 원시코드로부터 정보를 추출하여 물리적 설계 정보저장소에 저장 물리적 설계정보를 얻어내는 역할 수행 자료역공학 기존 데이터베이스를 수정하거나 새로운 데이터베이스 관리시스템으로 전이하는 역 nigh M1 소프트웨어 개발 11. 자료구조와 알고 &gt;&gt; 학습 목표 </p><ul class="bul"><li>상용화되거나 기 개발된 소프트워어의 BNE 도외줌</li><li>기존 시스템의 자료와 정보를 설계 수준에서 분석할 수 있어 유지 보수성을 향상</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">자료구조(Data Structure)</div><div class="row-ch">소프트웨어 공학 개요</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">컴파일시간:</span><span class="kw">프로그램</span><span class="kw">외부정렬:</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 정의</li><li>다) 스택과 큐 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">정의</div>
-  <p class="sub-c">자료구소(288 Stucture)et ES 컴퓨터의 기억장치 내에 저장하는 방법으로 다양한 RS 효율적으로 표현하고 활용할 수 있도록 자료의 특성과 사용 용도를 고려하여 조직적, 체계적으로 정의한 것이다. 나 분류 자료구조는 크게 선형구조와 비선형구조로 나눌 수 있다. 선형구조는 자료가 일럴로 연결되어 있는 형태로 구성하는 방법이 고 비선형구조는 자료의 구</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">스택과 큐</div>
-  <p class="sub-c">0) AEH(Stack) 스택은 선형리스트의 하나로 데이터가 입력된 순서로 기억공간에 저장되어 출력 시 가장 나중에 쌓인 데이터가 가장 먼저 출력을 하게 되는 자료구소이다. 즉, 스택에 저장된 HAE 100으로 정한 곳에서만 접근 원 를 삼입하고 마지막에 삼입한 SLA 맨 위에 쌓여 있다가 가장 먼저 출력되게 된다. 엑세스 (삼입/삭제) LIFO(Lasti</p><ul class="bul"><li>push(); 스택에 데이터를 삽입한다.</li><li>pop): 스택에서 데이터를 삭제하여 반환한다.</li><li>isempty(): 스택에 BAT} SLOT true 값을 반환하고 있으면 false 값을 반환한다.</li><li>deQueue: 큐에서 데이터를 삭제한다. 「00를 움직여 가장 오래된 데이터를 다음 번째 데이터로 넘기게 된다.</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">트리와 그래프</div>
-  <p class="sub-c">0) E2l(Tree) AAS 간에 계층관계를 가지는 ASS 자료 PAS 상위원소에 가지고 있으며 BAS 간에 Cp 관계를 가진다. 트리의 시작노드를 루트노드(00 0006)라고 하고 LOS 연결하는 NS 간선(6006(이라고 한다. 같은 부모 노드를 가진 자식 노드들을 형제노드라고 하고 부모노드와 연결된 간선을 끊었을 때 생성되는 트리를 서브트리 라고 한</p>
-</div><div class="sub">
-  <span class="sub-mk">마)</span>
-  <div class="sub-t">자료구조의 선택 기준</div>
-  <p class="sub-c">0 자료의 처리 시간 @ 자료의 크기 Ht) 자료구조의 활용 데이터의 정렬(600 검색(630 파일 편성 및 인덱스 등에서 주로 활용된다. 자료구조별 활용 분야를 정리하면 디음과 같다. (8 리스트 배열의 구현, DBMS 인덱스, 탐색이나 정렬과 같은 문제 등 @ 스택(8604 인터럽트 처리, 재귀 프로그램의 순서 제어, 서브루틴의 복귀 번지 저장, 후위(</p>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">알고리즘 개요</div>
-  <p class="sub-c">(8 알고리즘의 정의 알고리즘이란 주어진 SAS 해결하기 위한 일련의 처리 절차를 단계적으로 기술한 것으로 문제 해결 방법을 추상화하여 단 계적 SAS 논리적으로 기술해 놓은 명세서이다. 을 처리시간이나 기억장소 사용 측면에서 효율적인 알고리즘을 Lok 조건 설명 입력0004) 알고리즘 수행에 필요한 자료가 외부에서 0개 이상 입력으로 ASS 수 있어야 한</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">알고리즘 분석 기준</div>
-  <p class="sub-c">@ 정확성 알고리즘이 타당한 입력에 대해서 유한 시간 내에 올바른 결과를 산출하는7 rel ill 10 x 2 주 이 00 i = ry 더 if 내 aol 분 분 흐 더 ol © Ed i 을 떠 oft = zl 대 인 OO &lt; x i 00 더 | 운 뻐 Bl ‘lo! x oll 더 io a 꼬 비 mi rat ot a a 가버 바 * xO 해 ol 멀 19</p><ul class="bul"><li>컴파일시간: 프로그램 특성과 관련이 적은</li><li>외부정렬: 대량의 데이터에 대해 보조 기억 장치에서 정렬하는 방식으로 대량의 데이터를 몇 개의 서브 파일로 나누어</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">바)</span>
-  <div class="sub-t">검색 알고리즘</div>
-  <p class="sub-c">O 검색 알고리즘 개요 데이터 집합에서 원하는 항목을 효율적으로 찾는 기법으로 데이터의 정렬 여부에 따라 순차검색1068「 Search)a} 제어검 색(20010. Search 22 구분할 수 있다. 또한 특정 함수에 따라 키 값을 계산하여 데이터를 검색 자료구조의 형태 및 자료의 배열 상태를 고려하여 최적의 탐색 방법을 선택해야 한다. &quot;하는 해싱도 있다</p><ul class="bul"><li>프로그램 작성이 용이</li><li>프로그램 작성과 갱신이 쉬움</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">사)</span>
-  <div class="sub-t">그래프 탐색 알고리즘</div>
-  <p class="sub-c">@ 그래프 탐색 그래프의 가장 기본적인 연산으로 하나의 정점에서 시작하여 그래프에 있는 모든 정점을 한 번씩 방문하여 처리하는 연 산이다. 도로망에서 특정 도시에서 다른 도시로 갈 수 있는지 여부나 전자회로에서의 단자 연결 여부 등 해결해야 하는 많 은 문제들이 단순히 그래프 노드를 탐색하는 것으로만 해결되는 경우가 많다. 그래프 탐색 방법에는 깊이 우선 </p>
-</div><div class="sub">
-  <span class="sub-mk">아)</span>
-  <div class="sub-t">최소 신장 트리</div>
-  <p class="sub-c">(1) 최소 신장 E의 (Minimum Spanning Tree) 소개 신장트리(6080009 1「66!는 무방향 가중치 그래프 내 모든 정점을 포함하고 서로 연결되어 있는 트리의 특수한 SEHR 사 이클을 포함해서는 안되는 트리이다. 신장 트리는 구성하는 가중치의 합이 최소인 신장 트리를 최소 신장 트리라고 흐 최소 신장 트리를 구현하는 대표적인 알고리즘</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">03</div>
-  <div><div class="row-title">구조적 설계 방법</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">모듈이</span><span class="kw">기능적</span><span class="kw">어떤</span><span class="kw">스탬프</span><span class="kw">외부</span><span class="kw">유사한</span><span class="kw">분할</span><span class="kw">모듈</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>나) 트랜잭션흐름 중심 설계(Transaction Flow-Oriented Design) [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">트랜잭션흐름 중심 설계(Transaction Flow-Oriented Design)</div>
-  <p class="sub-c">트랜잭션이란 자료나 제어 시그널 등이 어떠한 행위를 유발시키는 것을 말한다. 트랜잭션흐름에 의한 설계는 들어온 입력 을 여러 갈래의 출력흐름으로 쪼갤 수 있는 경우에 가능하다. 트랜잭션은 입력값을 평가하고 그 결과에 따라 여러 출력 경 로 중 하나를 따라 흘러간다. 이 경우 정보흐름의 SAS 트랜잭션 ZAl(Transaction 0606/이라고 한다. 다음</p><ul class="bul"><li>트랜잭션 중심으로 작용하는 모듈</li><li>각 동작 경로에 해당하는 하나 이상의 모듈</li><li>0080765(코치)</li><li>00010108168(조정자)</li><li>400008165(대변가)</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">객체 지향 분석과 모델링 개념</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">트랜잭션</span><span class="kw">400008165(대변가)</span><span class="kw">00010108168(조정자)</span><span class="kw">입력을</span><span class="kw">0080765(코치)</span><span class="kw">결정</span><span class="kw">유입경로</span></div>
-  <div class="subs"></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">객체 지향 설계와 원리</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">아키텍처</span></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">객체와 클래스</div>
-  <p class="sub-c">유사한 객체들의 모임이다. 객체는 독 기 MAAS} Ol), MEAL! ofl) SO] 있다 : 의 모임에 의해 기술되며 속성값들에 의하여 스느 김철수는 주민 객 체외 구별된다. 예를 들어 김 등의 속성과 속 항생 이 있으며 이 유사한 SBS 가소 St ANS 갖는 집합들이 있다. 같은 속성을 공유하고(에: 객체(은 각 속성의 고 THe 들어 a |진다. </p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">03</div>
-  <div><div class="row-title">정적 모델링과 동적 모델링</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  
-  <div class="subs"></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">04</div>
-  <div><div class="row-title">디자인 패턴</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 디자인 패턴 개념</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">디자인 패턴 개념</div>
-  <p class="sub-c">옷에 쓰이는 그런 패턴의 이야기가 정확히 이야기하면 소프트웨어 디자인 패턴이다. 디자인 패턴에 대해서 정의하면 디 자인 패텐(소프트웨어 생략)이라는 것은 &quot;소프트웨어 설계의 특정한 맥락에서 a context) 반복해서 해결해야 할 문제 (recurring problem)dl] 대해서 일반적이고 재사용이 가능한 해결 방법&quot;이다. 디자인 패턴은 다양한 상황에서</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">대표적인 디자인 패턴</div>
-  <p class="sub-c">2 주로 상속이며 컴파일 타임에 정적 적인 성격을 갖는다. 반복적 코드 사용에 대한 재활용 편의를 높이고 복잡한 코드를 쉽게 관리하기 위해 옆 그림의 디자인 패턴들을 사용하여 소프트웨어 개발을 효과적으로 한다. &lt;표 20&gt; 대표적인 디자인 패턴과 문제유형 대분류 문제 유형(사용 목적) 관련 디자인 패턴 AM =(Product Family)! 객체 생성 Ab</p><ul class="bul"><li>Facade 패턴</li><li>Facade 클래스 다이어그램</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">사용자 인터페이스(User Interface) 개요</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">클래스는</span><span class="kw">클래스</span></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">일관성 필요</div>
-  <p class="sub-c">용자 인터퍼이스는 일관성 있 . 그러나 일반적으로 큰 시스템을 개발하는 경우 여러 시람이 사용자 인 EIMOLAS 설계. 구현하게 Sol 따라 we AB SGD OFAC, NBN 인터페이스 Bev 71 위해 HE 이 전에 사용자 인터퍼이스에 다한 표 fol, 개발 후에도 이를 점검하여 오류를 수정하여야 한다. 를 호 rol nin 우공</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">사용자 중심 설계</div>
-  <p class="sub-c">사용자 인터페이스는 ASAE 위한 것이기 때문에 ABTS 중심으로 설계되어야 한다. 사용자가 인터퍼이스를 제어할 수 있도록 만드는 것이 요구된다. 사용자 인터퍼이스의 “입력 및 출력 언어&quot;를 사용자가 쉼게 배울 수 있도록 설계하여야 rol 인터페이스는 의미 있는 피드백을 제공하여야 한다. 사용자가 잘못 WES 누르거나 잘못된 연산을 수행하고자 할 때 자신의</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">사용자 경험(User Experience) 개요</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">정적모델</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점</li><li>나) Check-사용자 분석 및 대응방법 확인</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">사용자 경험(UX)과 사용자 인터페이스(UI)의 차이점</div>
-  <p class="sub-c">사용자 경험(468 Experience, 이하 UE Ot 보이는 AS 연구하는 것이고 사용자 ClE|HIO|A(User Interface, 이하 내는 그것을 보이게 만드는 구체화 작업을 말한다. 또한 는 사용자가 느끼는 느낌, 태도, 행동이고 Ute 사용자가 인터페이스 를 직접 대면하는 환경으로 구분할 수 있다. UXE 사용자의 경험에 대한 통계에 기반을 </p>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">MAKE - 아이디어를 제품으로 전환</div>
-  <p class="sub-c">® BLS 및 관리 — GitHub, Trello (2) 2}0|0{=e|2\ — Microsoft Visio, moqups @ H=£Et0|Prototyping) — Adobe Photoshop, ketch3</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">Check-사용자 분석 및 대응방법 확인</div>
-  <p class="sub-c">@ 시각적 분석 - Beusable, Clicktale @ 분석과 DHE#!A (Analytics &amp; Metrics) - Google Analytics, Mixpanel (3) ABEH|AEIAB Testing) - Google Optimize, Optimizely @ St의 7 |(Record Users) — Beusable, hotjar</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">-시장의 피드백 지속확인</div>
-  <p class="sub-c">0) 사용자 2 El(Recruiting Users) - Pivot Planet, Clarity (2) 온라인설문 —Polldaddy, holjar (3) 사용자 피드백 — LiveChat, mouseflow @) 원격테스팅 - Chalkmark, UsabilityHub [참고 및 추천 자료] [1] 최은만, &quot;소프트웨어 공학&quot;, 서울: 정익사 2007. </p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">프로그래밍 언어의 개요</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">방법</span><span class="kw">클래스</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 프로그래밍 언어 개념</li><li>다) Java 언어 [열거형]</li><li>마) JavaScript 언어 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">프로그래밍 언어 개념</div>
-  <p class="sub-c">언어를 가지고 De THs 짤 짜 수 ' , : 를 사용해야 한다. 그리고 프로 그리밍 ain 작성된 프로그램을 기계어로 번역해 주는 고유의 번역기인 컴파일러, 인터프리터가 있어 컴퓨터가 언어 품질 오브 또한, 프로그래밍 언어마다 쓰이는 용도가 달라 각 영역에서 적절한 프로그래밍 언어를 사용하여 원하는 생산성 을 피 H 구분 설명 대표적인 언어 기계 중심적</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">인터프리터 언어</div>
-  <p class="sub-c">인터프리터는 중간과정 없이 원시 프로그램을 직접 저급 언어로 바꾸면서 동시에 실행한다. 고급 언어를 중간 코드까지만 번역하고 번역된 코드를 소프트웨어 인터프리터로 실행하여. 기계어 프로그램이 만드는 것이 아니라, 각 중간 코드의 기 능에 해당되는 서브루틴을 호출하면서 수행한다. LISP, PROLOGSO| 인터프리터 언어이다. 인터프리터 과정 개발도구로 작</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">컴파일러 언어</div>
-  <p class="sub-c">JUSS 어느 특정 언어를 동등한 의미를 갖는 다른 언어로 바꾸는 AS 의미한다. SUVA] 의해 고급 HHS 저급 언어인 기계어로 번역하여 객체 모듈S 만들고, 이 SBS 링크, 로드 tO} 실행시키는 것이다. FORTRAN, PASCAL, C/C++50| 컴파일러 언어이다. 컴파일 과정 개발도구로 작성 저장 프로그램 언어로 소스코드 작성 메신저 등 cc</p><ul class="bul"><li>기계어로 변환하는데 많은 시간 소요</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">언어</div>
-  <p class="sub-c">0) (원어 소개 (언어는 1970년대 UNX 운영체제를 위해 ATRAQ] 벨 연구소에서 일하던 데니스 리치(26006 「4076에 의해 탄생하였고 컴퓨터 언어 중 (언어를 모티브 삼은 언어가 대부분이며 128(아이폰; 안드로이드와 같은 현재 유명한 운영체제들은 &lt;: 어로 대부분 구성되어 있다. *실행속도가 빠르고 효율적인 메모리 관리 용이 + 절차지향적인</p><ul class="bul"><li>표기법이 간결하여 문단으로 기능 구현 가능</li><li>실행환경 및 기계 변경 시 인식이 어려움</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">C++ 언어</div>
-  <p class="sub-c">00 CH 언어 소개 CHE 0의 대부분의 특징을 포함하고 있어서 시스템 프로그래밍에 적합하고 클래스, 연산자 중복, 가상 함수 등의 특징 이 있어 객체 지향 프로그래밍에 적합하다. 객체 지향형 프로그래밍 기법을 이용 응하여: 소프트웨어를 개발하면, 소프트웨어의 재사용성, 확장성 및 유지보수성이 높아 지기 때문에 대형 프로그램 작성에 좋고, 프로그램의 가독</p><ul class="bul"><li>객체 지향 특성: (:언어에서 객체 지향 프로그래밍을 지원하는 HOS 발전된 언어로서 객체 지향 SAS 잘 반영하고 있</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">Java 언어</div>
-  <p class="sub-c">00 Java 언어 소개 199년부터 soo senate 제임스 고슬링은 가전 제품을 제어하는 단순하고 버그 없는 프로그래밍 언어 Java 개발하기 시작하였다. 초기에는 ++언어로 시작하였고 0++의 여러 문제점을 개선한 언어였으나 가전제품 SISO! 관 심밖에 있다가 1995년 \''0\\라는 인터넷의 보급 확산으로 핫자바(0 Java)oll 의해 인터넷</p><ul class="bul"><li>++언어로 부터 나온 43/8는 C/CH O02} 문법적으로 유사</li><li>항상 자동 가비지 콜렉션을 수행</li><li>객체 지향적, 객체개년을 적용하는 완벽한 객체 지향적 언어</li><li>Java 프로그램은 자바 가상머신에 의해 실행됨으로 플랫폼에 독립적</li><li>동적 타</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">마)</span>
-  <div class="sub-t">JavaScript 언어</div>
-  <p class="sub-c">언어 소개 객체 기반의 스크립트 프로그래밍 언어로 웹 브라우저 내에서 주로 사용하며, 다른 응용 프로그램의 내장 객체에도 접근 할수 있는 있다. @ JavaScript 기능을 가지고 있다. 또한 006.6와같은 런타임 환경과 같이 서버 사이드 네트워크 프로그래밍에도 사용되고 Boils 을 짜고 프로그래밍을 구현할 수 있지만, 보안에 취약할 수 있음 Doz </p><ul class="bul"><li>긴단하게 코딩</li><li>오픈 소스로 운영되기 때문에 개발지들 간의 공유</li><li>최근에는</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">03</div>
-  <div><div class="row-title">소프트웨어 개발 프레임워크</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">소프트웨어</span><span class="kw">부분</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 소프트웨어 개발 프레임워크 개념</li><li>다) 전자정부 표준프레임워크 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">소프트웨어 개발 프레임워크 개념</div>
-  <p class="sub-c">소프트웨어 개발 프레임워크란 효율적인 정보시스템 개발을 위한 코드 라이브러리, 인터페이스 규약, 설정정보 등의 집합 으로 소프트웨어 구성에 필요한 기본 빼대를 제공한다. 개발자는 이를 기반으로 어플리케이션 상위 기능(비즈니스 로직 즉, 소프트웨어를 개발할 때 AHadoop 하나하나 개발하는 것이 아니라 화면에 표현되거나, 데이터를 처리하는 방식, 외 모듈과</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">전자정부 표준프레임워크</div>
-  <p class="sub-c">O 전자정부 표준프레임워크 소개 자바기반의 시스템 개발ㆍ운영 시 필요한 기본 기능들을 표준화하여 미리 구현해 둔 공공사업용 표준개발프레임워크로 민간과 정부에서 필요한 다양한 소프트웨어 개발에 기반이 되는 SAA ㆍ개발 Be] - Sea} 공통모듈을 미리 구현 하여 제공한 것이다. 개발자는 표순프레임워크가 제공하는 기반 환경 위에서 공통모듈을 재사용하고 각 </p><ul class="bul"><li>전자정부 서비스 품질향상</li><li>정보화 투자 효율성 향상</li><li>대ㆍ중ㆍ소기업이 동일한 개발 기반 위에서 공정한 경쟁</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">04</div>
-  <div><div class="row-title">통합개발환경(IDE)</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">작업</span><span class="kw">자체</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 통합개발환경(IDE) 개념</li><li>다) 소프트웨어 빌드(Software Build) [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">통합개발환경(IDE) 개념</div>
-  <p class="sub-c">ent 트 편집기, 디버거, 원격 서버 액세서 등의 기능을 위해 별도 소프트웨어를 사용하였으나 통합개발환경에서는 이들을 개발환경(0, Integrated Develooment ㅁ7/000760!)은 코딩, 디버깅, 컴파일, 배포 등 프로그램 개발에 관련된 모든 작 }나의 소프트웨어 안에서 처리하는 SSS 제공하는 WLS 소프트웨어이다. 전통적인 개발환경에서</p><ul class="bul"><li>빌드에 대한 형상관리</li><li>코드 통합 시 발생하는 문제점을 사전에 발견하여 처리</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">소프트웨어 빌드(Software Build)</div>
-  <p class="sub-c">소프트웨어 빌드란 소스 코드 파일을 컴퓨터에서 실행할 수 있는 독립 소프트웨어 가공물로 변환하는 과정을 말하거나 그 에 대한 결과물을 이르는 말이며, 소프트웨어 SLES 활동 중 하나이고, 일일 빌드는 통합위험 감소, 저품질 방지, 초기 함 분석, 진척상황 모니터링, 개발자 사기 증진을 촉 ams, 나 (Daily Build) 및 동작 테스트 이다 트 효율</p><ul class="bul"><li>소프트웨어 제품을 매일 전체적으로 다시 컴파일하고, 기본 Hadoop 검증하기 위해 필요한 일련의 테스트를 거치는 공정</li><li>일일 WCE 소프트웨어 통합 실패, 낮은 품질 낮은 프로젝트 가시성과 같은 리스크를 줄이고 시간을 절약하여 프로젝</li><li>UY 빌드와 동작 테스트는 모든 프로젝트에서 활용할 수 있고 큰 프로젝트, 작은 프로젝트, 운영체제, 기성품 소프트웨</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">마)</span>
-  <div class="sub-t">소프트웨어 배포</div>
-  <p class="sub-c">소프트웨어 배포는 사용할 소프트웨어 시스템을 만드는 모든 행위를 지칭하고, 배포 프로세스는 그들 사이에 가능한 전환 과 함께 상호 활동으로 구성되어 있다. 이러한 SSS 제작자 입장 또는 소비자 입장, 도두에서 발생할 수 있다. 배푸는 모 rom ㅎㅇ &amp; 소프트웨어 AIAG R71 EO, 2 활동 내의 정확한 SAH 정의하기 fC 따라서, “wi AOI A</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">테스팅 개념 및 프로세스</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">표기법이</span><span class="kw">실행환경</span><span class="kw">최근에는</span><span class="kw">긴단하게</span><span class="kw">객체</span><span class="kw">저급언어</span><span class="kw">과정</span><span class="kw">동적</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 테스팅 개념</li><li>나) 테스팅 프로세스 [열거형]</li><li>가) 테스팅 유형</li><li>나) 테스팅 기법</li><li>나) 테스팅 기법 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">테스팅 개념</div>
-  <p class="sub-c">테스팀이란 어플리케이션 또는 시스템의 동작과 성능. 안정성이 사용자나 고객이 요구하는 ABS 만족하는지 확인이나 검증하기 위해 결함을 발견하는 방법이다. 테스팅의 일반적인 윈리는 다음과 같다. 테스팅 활동은 결함이 AMS 밝히는 활동임. 소프트웨어의 무결함을 증명하는 것은 거의 불가능하다. (2 완벽한 테스팅은 불가능 매우 간단한 프로그램일지라도 모든 경우</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">테스팅 프로세스</div>
-  <p class="sub-c">테스팀은 다양한 구성 요소를 포함하는 프로세스를 중심으로 조정하고 관리되어야 한다. 테스트 프로세스와 해당 프로세 스의 주요 활동은 다음과 같다. &lt;표 28&gt; 테스팅 프로세스의 주요 활동 프로세스 주요활동 테스트 계획과 통제 ㆍ테스트 전력개발 및 리스크 분석 + 테스트 베이시스 검토 + BIAS 상황/요구사항/데이터 식별 테스트 분석과 설계 “BIAS 기법</p><ul class="bul"><li>테스트 목적/목표 설정 및 대상 연구</li><li>전략수립 및 테스트 완료 조건</li><li>산출물 확인, 테스트웨어 보관</li><li>테스트 프로세스 평가</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">테스트 설계</div>
-  <p class="sub-c">O 테스트 설계 개요 AE 설계는 테스트 케이스를 도출하고 수행하여 테스트 대상이 어느 수준까지 테스팅이 되었는지 보장하기 위해 사용 다. 테스트 설계 진행 방식은 테스트 조직의 구성. 테스팅과 개발 프로세스의 성숙도, 시간적 제약, 테스트 참여 인원 등 스팅 정황(2006%(에 의해 달라지게 된다. 테스트 분석과정에서 테스트 AAS 식별하기 위해 테스트 </p>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">테스팅 유형</div>
-  <p class="sub-c">여러가지 레벨에 따라 &lt;표 31&gt;과 같이 여러 유형이 존재하고 각 유형에서 테스트를 수행하는 주체, 테스팅 목적, 테스트 환 경 등을 고려하는 것이 원칙이다. 성과성 = &lt; 데스트 수행 과성 &gt; [그림 23] 테스트 레벨의 유형 소프트웨어 테스팅은 개발 단계와 대응되는 스트 활동의 묶음인 테스트 러벨별로 각각의 테스트 계획 및 전략을 필요로 한다. 테스트 </p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">테스팅 기법</div>
-  <p class="sub-c">테스팅 기법은 크게 화이트박스 테스팅과 블랙박스 테스팅 기범이 있다. 각각의 SAS 다음과 같디 © 화이트박스 테스팅 기능을 검증하는 것이다. 소스코드를 활용하여 제어흐름 테스팅, 조건/결정 커버리지 테스팅, 최소비교 테스팅 등을 수행한다. 에서 발생 가능한 오류를 찾아내는 동적분석으로 구분한다. + 대표적인 화이트박스 테스트의 기법 종류는 아래와 같다. </p><ul class="bul"><li>구조적 또는 코드기반 테스트라고 한다.</li><li>단위 테스팅에서 주로 사용되고, 테스트가 가능한 AMEE, 프로그램, 객체, 클래스 등) 내에서 결함을 ata 해당</li><li>통합 테스팅 시에도 구조적 접근범을 사용하여 적용될 수도 있다.</li><li>구현된 소스코드 내부 FAB 분석하여 미리 정의된 오류를 찾아내는 정적분석과 프로그램의 실행을 통하여 실제 상황</li><li>기능 또는 명세기반 테스트라고 한다.</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">03</div>
-  <div><div class="row-title">리팩토링</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">정보화</span><span class="kw">대ㆍ중ㆍ소기업이</span><span class="kw">전자정부</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 리팩토링 개념</li><li>가) 리팩토링 개념 [열거형]</li><li>나) 코드스멜(Code Smell) 개념</li><li>다) 대표적인 리팩토링 기법</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">리팩토링 개념</div>
-  <p class="sub-c">(1 리팩토링 개요 리팩토링이란 외부에서 보는 프로그램 동작은 변경하지 않고 프로그램 내부 PAS 개선하는 것이다. 즉, 소프트웨어의 외부적 기능은 수정하지 않고 내부적 구조 프트웨어의 유지 보수성을 향상시켜 품질을 높이는 활 동인 것이다. 리팩토링의 정의에서 중요한 내용은 다음 두가지이다. cll 리팩토림을 수행하는 이유는 다음과 같다. ANS 리팩토링 </p><ul class="bul"><li>리팩토링을 수행해도 외부에서 보는 프로그 작은</li><li>오류발견과 디버깅을 용이하게 한다.</li><li>소프트워어 요구사항 변경에 효과적 대응 가능</li><li>복잡한 코드의 단순화 및 소스코드의 가독</li><li>프로그램 생산성 및 품질 향상</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">코드스멜(Code Smell) 개념</div>
-  <p class="sub-c">@ 코드스멜의 개념 코드스멜은 읽기 어렵거나 SSH SAIS 가진 프로그램처럼 개발자가 이해하거나 유지보수하기 어려워 리팩토링의 대상 이 되는 BES 의미한다. 코드스멜은 이해하기 어렵거나 수정이 어려운 부분, 확장하기 어려운 부분으로 코드를 읽을 때 이해하기 어렵다고 느껴진다면 리팩토링을 검토해 봐야한다. 종류 설명 중복된 코드 기능이나 데이터 코드가 중</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">대표적인 리팩토링 기법</div>
-  <p class="sub-c">리팩토링 기법 설명 extract Method 그룹으로 함께 묶을 수 YE 코드 조작이 있을 때 코드의 목적이 잘 드러나도록 ESE ° 메소드 이름을 지어 별도의 메소드로 BOHLHE 작업 a Replace Parameter with | 객제가 메소드를 호출한 다음, 결과를 다른 메소드에 매개변수로 넘기고 있으면 Method 수신자가 그 메소드를 호출하도록</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">요구사항 관리</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">소프트웨어</span><span class="kw">코드</span><span class="kw">빌드에</span><span class="kw">일일</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 요구사항 관리의 정의</li><li>다) 요구사항 관리의 목적</li><li>라) 요구사항 관리 공정 [열거형]</li><li>마) 요구사항 관리 원칙</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">요구사항 관리의 정의</div>
-  <p class="sub-c">요구사항 SSHReauirements Engineering} 크게 요구사항 개발과 요구사항 관리로 나눌 수 있다. 무엇을 할 것인가를 정 의하는 요구사항 개발과 하기로 정의된 요구사항이 제대로 반영되어 진행되는지를 확인하며, 최초 요구사항 변경에 대한 지속적인 관리를 수행하는 것이 요구사항 관리이다.</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">요구사항 관리의 중요성</div>
-  <p class="sub-c">적절한 요구사항 관리는 디양한 이해 관계자 간에 효과적인 의사소통의 ACS 제공하고, 프로젝트 초반부터 체계적인 요 구관리로 납기지연 및 예산초괴를 방지할 수 있으며, 사용자 요구 명세 수행 및 관리를 가능하게 한다.</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">요구사항 관리의 목적</div>
-  <p class="sub-c">요구사항 관리는 고객의 관점에서 고객의 요구를 정확히 파악하여 만족시키며, 제한된 일정과 기간 내에 품질 높은 소프 트웨어를 생산하는 것을 목석으로 한다.</p>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">요구사항 관리 공정</div>
-  <p class="sub-c">아래의 그림은 전체 소프트웨어 개발 생명주기 상에서 해당하는 요구사항 관리 ISS 설명하고 있다 SW \ 요구명세 \ a joe 시 / SW SW \ S44 —| 및 검증 |키텍처 설계 구현 / 테스트 0 way SW 요구 정의 BS SW 요구 변경 관리 요구공학의 총체적인 활동 [그림 24] 요구사항 관리활동 아래의 표는 요구사항 관리 공정의 세부 활동과</p><ul class="bul"><li>비즈니스 요구사항 정의</li><li>초기 요구사항 추출</li><li>후보 요구사항 모델링</li><li>요구사항 협의</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">마)</span>
-  <div class="sub-t">요구사항 관리 원칙</div>
-  <p class="sub-c">요구사항을 관리하는데 있어서의 원칙은 아래와 같다. :고객가치기반의 요구 우선 순위 부여, 이해관계자의 요구사항에 대한 동의 획득 * 요구 시스템의 정확한 목표 식별(기대 관리/범위 관리) *요구사항 변경관리 위원회 설정 SS 통한 요구 변경의 영향 분석 및 변경 단계별 베이스라인</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">요구사항 명세</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">테스트</span><span class="kw">단위</span><span class="kw">통합</span><span class="kw">소프트웨어</span><span class="kw">구현된</span><span class="kw">주로</span><span class="kw">산출물</span><span class="kw">구조적</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 요구사항 명세 기법</li><li>나) 요구사항 명세 원칙 및 주요 내용</li><li>나) 요구사항 명세 원칙 및 주요 내용 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">요구사항 명세 기법</div>
-  <p class="sub-c">요구사항 명세 기법은 명세 방식에 따라 정형 명세와 비정형 명세로 TES 수 있다. &lt;표 36&gt; 요구사항 명세 기법 분류 명세 기법 설명 VOM + Vienna Development Method 정형 명세 ㆍ상태 기반의 그래픽 명세 방법 수학적 기반 기술 + Bal 개발 및 체계적 시스템 검증 프레임워크 제공 3 + Finite Stale Machine +</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">요구사항 명세 원칙 및 주요 내용</div>
-  <p class="sub-c">IEEE(Institute of Electrical and Electronics EngineersOIME 권장하는 소프트웨어 요구사항 명세의 내용과 품질에 대해서 설명하고 여러가지 요구사항 개요 HSS 제공하고 있으며, 아래의 요구사항 명세 원칙은 품질 점검의 기준으로 활용할 수 있다. &lt;표 37) 요구사항 명세 원칙 원칙 설명 검증성 + 요구 명세는 증명</p><ul class="bul"><li>요구사항의 에러, 충돌 불일치</li><li>참여자의 시스템에 대한 새로운 이해 및 지식 증가</li><li>시스템 환경 및 조직의 변화</li><li>기술적, 시간적, 비용적 문제 발생</li><li>변경에 떠른 영향 분석</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">소프트웨어 형상관리의 개요</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">리팩토링을</span><span class="kw">오류발견과</span><span class="kw">프로그램</span><span class="kw">복잡한</span><span class="kw">일반적으로</span><span class="kw">리팩토링은</span><span class="kw">소프트워어</span><span class="kw">리팩토링</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 형상관리의 정의</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">형상관리의 정의</div>
-  <p class="sub-c">소프트웨어 SAH+의 (SCM, Software Configuration ManagemeniiE 소프트웨어의 개발 과정에서 소프트웨어의 변경사항 을 관리하기 위해 개발된 일련의 활동이다. 소프트웨어 형상관리는 소프트웨어 변경의 원인을 찾아 컨트롤하며 적절히 변 경되고 있는지 확인하여 관련 담당자에게 통보하는 작업이고, 소프트웨어 개발의 전 단계에 적용되는 </p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">형상관리 개념도 및 구성 요소</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">요구사항</span><span class="kw">비즈니스</span><span class="kw">후보</span><span class="kw">초기</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 형상관리의 개념도</li><li>나) 형상관리의 구성요소</li><li>나) 형상관리의 구성요소 [열거형]</li><li>다) 형상관리 고려사항 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">형상관리의 개념도</div>
-  <p class="sub-c">아래의 그림은 형상관리의 전체 활동과 상 를 개념적으로 설명하고 있다.</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">형상관리의 구성요소</div>
-  <p class="sub-c">아래 표는 형상관리를 구성하고 있는 주요 항목들을 설명하고 있다. &lt;표 40&gt; 형상관리 구성요소 구성요소 내용 7|%4 4 형상 항목들의 기술적 SAAS, SE 변화를 통제하는 시점의 기준 42! (Configuration tem) 소프트웨어 생명주기 중 공식적으로 정의되어 기술되는 기본 대상 소프트웨어 개발 ) 구성요소 내용 소프트웨어 개발 생명주기 중 </p><ul class="bul"><li>형상항목 식별내용: 제품/각종문서/형상항목 번호</li><li>품질 보증을 위한 베이스라인 제시</li><li>유지 보수성 향상</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">형상관리 고려사항</div>
-  <p class="sub-c">+ 운영중인 소프트웨어의 HSE 신중하게 진행 Con</p><ul class="bul"><li>효율적인 형상관리를 위해서는 다음과 같은 사항을 고려해야 한다.</li><li>적절한 운영 조직 구성, 관리 전문 도구의 활용</li><li>지속적인 관리와 관리 기준 필요, 이에 떠른 문제 sta 방안 필요</li><li>소규모 프로젝트일수록 형상관리 정도를 적절히 테일러링</li><li>형상관리 HSS 정하고 모든 변경 사향은 공식적인 합의에 의해 실시</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">오픈소스 소프트웨어 개념</div><div class="row-ch">소프트웨어 설계 원리와 구조적 설계</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">각종</span><span class="kw">변경에</span><span class="kw">추적성</span><span class="kw">다양한</span><span class="kw">기술적,</span><span class="kw">시스템</span><span class="kw">요구사항의</span><span class="kw">참여자의</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 오픈소스 소프트웨어 정의</li><li>나) 오픈소스 소프트웨어 라이선스 정의</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">오픈소스 소프트웨어 정의</div>
-  <p class="sub-c">오픈소스 소프트웨어는 사용하기 위한 라이선스 비용이 없으며 소스코드가 공개되어 있어 제작자의 권리를 지키면서 + 구나 자유롭게 사용ㆍ복제 ㆍ수정할 수 있는 소프트웨어이다. 1980년 소프트웨어 산업이 발전하기 시작하면서 지적재산권 및 라이선스 계약을 통하여 소프트웨어 사용ㆍ수정 등에 제 을 가하는 움직임이 나타나게 된다. 소프트웨어에 제한을 가하려는 흐름에</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">오픈소스 소프트웨어 라이선스 정의</div>
-  <p class="sub-c">오픈소스 소프트웨어 라이선스는 오픈소스 개발자와 이용자 간에 사용 방법 및 조건의 범위를 명 EAA 소프트웨어가 제작자의 권리를 지키며 사용되는 소프트웨어로 오픈소스 개발자가 만들어 라 해당 소프트웨어를 사용해야한다. 해당 조건을 위반할 경우에는 라이선스 위반 및 저작권 침해. 을 져야한다. 대표적인 라이선스로는 GPL(General Public Licen</p>
-</div></div>
-</div>
-</div>
 </div>
 
-<nav class="sheet-tabs"><a class="tab active" href="/topcit/01/" style="--active-color:#1F5C99"><span class="ic">💻</span>01</a><a class="tab " href="/topcit/02/" style=""><span class="ic">🗄️</span>02</a><a class="tab " href="/topcit/03/" style=""><span class="ic">🏗️</span>03</a><a class="tab " href="/topcit/04/" style=""><span class="ic">🔒</span>04</a><a class="tab " href="/topcit/05/" style=""><span class="ic">📊</span>05</a><a class="tab " href="/topcit/06/" style=""><span class="ic">📋</span>06</a></nav>
 <script>
-// 아코디언
-document.querySelectorAll('.row-hd').forEach(h=>{
-  h.addEventListener('click',()=>{
-    h.closest('.row').classList.toggle('open');
-  });
-});
+let curTab = 'all';
+let curView = 'card';
 
-// 검색
-const si=document.getElementById('search');
-if(si){
-  si.addEventListener('input',()=>{
-    const v=si.value.trim().toLowerCase();
-    document.querySelectorAll('.row').forEach(r=>{
-      if(r.classList.contains('tbl-header-row')) return;
-      const t=(r.querySelector('.row-title')?.textContent||'').toLowerCase();
-      const c=(r.querySelector('.row-ch')?.textContent||'').toLowerCase();
-      const b=(r.querySelector('.row-body')?.textContent||'').toLowerCase();
-      const show=!v||t.includes(v)||c.includes(v)||b.includes(v);
-      r.style.display=show?'':'none';
-      if(v&&show) r.classList.add('open');
-      else if(!v) r.classList.remove('open');
-    });
+// ── 뷰 전환 ──
+function switchView(view, btn) {
+  curView = view;
+  document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cardEls = ['tab-bar','card-content'];
+  const treeEl  = document.getElementById('tree-content');
+  const search  = document.querySelector('.search');
+
+  const fbEl = document.getElementById('fb-content');
+  cardEls.forEach(id => document.getElementById(id).style.display = view==='card' ? '' : 'none');
+  if (fbEl) fbEl.classList.toggle('show', view==='fb');
+  search.placeholder = '🔍  개념 검색...';
+  search.style.display = view==='fb' ? 'none' : '';
+}
+
+// ── 트리 토글 ──
+function toggleNode(el) {
+  const body = el.nextElementSibling;
+  const arr  = el.querySelector('.tree-arr');
+  const isOpen = body.classList.toggle('open');
+  arr.style.transform = isOpen ? 'rotate(90deg)' : '';
+}
+
+// ── 카드뷰 필터 ──
+function filterTab(btn, ch) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  curTab = ch;
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.querySelector('.search').value.toLowerCase();
+
+  if (curView === 'tree') {
+    filterTree(q);
+    return;
+  }
+
+  document.querySelectorAll('.section-group').forEach(grp => {
+    const chOk = curTab === 'all' || grp.dataset.chapter === curTab;
+    grp.classList.toggle('hidden', !chOk);
+    if (chOk) {
+      let any = false;
+      grp.querySelectorAll('.card').forEach(c => {
+        const show = !q || c.textContent.toLowerCase().includes(q);
+        c.classList.toggle('hidden-card', !show);
+        if (show) any = true;
+      });
+      if (q) grp.classList.toggle('hidden', !any);
+    }
   });
 }
+
+function filterTree(q) {
+  document.querySelectorAll('.tree-con').forEach(con => {
+    const show = !q || con.textContent.toLowerCase().includes(q);
+    con.style.display = show ? '' : 'none';
+    if (show && q) {
+      // 부모 열기
+      let p = con.parentElement;
+      while (p && !p.classList.contains('tree-root')) {
+        if (p.classList.contains('tree-sec-body') || p.classList.contains('tree-ch-body')) {
+          p.classList.add('open');
+          const hdr = p.previousElementSibling;
+          if (hdr) {
+            const arr = hdr.querySelector('.tree-arr');
+            if (arr) arr.style.transform = 'rotate(90deg)';
+          }
+        }
+        p = p.parentElement;
+      }
+    }
+  });
+}
+
+// ── 피쉬본 토글 ──
+function fbToggle(id) {
+  const el  = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  const arr  = el.previousElementSibling.querySelector('.fb-arr');
+  if (arr) arr.style.transform = open ? 'rotate(90deg)' : '';
+}
+
+// ── 모달 ──
+function openModal(title, bg, expl, mn) {
+  document.getElementById('m-title').textContent = title;
+  document.getElementById('m-bg').textContent    = bg   || '(준비 중)';
+  document.getElementById('m-expl').textContent  = expl || '(준비 중)';
+  document.getElementById('m-mn').textContent    = mn   || '(준비 중)';
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
 </body>
 </html>

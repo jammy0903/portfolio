@@ -23,3 +23,19 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+# 민감/불필요 파일
+gdrive_token.pickle
+*.pickle
+*_raw.txt
+*_text.txt
+fishbone_test.html
+mindmap_test.html
+IBM_면접준비.md
+developer_resume_stories.md
+export_topcit.py
+upload_topcit.py
+portfolio/
+*.pdf
+*.docx
+*.docx.md

@@ -2,788 +2,329 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="#C55A11">
-<title>TOPCIT 04 - 정보보안</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOPCIT 04 정보보안</title>
 <style>
-:root{--accent:#C55A11;--accent-dark:#a73c00;--accent-rgb:197,90,17}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Pretendard","Apple SD Gothic Neo",sans-serif;background:#fdf8fb;color:#1a1a2e;min-height:100vh}
 
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{font-size:15px}
-body{
-  font-family:'맑은 고딕','Malgun Gothic','Noto Sans KR',-apple-system,sans-serif;
-  background:#F2F2F2;
-  color:#1a1a1a;
-  line-height:1.5;
-  min-height:100vh;
-  padding-bottom:72px;
-}
+/* 헤더 */
+.header{background:#d4789c;color:#fff;padding:.85rem 1.25rem;display:flex;align-items:center;gap:.75rem;position:sticky;top:0;z-index:20;box-shadow:0 2px 10px rgba(212,120,156,.3)}
+.header-back{color:#fff;text-decoration:none;font-size:1.1rem;opacity:.8}
+.header-back:hover{opacity:1}
+.header h1{font-size:1rem;font-weight:700;flex:1}
+.header-cnt{font-size:.75rem;opacity:.7;white-space:nowrap}
 
-/* 엑셀 상단 리본 */
-.ribbon{
-  position:sticky;top:0;z-index:100;
-  background:var(--accent);
-  border-bottom:3px solid var(--accent-dark);
-  padding:0 12px;
-  display:flex;align-items:center;gap:10px;
-  height:48px;
-}
-.ribbon-back{
-  background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.3);
-  color:#fff;padding:6px 12px;border-radius:3px;
-  font-size:13px;text-decoration:none;
-  display:flex;align-items:center;gap:5px;white-space:nowrap;
-}
-.ribbon-back:active{background:rgba(255,255,255,0.25)}
-.ribbon-title{
-  font-size:14px;font-weight:700;color:#fff;
-  flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
+/* 뷰 토글 */
+.view-toggle{display:flex;gap:0;padding:.7rem 1.25rem .3rem;}
+.vtab{padding:.35rem .9rem;font-size:.78rem;font-weight:600;cursor:pointer;border:1.5px solid #d4789c;background:#fff;color:#d4789c;transition:all .15s}
+.vtab:first-child{border-radius:.5rem 0 0 .5rem}
+.vtab:last-child{border-radius:0 .5rem .5rem 0}
+.vtab.active{background:#d4789c;color:#fff}
 
-/* 시트 탭 영역 (상단 메타 정보) */
-.sheet-info{
-  background:#fff;
-  border-bottom:2px solid #D9D9D9;
-  padding:14px 12px 12px;
-}
-.sheet-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--accent);color:#fff;
-  padding:3px 10px;border-radius:2px;
-  font-size:12px;font-weight:700;
-  margin-bottom:10px;letter-spacing:0.03em;
-}
-.sheet-info h1{
-  font-size:20px;font-weight:700;
-  color:var(--accent-dark);
-  margin-bottom:4px;
-}
-.sheet-info p{font-size:13px;color:#666}
+/* ── 피쉬본 뷰 ── */
+.fb-wrap{display:none;padding:.5rem 1rem 2rem}
+.fb-wrap.show{display:block}
+.fb-title{text-align:center;background:#d4789c;color:#fff;border-radius:.75rem;padding:.6rem 1rem;font-size:.92rem;font-weight:800;margin-bottom:0}
+.fb-spine{position:relative;padding:.4rem 0 .5rem}
+.fb-spine::before{content:'';position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;width:3px;background:linear-gradient(#d4789c,#8b6bae);border-radius:2px;z-index:0}
+.fb-branch{display:flex;align-items:flex-start;margin:.9rem 0;position:relative;z-index:1}
+.fb-branch.left{flex-direction:row-reverse;padding-right:calc(50% + 10px)}
+.fb-branch.left .fb-inner{align-items:flex-end;text-align:right}
+.fb-branch.right{padding-left:calc(50% + 10px)}
+.fb-branch.right .fb-inner{align-items:flex-start;text-align:left}
+.fb-connector{position:absolute;top:14px;height:2px;width:calc(50% - 16px);opacity:.3}
+.fb-branch.left .fb-connector{right:calc(50% + 3px);background:#d4789c}
+.fb-branch.right .fb-connector{left:calc(50% + 3px);background:#8b6bae}
+.fb-inner{display:flex;flex-direction:column;gap:.4rem;width:100%}
+.fb-ch{display:inline-flex;align-items:center;gap:.3rem;flex-wrap:wrap;background:#d4789c;color:#fff;border-radius:.5rem;padding:.36rem .7rem;font-size:.78rem;font-weight:700;cursor:pointer;user-select:none;transition:opacity .15s}
+.fb-branch.right .fb-ch{background:#8b6bae}
+.fb-ch:hover{opacity:.85}
+.fb-arr{font-size:.52rem;transition:transform .2s;flex-shrink:0}
+.fb-cnt{font-size:.62rem;opacity:.7;font-weight:400}
+.fb-sec-blocks{display:none;flex-direction:column;gap:.4rem;width:100%;padding:.2rem 0}
+.fb-sec-blocks.open{display:flex}
+.fb-branch.left .fb-sec-blocks{align-items:flex-end}
+.fb-sec-block{display:flex;flex-direction:column;gap:.18rem;width:100%}
+.fb-branch.left .fb-sec-block{align-items:flex-end}
+.fb-sec{display:inline-flex;align-items:center;gap:.22rem;flex-wrap:wrap;background:#fff;border:1.5px solid #f0c6d8;border-radius:.4rem;padding:.2rem .52rem;font-size:.7rem;color:#555;font-weight:600;cursor:pointer;user-select:none;transition:background .15s}
+.fb-branch.right .fb-sec{border-color:#f3eefa}
+.fb-sec:hover{background:#fdf0f5}
+.fb-branch.right .fb-sec:hover{background:#f3eefa}
+.fb-sec em{font-style:normal;color:#ccc;font-size:.6rem;font-weight:400}
+.fb-con-list{display:none;flex-wrap:wrap;gap:.18rem;padding:.08rem 0}
+.fb-con-list.open{display:flex}
+.fb-branch.left .fb-con-list{justify-content:flex-end}
+.fb-con{background:#f9f1f6;border:1px solid #f0d8ea;border-radius:1rem;padding:.12rem .4rem;font-size:.62rem;color:#888;cursor:pointer;white-space:nowrap;transition:all .15s}
+.fb-branch.right .fb-con{background:#f5f1fa;border-color:#e2d5f5}
+.fb-con:hover{background:#d4789c;color:#fff;border-color:#d4789c}
+.fb-branch.right .fb-con:hover{background:#8b6bae;color:#fff;border-color:#8b6bae}
+.fb-tail{text-align:center;color:#d4789c;opacity:.3;margin-top:.3rem;font-size:.9rem}
 
-/* 통계 행 (엑셀 셀처럼) */
-.stat-row{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  border:1px solid #D9D9D9;
-  border-top:none;
-  background:#fff;
-}
-.stat-cell{
-  padding:10px 8px;text-align:center;
-  border-right:1px solid #D9D9D9;
-}
-.stat-cell:last-child{border-right:none}
-.stat-num{font-size:20px;font-weight:700;color:var(--accent)}
-.stat-label{font-size:11px;color:#888;margin-top:1px}
+/* 검색 */
+.search-wrap{padding:.5rem 1.25rem}
+.search{width:100%;padding:.55rem 1rem;border:2px solid #f0c6d8;border-radius:2rem;font-size:.88rem;outline:none;transition:border .2s;background:#fff}
+.search:focus{border-color:#d4789c}
 
-/* 검색 바 */
-.search-bar{
-  background:#fff;border-bottom:1px solid #D9D9D9;
-  padding:8px 12px;display:flex;align-items:center;gap:8px;
-}
-.search-bar label{font-size:12px;color:#888;white-space:nowrap;font-weight:600}
-.search{
-  flex:1;background:#fff;
-  border:1px solid #BFBFBF;
-  padding:7px 10px;font-size:14px;
-  color:#1a1a1a;outline:none;
-  border-radius:2px;
-  font-family:inherit;
-}
-.search:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--accent-rgb),.15)}
+/* 챕터 탭 (카드뷰) */
+.tabs{display:flex;gap:.35rem;padding:.4rem 1.25rem .5rem;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:.28rem .75rem;border-radius:2rem;border:1.5px solid #d4789c;background:#fff;color:#d4789c;font-size:.74rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
+.tab.active,.tab:hover{background:#d4789c;color:#fff}
 
-/* 섹션 테이블 */
-.tbl-wrap{padding:0}
-.tbl-header{
-  background:var(--accent);color:#fff;
-  padding:8px 12px;
-  display:grid;grid-template-columns:40px 1fr 28px;
-  align-items:center;gap:8px;
-  font-size:12px;font-weight:700;letter-spacing:0.04em;
-  border-bottom:1px solid var(--accent-dark);
-  position:sticky;top:48px;z-index:40;
-}
+/* 카드 그리드 */
+.section-group{padding:.3rem 1.25rem .8rem}
+.section-group.hidden{display:none}
+.section-label{font-size:.68rem;font-weight:700;color:#8b6bae;text-transform:uppercase;letter-spacing:.05em;padding:.35rem 0 .3rem;border-bottom:2px solid #f3eefa;margin-bottom:.5rem}
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem}
+@media(min-width:540px){.card-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.card-grid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1200px){.card-grid{grid-template-columns:repeat(5,1fr)}}
+.card{background:#fff;border-radius:.65rem;padding:.7rem;cursor:pointer;border:1.5px solid #f0e0ea;transition:all .18s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card:hover{border-color:#d4789c;box-shadow:0 4px 14px rgba(212,120,156,.18);transform:translateY(-2px)}
+.card-title{font-size:.78rem;font-weight:700;color:#1a1a2e;margin-bottom:.3rem;line-height:1.35}
+.card-preview{font-size:.68rem;color:#999;line-height:1.4}
+.card.hidden-card{display:none!important}
 
-/* 섹션 행 */
-.row{
-  background:#fff;
-  border-bottom:1px solid #E8E8E8;
-}
-.row:nth-child(even) .row-hd{background:#F8F8F8}
-.row-hd{
-  display:grid;grid-template-columns:40px 1fr 28px;
-  align-items:center;gap:8px;
-  padding:13px 12px;
-  cursor:pointer;
-  min-height:52px;
-}
-.row-hd:active{background:#EDF3FB!important}
-.row-num{
-  font-size:11px;font-weight:800;
-  color:var(--accent);
-  background:rgba(var(--accent-rgb),.1);
-  border:1px solid rgba(var(--accent-rgb),.25);
-  padding:2px 4px;border-radius:2px;
-  text-align:center;font-family:monospace;
-}
-.row-title{font-size:14px;font-weight:600;line-height:1.35;color:#1a1a1a}
-.row-ch{font-size:11px;color:#999;margin-top:2px}
-.arr{font-size:10px;color:#BFBFBF;transition:transform .15s;text-align:center}
-.row.open .arr{transform:rotate(180deg)}
+/* ── 트리 뷰 ── */
+.tree-root{padding:.5rem 1.25rem 2rem;display:none}
+.tree-root.show{display:block}
 
-/* 펼침 영역 */
-.row-body{display:none;background:#FAFAFA;border-top:1px solid #E8E8E8;padding:14px 12px}
-.row.open .row-body{display:block}
+/* 챕터 */
+.tree-ch-wrap{margin-bottom:.5rem}
+.tree-ch{display:flex;align-items:center;gap:.5rem;padding:.6rem .9rem;background:#d4789c;color:#fff;border-radius:.6rem;cursor:pointer;font-size:.85rem;font-weight:700;user-select:none;transition:opacity .15s}
+.tree-ch:hover{opacity:.88}
+.tree-ch-body{display:none;padding:.4rem 0 .4rem 1.2rem;border-left:3px solid #d4789c;margin-left:1rem}
+.tree-ch-body.open{display:block}
 
-/* 키워드 */
-.kw-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
-.kw{
-  background:#fff;border:1px solid #D9D9D9;
-  color:#555;padding:3px 9px;border-radius:2px;
-  font-size:12px;font-family:inherit;
-}
+/* 섹션 */
+.tree-sec-wrap{margin-bottom:.3rem}
+.tree-sec{display:flex;align-items:center;gap:.5rem;padding:.45rem .8rem;background:#f3eefa;border:1.5px solid #8b6bae;border-radius:.5rem;cursor:pointer;font-size:.8rem;font-weight:600;color:#8b6bae;user-select:none;transition:background .15s}
+.tree-sec:hover{background:#e8e0f5}
+.tree-sec-body{display:none;padding:.3rem 0 .3rem 1rem;border-left:2px solid #f3eefa;margin-left:.9rem}
+.tree-sec-body.open{display:block}
 
-/* 출제 포인트 */
-.quiz{
-  background:#fff;
-  border:1px solid #D9D9D9;
-  border-left:4px solid var(--accent);
-  padding:10px 12px;margin-bottom:12px;
-  border-radius:0 2px 2px 0;
-}
-.quiz h4{
-  font-size:11px;color:var(--accent);font-weight:800;
-  text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;
-}
-.quiz li{font-size:12px;color:#444;margin-left:14px;margin-bottom:3px}
+/* 개념 노드 */
+.tree-con{display:flex;align-items:center;gap:.5rem;padding:.3rem .6rem;border-radius:.4rem;cursor:pointer;font-size:.76rem;color:#444;transition:all .15s}
+.tree-con:hover{background:#fdf0f5;color:#d4789c;font-weight:600}
 
-/* 세부항목 */
-.subs{display:flex;flex-direction:column;gap:8px}
-.sub{
-  background:#fff;
-  border:1px solid #D9D9D9;
-  border-radius:2px;padding:12px;
-}
-.sub-mk{
-  display:inline-block;
-  background:var(--accent);color:#fff;
-  padding:1px 7px;border-radius:1px;
-  font-size:11px;font-weight:700;
-  margin-bottom:5px;letter-spacing:.03em;
-}
-.sub-t{font-size:13px;font-weight:700;margin-bottom:5px;line-height:1.4;color:#1a1a1a}
-.sub-c{font-size:12px;color:#555;margin-bottom:6px;line-height:1.6}
-.bul{list-style:none;border-top:1px solid #F0F0F0;padding-top:6px}
-.bul li{
-  font-size:12px;color:#444;
-  padding:3px 0 3px 12px;
-  position:relative;
-  border-bottom:1px dotted #F0F0F0;
-}
-.bul li:last-child{border-bottom:none}
-.bul li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:11px;top:4px}
+/* 화살표 */
+.tree-arr{font-size:.6rem;transition:transform .2s;display:inline-block;width:.8rem;flex-shrink:0}
+.open > .tree-arr, .open + * > .tree-arr{transform:rotate(90deg)}
 
-/* 하단 시트 탭 네비 */
-.sheet-tabs{
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  background:#F0F0F0;
-  border-top:2px solid #D9D9D9;
-  display:flex;overflow-x:auto;
-  -ms-overflow-style:none;scrollbar-width:none;
-  padding:0 4px;
-  gap:2px;
-  align-items:flex-end;
-  height:48px;
-}
-.sheet-tabs::-webkit-scrollbar{display:none}
-.tab{
-  flex-shrink:0;
-  display:flex;align-items:center;gap:4px;
-  padding:6px 10px;
-  background:#DCDCDC;
-  border:1px solid #BFBFBF;border-bottom:none;
-  border-radius:3px 3px 0 0;
-  font-size:12px;color:#555;
-  text-decoration:none;
-  height:36px;
-  transition:background .1s;
-  white-space:nowrap;
-}
-.tab:active,.tab.active{
-  background:#fff;color:var(--active-color,#1a1a1a);
-  font-weight:700;border-color:#BFBFBF;
-  height:40px;
-}
-.tab .ic{font-size:14px}
+/* 개념 dot (enriched 여부) */
+.tree-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.tree-dot.has{background:#d4789c}
+.tree-dot.empty{background:#ddd}
 
-/* 인덱스 */
-.idx-header{
-  background:var(--accent);color:#fff;
-  padding:20px 16px;
-  border-bottom:3px solid var(--accent-dark);
-}
-.idx-header h1{font-size:22px;font-weight:700;margin-bottom:4px}
-.idx-header p{font-size:13px;opacity:.85}
-.idx-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:0;
-  border-left:1px solid #D9D9D9;
-  border-top:1px solid #D9D9D9;
-}
-.idx-card{
-  background:#fff;
-  border-right:1px solid #D9D9D9;
-  border-bottom:1px solid #D9D9D9;
-  padding:18px 14px;
-  text-decoration:none;color:inherit;
-  display:block;
-}
-.idx-card:active{background:#EDF3FB}
-.idx-card .ic{font-size:26px;margin-bottom:8px}
-.idx-card .n{font-size:11px;font-weight:800;color:var(--card-c);margin-bottom:4px}
-.idx-card h2{font-size:14px;font-weight:700;margin-bottom:4px;line-height:1.3;color:#1a1a1a}
-.idx-card .m{font-size:12px;color:#888}
-.idx-card .bar{height:3px;background:var(--card-c);border-radius:0;margin-top:10px}
+/* 개수 뱃지 */
+.tree-count{margin-left:auto;font-size:.68rem;opacity:.65;font-weight:400}
 
-@media(min-width:600px){
-  .idx-grid{grid-template-columns:repeat(3,1fr)}
-  .sheet-info h1{font-size:24px}
-}
-@media(min-width:900px){
-  body{max-width:900px;margin:0 auto}
-  .sheet-tabs{max-width:900px;left:50%;transform:translateX(-50%)}
-  .ribbon{max-width:900px;left:50%;transform:translateX(-50%);position:sticky}
-}
-
+/* 모달 */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;padding:1rem;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex}
+@media(min-width:640px){.overlay{align-items:center}}
+.modal{background:#fff;border-radius:1rem 1rem 0 0;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,.18)}
+@media(min-width:640px){.modal{border-radius:1rem;max-height:85vh}}
+.modal-header{background:#d4789c;color:#fff;padding:.9rem 1.25rem;border-radius:1rem 1rem 0 0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+.modal-header h2{font-size:.95rem;font-weight:700;line-height:1.3}
+.modal-close{background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;opacity:.8;line-height:1}
+.modal-close:hover{opacity:1}
+.modal-body{padding:1.1rem;display:flex;flex-direction:column;gap:.9rem}
+.sec-bg{background:#fdf0f5;border-left:4px solid #d4789c;border-radius:0 .5rem .5rem 0;padding:.8rem 1rem}
+.sec-expl{background:#f3eefa;border-left:4px solid #8b6bae;border-radius:0 .5rem .5rem 0;padding:.8rem 1rem}
+.sec-mn{background:#8b6bae;color:#fff;border-radius:.75rem;padding:.95rem 1.2rem}
+.sec-label{font-size:.64rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.sec-bg .sec-label{color:#d4789c}
+.sec-expl .sec-label{color:#8b6bae}
+.sec-mn .sec-label{color:rgba(255,255,255,.75)}
+.sec-bg p,.sec-expl p{font-size:.85rem;line-height:1.7;color:#333}
+.sec-mn p{font-size:.92rem;line-height:1.6;font-weight:600}
+.no-data{font-size:.82rem;color:#bbb;font-style:italic}
 </style>
 </head>
 <body>
 
-<div class="ribbon">
-  <a class="ribbon-back" href="/topcit">◀ 목록</a>
-  <div class="ribbon-title">🔒 04. 정보보안</div>
+<div class="header">
+  <a href="/topcit/" class="header-back">←</a>
+  <span style="font-size:1.2rem">🔒</span>
+  <h1>TOPCIT 04 &nbsp;정보보안</h1>
+  <span class="header-cnt">70개 개념</span>
 </div>
 
-<div class="sheet-info">
-  <div class="sheet-badge">기술영역 04</div>
-  <h1>정보보안</h1>
-  <p>TOPCIT 에센스 핵심 정리</p>
-</div>
-<div class="stat-row">
-  <div class="stat-cell"><div class="stat-num">19</div><div class="stat-label">소단원</div></div>
-  <div class="stat-cell"><div class="stat-num">70</div><div class="stat-label">세부항목</div></div>
-  <div class="stat-cell"><div class="stat-num">44</div><div class="stat-label">키워드</div></div>
-  <div class="stat-cell"><div class="stat-num">22</div><div class="stat-label">출제포인트</div></div>
+<div class="view-toggle">
+  <button class="vtab active" onclick="switchView('card', this)">🃏 카드</button>
+  <button class="vtab" onclick="switchView('fb', this)">🌳 트리</button>
 </div>
 
-<div class="search-bar">
-  <label>🔍 검색</label>
-  <input id="search" class="search" type="search" placeholder="소단원명 검색..." autocomplete="off">
+<div class="search-wrap">
+  <input class="search" type="text" placeholder="🔍  개념 검색..." oninput="applyFilters()">
 </div>
 
-<div class="tbl-wrap">
-  <div class="tbl-header">
-    <div>NO</div><div>소단원</div><div></div>
+<div class="tabs" id="tab-bar">
+<button class="tab active" onclick="filterTab(this,'all')">전체</button>
+<button class="tab" onclick="filterTab(this,'0')">정보보안 기초</button>
+<button class="tab" onclick="filterTab(this,'1')">암호 기술</button>
+<button class="tab" onclick="filterTab(this,'2')">애플리케이션 & 시큐어 코딩</button>
+<button class="tab" onclick="filterTab(this,'3')">보안관리 & 표준</button>
+<button class="tab" onclick="filterTab(this,'4')">데이터베이스 보안</button>
+<button class="tab" onclick="filterTab(this,'5')">네트워크 보안</button>
+<button class="tab" onclick="filterTab(this,'6')">개인정보 보호</button>
+</div>
+<div id="card-content">
+<div class="section-group" data-chapter="0"><div class="section-label">정보보안의 개요</div><div class="card-grid"><div class="card" onclick="openModal('정보보안의 개요','','','')"><div class="card-title">정보보안의 개요</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="0"><div class="section-label">정보보안의 기본 용어</div><div class="card-grid"><div class="card" onclick="openModal('부인방지(Non-Repudiation)','','','')"><div class="card-title">부인방지(Non-Repudiation)</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('전자서명','','','')"><div class="card-title">전자서명</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('주요 보안 솔루션','','','')"><div class="card-title">주요 보안 솔루션</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="0"><div class="section-label">정보보안 신기술 용어</div><div class="card-grid"><div class="card" onclick="openModal('블록체인','','','')"><div class="card-title">블록체인</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('망분리와 망연계','','','')"><div class="card-title">망분리와 망연계</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('이상금융거래 탐지시스템(FDS: Fraud Detection System)','','','')"><div class="card-title">이상금융거래 탐지시스템(FDS: Fraud Detection System)</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('양자 암호','','','')"><div class="card-title">양자 암호</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('신뢰 플랫폼 D-S(TPM, Trusted Platform Module)','','','')"><div class="card-title">신뢰 플랫폼 D-S(TPM, Trusted Platform Module)</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="0"><div class="section-label">최신 정보기술 관련 보안동향</div><div class="card-grid"><div class="card" onclick="openModal('IoT 보안','','','')"><div class="card-title">IoT 보안</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="1"><div class="section-label">암호 기술</div><div class="card-grid"><div class="card" onclick="openModal('암호의 개념','','','')"><div class="card-title">암호의 개념</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('암호화와 복호화(Decryption)','','','')"><div class="card-title">암호화와 복호화(Decryption)</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('암호기술의 분류','','','')"><div class="card-title">암호기술의 분류</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('비밀키 암호와 공개키 암호 알고리즘','','','')"><div class="card-title">비밀키 암호와 공개키 암호 알고리즘</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('해쉬','','','')"><div class="card-title">해쉬</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('인증(Authentication) 개념','','','')"><div class="card-title">인증(Authentication) 개념</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('인증방식의 유','','','')"><div class="card-title">인증방식의 유</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('인증기술의 종류','','','')"><div class="card-title">인증기술의 종류</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('전자서명','','','')"><div class="card-title">전자서명</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('접근통제 개요','','','')"><div class="card-title">접근통제 개요</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('접근통제 정책','','','')"><div class="card-title">접근통제 정책</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('접근통제 정책의 종류','','','')"><div class="card-title">접근통제 정책의 종류</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('접근통제 메커니즘','','','')"><div class="card-title">접근통제 메커니즘</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('접근통제 모델','','','')"><div class="card-title">접근통제 모델</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('APT(Advanced Persistent Threat) 공격','','','')"><div class="card-title">APT(Advanced Persistent Threat) 공격</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('파밍(Pharming)','','','')"><div class="card-title">파밍(Pharming)</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('큐싱','','','')"><div class="card-title">큐싱</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">제품 ㆍ서비스 설계 개발에서 시큐어 코딩, 소프트웨어, 애플리케이션 보안</div><div class="card-grid"><div class="card" onclick="openModal('악성 코드 설치 “Fileless” 공격','','','')"><div class="card-title">악성 코드 설치 “Fileless” 공격</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('클라우드 보안','','','')"><div class="card-title">클라우드 보안</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('빅데이터 보안','','','')"><div class="card-title">빅데이터 보안</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('모바일 보','','','')"><div class="card-title">모바일 보</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('위험관리(Risk Management)','','','')"><div class="card-title">위험관리(Risk Management)</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">시큐어 코딩의 필요성</div><div class="card-grid"><div class="card" onclick="openModal('시큐어 코딩의 필요성','','','')"><div class="card-title">시큐어 코딩의 필요성</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">시큐어 코딩 주요내용</div><div class="card-grid"><div class="card" onclick="openModal('SW 보안약점과 보안 취약점','','','')"><div class="card-title">SW 보안약점과 보안 취약점</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('시큐어 개발 생명주기','','','')"><div class="card-title">시큐어 개발 생명주기</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="2"><div class="section-label">시큐어 코딩 주요기법</div><div class="card-grid"><div class="card" onclick="openModal('JAVA 시큐어 코딩 주요기법','','','')"><div class="card-title">JAVA 시큐어 코딩 주요기법</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('C 시큐어 코딩 주요기법','','','')"><div class="card-title">C 시큐어 코딩 주요기법</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('Android-JAVA 시큐어 코딩 주요기법','','','')"><div class="card-title">Android-JAVA 시큐어 코딩 주요기법</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="3"><div class="section-label">정보보호 관리체계</div><div class="card-grid"><div class="card" onclick="openModal('정보보호 관리체계(ISMS)의 개요','','','')"><div class="card-title">정보보호 관리체계(ISMS)의 개요</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('위험관리( Management)','','','')"><div class="card-title">위험관리( Management)</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('정보보호 및 개인정보보호 관리체계','','','')"><div class="card-title">정보보호 및 개인정보보호 관리체계</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="3"><div class="section-label">정보보호 표준 및 관련 체계</div><div class="card-grid"><div class="card" onclick="openModal('데이터베이스 보안의 개요','','','')"><div class="card-title">데이터베이스 보안의 개요</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('데이터베이스의 보안 위협 및 대응','','','')"><div class="card-title">데이터베이스의 보안 위협 및 대응</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('네트워크 공격의 유형과 대응','','','')"><div class="card-title">네트워크 공격의 유형과 대응</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('윈도우 시스템 보안 개요','','','')"><div class="card-title">윈도우 시스템 보안 개요</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="4"><div class="section-label">데이터베이스 보안의 개요</div><div class="card-grid"><div class="card" onclick="openModal('데이터베이스 보안의 개요','','','')"><div class="card-title">데이터베이스 보안의 개요</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('데이터베이스의 보안 위협 및 대응','','','')"><div class="card-title">데이터베이스의 보안 위협 및 대응</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="4"><div class="section-label">데이터베이스 접근통제</div><div class="card-grid"><div class="card" onclick="openModal('데이터베이스 접근통제 정책','','','')"><div class="card-title">데이터베이스 접근통제 정책</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('데이터베이스 접근통제 구축 방식','','','')"><div class="card-title">데이터베이스 접근통제 구축 방식</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="4"><div class="section-label">데이터베이스 암호화</div><div class="card-grid"><div class="card" onclick="openModal('데이터베이스 암호화 적용 시 고려사항','','','')"><div class="card-title">데이터베이스 암호화 적용 시 고려사항</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('데이터베이스 암호화 대상 및 방식','','','')"><div class="card-title">데이터베이스 암호화 대상 및 방식</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('데이터베이스 암호화의 유형','','','')"><div class="card-title">데이터베이스 암호화의 유형</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('데이터베이스 암호화 적용','','','')"><div class="card-title">데이터베이스 암호화 적용</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('데이터베이스 암호화 적용절차','','','')"><div class="card-title">데이터베이스 암호화 적용절차</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="4"><div class="section-label">데이터베이스 암호화 | (Key) 관리</div><div class="card-grid"><div class="card" onclick="openModal('데이터베이스 암호화 키의 종류','','','')"><div class="card-title">데이터베이스 암호화 키의 종류</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('암호화 키 생명주기 단계별 관리방안','','','')"><div class="card-title">암호화 키 생명주기 단계별 관리방안</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('윈도우 시스템 보안 개요','','','')"><div class="card-title">윈도우 시스템 보안 개요</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('계정 및 패스워드 관리','','','')"><div class="card-title">계정 및 패스워드 관리</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('시스템 보안','','','')"><div class="card-title">시스템 보안</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('터미널 서비스 점검','','','')"><div class="card-title">터미널 서비스 점검</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('유닉스 계열 시스템 보안 개요','','','')"><div class="card-title">유닉스 계열 시스템 보안 개요</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('계정 및 패스워드 관리','','','')"><div class="card-title">계정 및 패스워드 관리</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('접근통제','','','')"><div class="card-title">접근통제</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('시스템 보안','','','')"><div class="card-title">시스템 보안</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('서비스 보안','','','')"><div class="card-title">서비스 보안</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="5"><div class="section-label">네트워크 보안의 개요</div><div class="card-grid"><div class="card" onclick="openModal('네트워크 보안 개념','','','')"><div class="card-title">네트워크 보안 개념</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('통신 프로토콜 계층과 보안','','','')"><div class="card-title">통신 프로토콜 계층과 보안</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('네트워크 공격의 유형과 대응','','','')"><div class="card-title">네트워크 공격의 유형과 대응</div><div class="card-preview">🧠 </div></div></div></div>
+<div class="section-group" data-chapter="6"><div class="section-label">개인정보보호</div><div class="card-grid"><div class="card" onclick="openModal('개인정보보호 수칙','','','')"><div class="card-title">개인정보보호 수칙</div><div class="card-preview">🧠 </div></div><div class="card" onclick="openModal('정보보호 및 개인정보보호 관리체계(ISMS-P)','','','')"><div class="card-title">정보보호 및 개인정보보호 관리체계(ISMS-P)</div><div class="card-preview">🧠 </div></div></div></div>
+
+</div>
+
+<div class="fb-wrap" id="fb-content"><div class="fb-title">🔒 정보보안</div><div class="fb-spine"><div class="fb-branch left"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch0')"><span class="fb-arr">▶</span>정보보안 기초<span class="fb-cnt">10개</span></div><div class="fb-sec-blocks" id="fb_ch0"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec0_0')"><span class="fb-arr">▶</span>정보보안의 개요 <em>1</em></div><div class="fb-con-list" id="fb_sec0_0"><span class="fb-con" onclick="openModal('정보보안의 개요','','','')">정보보안의 개요</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec0_1')"><span class="fb-arr">▶</span>정보보안의 기본 용어 <em>3</em></div><div class="fb-con-list" id="fb_sec0_1"><span class="fb-con" onclick="openModal('부인방지(Non-Repudiation)','','','')">부인방지(Non-Repudiation)</span><span class="fb-con" onclick="openModal('전자서명','','','')">전자서명</span><span class="fb-con" onclick="openModal('주요 보안 솔루션','','','')">주요 보안 솔루션</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec0_2')"><span class="fb-arr">▶</span>정보보안 신기술 용어 <em>5</em></div><div class="fb-con-list" id="fb_sec0_2"><span class="fb-con" onclick="openModal('블록체인','','','')">블록체인</span><span class="fb-con" onclick="openModal('망분리와 망연계','','','')">망분리와 망연계</span><span class="fb-con" onclick="openModal('이상금융거래 탐지시스템(FDS: Fraud Detection System)','','','')">이상금융거래 탐지시스템(FDS: Fraud Detection System)</span><span class="fb-con" onclick="openModal('양자 암호','','','')">양자 암호</span><span class="fb-con" onclick="openModal('신뢰 플랫폼 D-S(TPM, Trusted Platform Module)','','','')">신뢰 플랫폼 D-S(TPM, Trusted Platform Module)</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec0_3')"><span class="fb-arr">▶</span>최신 정보기술 관련 보안동향 <em>1</em></div><div class="fb-con-list" id="fb_sec0_3"><span class="fb-con" onclick="openModal('IoT 보안','','','')">IoT 보안</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch right"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch1')"><span class="fb-arr">▶</span>암호 기술<span class="fb-cnt">17개</span></div><div class="fb-sec-blocks" id="fb_ch1"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec1_0')"><span class="fb-arr">▶</span>암호 기술 <em>17</em></div><div class="fb-con-list" id="fb_sec1_0"><span class="fb-con" onclick="openModal('암호의 개념','','','')">암호의 개념</span><span class="fb-con" onclick="openModal('암호화와 복호화(Decryption)','','','')">암호화와 복호화(Decryption)</span><span class="fb-con" onclick="openModal('암호기술의 분류','','','')">암호기술의 분류</span><span class="fb-con" onclick="openModal('비밀키 암호와 공개키 암호 알고리즘','','','')">비밀키 암호와 공개키 암호 알고리즘</span><span class="fb-con" onclick="openModal('해쉬','','','')">해쉬</span><span class="fb-con" onclick="openModal('인증(Authentication) 개념','','','')">인증(Authentication) 개념</span><span class="fb-con" onclick="openModal('인증방식의 유','','','')">인증방식의 유</span><span class="fb-con" onclick="openModal('인증기술의 종류','','','')">인증기술의 종류</span><span class="fb-con" onclick="openModal('전자서명','','','')">전자서명</span><span class="fb-con" onclick="openModal('접근통제 개요','','','')">접근통제 개요</span><span class="fb-con" onclick="openModal('접근통제 정책','','','')">접근통제 정책</span><span class="fb-con" onclick="openModal('접근통제 정책의 종류','','','')">접근통제 정책의 종류</span><span class="fb-con" onclick="openModal('접근통제 메커니즘','','','')">접근통제 메커니즘</span><span class="fb-con" onclick="openModal('접근통제 모델','','','')">접근통제 모델</span><span class="fb-con" onclick="openModal('APT(Advanced Persistent Threat) 공격','','','')">APT(Advanced Persistent Threat) 공격</span><span class="fb-con" onclick="openModal('파밍(Pharming)','','','')">파밍(Pharming)</span><span class="fb-con" onclick="openModal('큐싱','','','')">큐싱</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch left"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch2')"><span class="fb-arr">▶</span>애플리케이션 & 시큐어 코딩<span class="fb-cnt">11개</span></div><div class="fb-sec-blocks" id="fb_ch2"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_0')"><span class="fb-arr">▶</span>제품 ㆍ서비스 설계 개발에서 시큐어 코딩, 소프트웨어, 애플리케이션 보안 <em>5</em></div><div class="fb-con-list" id="fb_sec2_0"><span class="fb-con" onclick="openModal('악성 코드 설치 “Fileless” 공격','','','')">악성 코드 설치 “Fileless” 공격</span><span class="fb-con" onclick="openModal('클라우드 보안','','','')">클라우드 보안</span><span class="fb-con" onclick="openModal('빅데이터 보안','','','')">빅데이터 보안</span><span class="fb-con" onclick="openModal('모바일 보','','','')">모바일 보</span><span class="fb-con" onclick="openModal('위험관리(Risk Management)','','','')">위험관리(Risk Management)</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_1')"><span class="fb-arr">▶</span>시큐어 코딩의 필요성 <em>1</em></div><div class="fb-con-list" id="fb_sec2_1"><span class="fb-con" onclick="openModal('시큐어 코딩의 필요성','','','')">시큐어 코딩의 필요성</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_2')"><span class="fb-arr">▶</span>시큐어 코딩 주요내용 <em>2</em></div><div class="fb-con-list" id="fb_sec2_2"><span class="fb-con" onclick="openModal('SW 보안약점과 보안 취약점','','','')">SW 보안약점과 보안 취약점</span><span class="fb-con" onclick="openModal('시큐어 개발 생명주기','','','')">시큐어 개발 생명주기</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec2_3')"><span class="fb-arr">▶</span>시큐어 코딩 주요기법 <em>3</em></div><div class="fb-con-list" id="fb_sec2_3"><span class="fb-con" onclick="openModal('JAVA 시큐어 코딩 주요기법','','','')">JAVA 시큐어 코딩 주요기법</span><span class="fb-con" onclick="openModal('C 시큐어 코딩 주요기법','','','')">C 시큐어 코딩 주요기법</span><span class="fb-con" onclick="openModal('Android-JAVA 시큐어 코딩 주요기법','','','')">Android-JAVA 시큐어 코딩 주요기법</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch right"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch3')"><span class="fb-arr">▶</span>보안관리 & 표준<span class="fb-cnt">7개</span></div><div class="fb-sec-blocks" id="fb_ch3"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec3_0')"><span class="fb-arr">▶</span>정보보호 관리체계 <em>3</em></div><div class="fb-con-list" id="fb_sec3_0"><span class="fb-con" onclick="openModal('정보보호 관리체계(ISMS)의 개요','','','')">정보보호 관리체계(ISMS)의 개요</span><span class="fb-con" onclick="openModal('위험관리( Management)','','','')">위험관리( Management)</span><span class="fb-con" onclick="openModal('정보보호 및 개인정보보호 관리체계','','','')">정보보호 및 개인정보보호 관리체계</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec3_1')"><span class="fb-arr">▶</span>정보보호 표준 및 관련 체계 <em>4</em></div><div class="fb-con-list" id="fb_sec3_1"><span class="fb-con" onclick="openModal('데이터베이스 보안의 개요','','','')">데이터베이스 보안의 개요</span><span class="fb-con" onclick="openModal('데이터베이스의 보안 위협 및 대응','','','')">데이터베이스의 보안 위협 및 대응</span><span class="fb-con" onclick="openModal('네트워크 공격의 유형과 대응','','','')">네트워크 공격의 유형과 대응</span><span class="fb-con" onclick="openModal('윈도우 시스템 보안 개요','','','')">윈도우 시스템 보안 개요</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch left"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch4')"><span class="fb-arr">▶</span>데이터베이스 보안<span class="fb-cnt">20개</span></div><div class="fb-sec-blocks" id="fb_ch4"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec4_0')"><span class="fb-arr">▶</span>데이터베이스 보안의 개요 <em>2</em></div><div class="fb-con-list" id="fb_sec4_0"><span class="fb-con" onclick="openModal('데이터베이스 보안의 개요','','','')">데이터베이스 보안의 개요</span><span class="fb-con" onclick="openModal('데이터베이스의 보안 위협 및 대응','','','')">데이터베이스의 보안 위협 및 대응</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec4_1')"><span class="fb-arr">▶</span>데이터베이스 접근통제 <em>2</em></div><div class="fb-con-list" id="fb_sec4_1"><span class="fb-con" onclick="openModal('데이터베이스 접근통제 정책','','','')">데이터베이스 접근통제 정책</span><span class="fb-con" onclick="openModal('데이터베이스 접근통제 구축 방식','','','')">데이터베이스 접근통제 구축 방식</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec4_2')"><span class="fb-arr">▶</span>데이터베이스 암호화 <em>5</em></div><div class="fb-con-list" id="fb_sec4_2"><span class="fb-con" onclick="openModal('데이터베이스 암호화 적용 시 고려사항','','','')">데이터베이스 암호화 적용 시 고려사항</span><span class="fb-con" onclick="openModal('데이터베이스 암호화 대상 및 방식','','','')">데이터베이스 암호화 대상 및 방식</span><span class="fb-con" onclick="openModal('데이터베이스 암호화의 유형','','','')">데이터베이스 암호화의 유형</span><span class="fb-con" onclick="openModal('데이터베이스 암호화 적용','','','')">데이터베이스 암호화 적용</span><span class="fb-con" onclick="openModal('데이터베이스 암호화 적용절차','','','')">데이터베이스 암호화 적용절차</span></div></div><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec4_3')"><span class="fb-arr">▶</span>데이터베이스 암호화 | (Key) 관리 <em>11</em></div><div class="fb-con-list" id="fb_sec4_3"><span class="fb-con" onclick="openModal('데이터베이스 암호화 키의 종류','','','')">데이터베이스 암호화 키의 종류</span><span class="fb-con" onclick="openModal('암호화 키 생명주기 단계별 관리방안','','','')">암호화 키 생명주기 단계별 관리방안</span><span class="fb-con" onclick="openModal('윈도우 시스템 보안 개요','','','')">윈도우 시스템 보안 개요</span><span class="fb-con" onclick="openModal('계정 및 패스워드 관리','','','')">계정 및 패스워드 관리</span><span class="fb-con" onclick="openModal('시스템 보안','','','')">시스템 보안</span><span class="fb-con" onclick="openModal('터미널 서비스 점검','','','')">터미널 서비스 점검</span><span class="fb-con" onclick="openModal('유닉스 계열 시스템 보안 개요','','','')">유닉스 계열 시스템 보안 개요</span><span class="fb-con" onclick="openModal('계정 및 패스워드 관리','','','')">계정 및 패스워드 관리</span><span class="fb-con" onclick="openModal('접근통제','','','')">접근통제</span><span class="fb-con" onclick="openModal('시스템 보안','','','')">시스템 보안</span><span class="fb-con" onclick="openModal('서비스 보안','','','')">서비스 보안</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch right"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch5')"><span class="fb-arr">▶</span>네트워크 보안<span class="fb-cnt">3개</span></div><div class="fb-sec-blocks" id="fb_ch5"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec5_0')"><span class="fb-arr">▶</span>네트워크 보안의 개요 <em>3</em></div><div class="fb-con-list" id="fb_sec5_0"><span class="fb-con" onclick="openModal('네트워크 보안 개념','','','')">네트워크 보안 개념</span><span class="fb-con" onclick="openModal('통신 프로토콜 계층과 보안','','','')">통신 프로토콜 계층과 보안</span><span class="fb-con" onclick="openModal('네트워크 공격의 유형과 대응','','','')">네트워크 공격의 유형과 대응</span></div></div></div></div><div class="fb-connector"></div></div><div class="fb-branch left"><div class="fb-inner"><div class="fb-ch" onclick="fbToggle('fb_ch6')"><span class="fb-arr">▶</span>개인정보 보호<span class="fb-cnt">2개</span></div><div class="fb-sec-blocks" id="fb_ch6"><div class="fb-sec-block"><div class="fb-sec" onclick="fbToggle('fb_sec6_0')"><span class="fb-arr">▶</span>개인정보보호 <em>2</em></div><div class="fb-con-list" id="fb_sec6_0"><span class="fb-con" onclick="openModal('개인정보보호 수칙','','','')">개인정보보호 수칙</span><span class="fb-con" onclick="openModal('정보보호 및 개인정보보호 관리체계(ISMS-P)','','','')">정보보호 및 개인정보보호 관리체계(ISMS-P)</span></div></div></div></div><div class="fb-connector"></div></div></div><div class="fb-tail">▼</div></div>
+
+<!-- 모달 -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="m-title"></h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sec-bg">
+        <div class="sec-label">💡 왜 생겼어?</div>
+        <p id="m-bg"></p>
+      </div>
+      <div class="sec-expl">
+        <div class="sec-label">📖 무슨 뜻이야?</div>
+        <p id="m-expl"></p>
+      </div>
+      <div class="sec-mn">
+        <div class="sec-label">🧠 이렇게 외워!</div>
+        <p id="m-mn"></p>
+      </div>
+    </div>
   </div>
-  <div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">정보보안의 기본 용어</div><div class="row-ch">정보보안 개념</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">부인방지(Non-Repudiation)</div>
-  <p class="sub-c">메시지를 송수신한 후 송수신 사실을 증명함으로써 송수신 여부에 대한 부인을 방지하기 우 3가지 유형으로 나누어 볼 수 있다. 보안 보안 하며, 아래 0 송신 OIA (non-repudiation of origin) 하고도 송신하지 않았다고 주장하는 송신자의 부인을 방지하는 AS 말한다. (non-repudiation of delivery) 되었음에도 메시지</p>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">전자서명</div>
-  <p class="sub-c">전자서명은 서명자가 특정 문서에 자신의 개인키를 이용하여 해쉬 연산을 함으로 레 데이터의 무결성과 서명자의 인증성 을 함께 제공하는 방식이다. 메시지 전체에 대해 직접 서명하는 것은 공개키 연산을 모든 메시지 블록마다 반복해야 하기 때문에 매우 비효율적이며 따라서 메시지에 대한 해쉬 값을 계산한 후 이것에 - 서명함으로써 SSAC oes 생성할 수 있다. </p>
-</div><div class="sub">
-  <span class="sub-mk">사)</span>
-  <div class="sub-t">주요 보안 솔루션</div>
-  <p class="sub-c">0) 방화벽『ㅠ6083! 사설 네트워크를 외부로부터 보호하기 위해 공중 네트워크와 사설 네트워크 사이에 설치하는 보안솔루션을 말한다. 일반 적으로 방화벽에는 크게 두 가지 종류가 있는데 첫 번째 형태는 패킷 필터링 게이트웨이[?8 Fitering Gateway)= 일 련의 FAIS 바탕으로 패킷의 통과 여부를 판단하는 장치이며, 두 번째 형태는 프록시 서버</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">03</div>
-  <div><div class="row-title">정보보안 신기술 용어</div><div class="row-ch">정보보안 개념</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">블록체인</div>
-  <p class="sub-c">암호화폐인 비트코인 시스템과 네트워크에서 발생하는 모든 거래는 하나의 공개 장부에 기록되고, 분산되어 저장도 일장부를 말한다. 블록처인은 HAAS (Distributed Ｌ6096/로서 네트워크 참여자들이 데이터를 저장하고 검증하기 우 조로 설계 되어 있다. 거래가 발생하게 되면 거래된 정보의 ASS 위해 일정시간00분) 동안 발생한 거래를 모아서 (blo</p><ul class="bul"><li>분산저장을 통한 비용</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">망분리와 망연계</div>
-  <p class="sub-c">통한 불법적인 접근과 내부정보 유출을 차딘 치를 말하며, 물리적 망분리와 논리적 망분리의 두 가지 FSO! 있다. &lt;표 1&gt; 물리적 망분리와 논리적 망분리 = 물리적 망분리 논리적 망분리 운영방법 업무용 망과 인터넷용 YS 물리적 Hel(Pc 2H 사용) | 가상화 등의 방법을 사용하는 논리적 Bel(PC 1c 사용) 도입비용 많음(추가 PC, 망구축) 적</p>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">이상금융거래 탐지시스템(FDS: Fraud Detection System)</div>
-  <p class="sub-c">POSE 전자금융거래에 사용되는 단말기 정보, 접속정보, 거래내용 SS 종합적으로 분석해 의심거래를 탐지하고, OS 융거래를 치단하는 시스템으로, 사용자의 평소 거래 MES 분석하여 패턴에 위배되는 액션이 취해지게 되면 이상 행위로 판단하기 때문에 패턴분석이 FDSS| 핵심 엔진이며, 아래와 같은 기능을 가진다. O MAE 이용자의 정보 및 행위에 대한 정</p>
-</div><div class="sub">
-  <span class="sub-mk">마)</span>
-  <div class="sub-t">양자 암호</div>
-  <p class="sub-c">역학의 SAS 활용한 암호 기술이다. 수학적 복잡성을 기반으로 하는 기존의 암호체계와는 달리 양자 암호는 양자 10.67107의 $82 7hlos 한다 Oke Sale + ein 원가의 Aes 되돌릴 수 없는 득성을 가지는, 이는 송신자 와 수신자 이외의 제 3자가 ESS 위해 측정하는 순간 양자 상태를 변화시켜 수신자가 도청 시도를 파악할 수 있다. 1.</p>
-</div><div class="sub">
-  <span class="sub-mk">바)</span>
-  <div class="sub-t">신뢰 플랫폼 D-S(TPM, Trusted Platform Module)</div>
-  <p class="sub-c">국제산업표준단체인 TCG(Trusted Computing Group)O|| 소프트웨어만으로 운영되는 보안 기술의 한계점을 극복하 위한 표준 규격으로 암호화된 키, 패스워드, 디지털 인증서와 같이 SOS Bee 하는 중요한 데이터를 하드웨어적 로 분리된 안전한 공간에 저장하여 키(&lt;6/의 관리나 암호화 처리 SS 해당 보안 장치 내부에서만 처리하도록 하는 력</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">암호 기술</div><div class="row-ch">정보보안 개념</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 암호의 개념</li><li>마) 비밀키 암호와 공개키 암호 알고리즘 [열거형]</li><li>가) 인증(Authentication) 개념</li><li>다) 인증기술의 종류</li><li>다) 인증기술의 종류 [열거형]</li><li>라) 전자서명 [열거형]</li><li>다) 접근통제 정책의 종류</li><li>다) 큐싱 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">암호의 개념</div>
-  <p class="sub-c">누구나 볼 수 있는 형태의 평문[78016&gt;을 해석하기 불가능한 형태의 암호문(2707606×(으로 변형하는 WIS 암호화 et 하는더 이 들을 USst0le} 부른다. 이 두 변환 과정에서 사용되는 수학적 기능을 암호 알고리즘이라고 하며 암호 알 고리즘은 암후회와 복호회를 수행하기 위해 키(&lt;6//를 사용하게 된다. 한마디로 정보보안의 acy 목표 중의 </p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">암호화와 복호화(Decryption)</div>
-  <p class="sub-c">}호화란 평문S 인가받지 않은 제 3자가 인식할 수 없는 형태로(암호문) 변환하는 과정을 말하며, 복호화란 a 호화 과정의 역과정으로 변환된 암호문을 다시 평문으로 복원하는 과정을 말한다. 암호화 키 mo |__,/ 암호 | 때 알고리즘 복호화 키 암호 | | gels [그림 3] 암호화와 복호화 암호화는 ASO 주로 군사적인 목적으로 사용되었지만, 현재는</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">암호기술의 분류</div>
-  <p class="sub-c">암호 기술은 [그림 4] 에서와 같이 크게 암호화 기술과 암호 프로토콜 기술로 분류된다. (1) 암호화 기술 암호화 키와 복호화 키가 같은지의 여부에 따라 암호화 키와 복호화 키가 같은 대칭 키 암호 방식과 암호화 키와 복호화 키가 서로 다른 공개키 암호 방식으로 분류할 수 있다. (2) 암호 프로토콜 암호 기술을 사용하는 프로토콜을 의미한다. 프로토콤은 </p><ul class="bul"><li>암호화 키에 의하여 암호화 및 복호화가 효과적으로 이루어져야 한다.</li><li>암호화 알고리즘보다는 암호 키에 의한 보안이 이루어져야 한다.</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">마)</span>
-  <div class="sub-t">비밀키 암호와 공개키 암호 알고리즘</div>
-  <p class="sub-c">oO) 비밀키 암 암호 알고리즘 비밀키 암호 알고리즘은 암호화에 사용하는 암호화 키와 복호화에 사용하는 복호화 키가 동일하며, 키의 길이가 짧아도 되고 암호화와 복호화 연산의 속도가 빠르다는 장점이 있다. 암호화 키 동일 복호화 키 mo 암호 =o 암호 mo [ee Sf sits JL eee JL ts JL [그림 6] 비밀키 암호 알고리즘 그러나 송신자와</p><ul class="bul"><li>블록 암호 알고리즘</li><li>스트림 암호 알고리즘</li><li>엘가말</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">바)</span>
-  <div class="sub-t">해쉬</div>
-  <p class="sub-c">O 해쉬 함수의 개념 aie 함수 aor 는 기능이라고 S 수 있다. 예 비트의 결과를 출력한다. inc 함수 또는 해쉬 QI Hash Algorthm)e [그림 10과 같이 다양한 크기를 갖는 임의의 데이터로부터 고정된 길이 해쉬 Atal 코드)을 출력하는 수학적 함수이다. 다시 말해서 해쉬 함수는 SIME 임의의 길이를 갖는 입력 비트열을 고 어 HAS</p><ul class="bul"><li>무결성 걷증 방식</li><li>패스워드를 기초로 한 암호화</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">인증(Authentication) 개념</div>
-  <p class="sub-c">인증이란 정보의 주체가 되는 송신자와 수신자 간에 교류되는 정보의 내용이 변조 또는 삭제되지 않았는지, 그리고 주체 가 되는 S, 수신자가 정당한지를 확인하는 HAS 말한다. S 인증은 메시지 인증과 사용자 인증으로 나눌 수 있다. Lom M4 정보보안 이해와 활용 는 FAS 보장을 위해 인터넷 상에서 파일을 전송하거나 홈퍼이지에 올릴 경우 해쉬 함수를 이</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">인증방식의 유</div>
-  <p class="sub-c">사용자7 | 가지고 있 있는 AMS 이용하는 방법, 사용자가 가진 SUS 이용하는 방법, 사용자 자신의 신체적온 하는 방법 등이 있다. COHS + 지식 기반 인증 사용자가 알고 있는 정보(^ you know)Oi| 기반한 방법으로 PIN(Personal Identification Number), 패스워드, 계좌번호 !체나 신체의 특징에 기반(/}78 yo</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">인증기술의 종류</div>
-  <p class="sub-c">0 ose 인증 사용자가 미리 패스워드를 설정한 후, 인증 시 입력된 패스워드와 설정된 패스워드를 비교하여 사용자를 인증하는 방식 정보보안 이해와 활용 ) 로, 가장 널리 사용되는 인증 기술이지만 [그림 15!에서와 같이 가장 안전하지 않은 인증기술이기 때문에 사용시 세심 한 주의가 필요하다. 사회공학적 기법, 엿보기 :패스워드 정치 패스워드의 생성은 대문</p><ul class="bul"><li>패스워드 인증의 개요</li><li>패스워드에 대한 공격 기법</li><li>07의 종류</li><li>생체인증의 처리과정</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">전자서명</div>
-  <p class="sub-c">(8 전자서명의 개념 암호기술의 인증기능을 이용해 전자문서에 서명이 가능하게 하는 기술이 [그림 19:에서 보이는 전자서명이다. 공개키 암호 기술이 가지는 인증기능을 이용해 서명자의 신분을 인증하고 서명대상인 전자문서의 인증을 동시에 수행하도록 하여 전 자서명 효괴를 얻을 수 있다. 공개키 암호 방식의 기본 가정은 공개키에 다해 쌍이 되는 개인키삐밀키는 사</p><ul class="bul"><li>위조 방지; 정당한 MSA 이외의 타인은 MBS ALS 수 없어야 St</li><li>사용자 인증: 전자서명으로부터 서명자가 누구인지 확인할 수 있어야 함</li><li>재사용 방지: 하나의 ABS 다른 문서의 서명으로 재사용 할 수 없음</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">접근통제 개요</div>
-  <p class="sub-c">O 접근통제의 개념 접근통제란 사용자와 시스템이 상호작용을 하면서 누가 시스템에 접근하여 무 하며, 세부적으로 식별, 인증 및 인가의 세 부분으로 구성된다. |업을 할 수 있는지를 통제하는 것을 말 M4 정보보안 이해와 활용 정보보안 이해와 00 PKI 정의 PKS 안전한 거래를 위해 필요한 암호화. 인증 등에 필수 요소라 할 수 있는 공개키 관리를 위한 </p><ul class="bul"><li>식별</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">접근통제 정책</div>
-  <p class="sub-c">시스템의 보안정책은 접 eel 시스템의 설계 및 관리를 다루기 위한 상위 지침들이다. 일반적으로, 대상 시스템 자원들 을 보호하기 위해서 조직이 희망하는 기본적인 원칙들의 표현이다. 즉, 정책은 어떤 주체(이가 언제(760) 어떤 위치 OllAd(where), 어떤 객쳐 do 8!/에 대하여. 어떠한 AA(how)S 하도록 허용(또는 거부)할 것인지 접근통</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">접근통제 정책의 종류</div>
-  <p class="sub-c">경에 효과적으로 적용할 수 있다. 권한이 있는 사용자에게만 정보 자원에 접근이 가능하도 적 접근통저 접근통제 정책에는 강제적 접근통제, 임의 | 정 적 HALE RI(MAC: Mandatory Access Control) |에게 보안 SB(Security Level!S 부여하고 AAs © 제계를 구현하기 위한 정책으로 대표 | 정책 등이 있다. 레이블(36</p>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">접근통제 메커니즘</div>
-  <p class="sub-c">(1) 접근통제 행렬 주체와 객체를 행과 열로 표현하고 행렬의 각 엔트리는 접근 권한을 표시한다. 주체와 객체의 모든 관계를 행렬로 관리하 는데 특정 자원에 접근하기 위해 행렬을 검색하는 것은 비효율적이므로 (30300&quot;/ List2} Access Control 189 나누어 관리 한다. 객체 객체1 객체2 객체3 객체4 사용자&amp; 읽기 쓰기 읽기 읽기 쓰기</p>
-</div><div class="sub">
-  <span class="sub-mk">마)</span>
-  <div class="sub-t">접근통제 모델</div>
-  <p class="sub-c">0) BelH_apadula 모델 수학적 모델이며, 강제적 정책에 의한 접근 통제 모델(//&amp; BAe 미 국방성의 지원에 따라 설계된 모델로서 기 정보의 불법적인 파괴나 변조보다 기밀 유출 방지에 SAS 두었으며, 정보가 높은 레벨에서 낮은 레벨 (2 Biba 모델 Bel-Lepacua 모델의 단점인 무결성을 보장하도록 만들어진 모델(기밀성 보장하지 않음로</p>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">APT(Advanced Persistent Threat) 공격</div>
-  <p class="sub-c">® APT 공격의 개념 정치적, 사회적, 경제적, 스 정기적인 정보 수집으로 다양한 공격기술과 기즐점 고사저으로 취와점 파악 사회 공학적 해킹기법활용 중요한 공격대상이 표적 복합적ㆍ지능적으로 SAS 수행하기 위한 해킹 전략 [그림 27] APT 공격의 개념 @ APT2 공격으 절차 APT 공격은 침투, 검색, 수집 및 유출 단계 등의 과정을 거쳐 공격이 수</p><ul class="bul"><li>표적이 되는 대상의 보안체계 BAS 바탕으로 여러 취약점을 분석함으로써 조직의 종합적인</li><li>APT BAO 때 SE 엔드모인트이며 엔드포인트에서는 인터넷 메일 SNS, 메신저 PoP, USB 등의</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">파밍(Pharming)</div>
-  <p class="sub-c">0) 파밍[41807009) 공격의 개념 악성코드에 감염된 Pca SAE T}el0|L} 브라우저의 즐겨찾기'를 조작해서 금융회사나 포털사이트 등의 홈페이지에 접속하게 되면 자동으로 피싱(가짜)사이트로 유도되어 금융정보나 접속정보를 탈취함으로써 or 개인정보유출 등의 피해를 야기시키는 사기수법을 말한다. © 파밍 공격의 수행 절차 (2 수집한 금융정보 이용</p><ul class="bul"><li>Y 브라우저의 [인터넷 옵션] 메뉴를 클릭하고 (MOBS 선택하여 보안 수준을 강화</li><li>[20의 호스트 파일(\600000/60\/6/91070321407/6「(9“070889(의 위변조 여부를 수시로 확인</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">큐싱</div>
-  <p class="sub-c">(0 큐싱의 개념 FAS CRTE'D| HO, 금융정보를 Ect lishing)ol 힙성어로 CRASS 통해 악성 링크로 점속하게 하거나 직접 악성코드를 감염시키는 공격기법이다. “ot Sen con © 큐싱 공격 절차 스마트폰을 약성코드에 감염시켜 ASAE 정상 금융 사이트에 접속하더라도 가짜 금융사이트(피싱사이트:로 연결ㅡ가짜 ABAOIEOIA 4710</p><ul class="bul"><li>출처가 불명확한 홍보성 SVS] 웹사이트 링크 전속 지제</li><li>스미싱 RICH 설치</li><li>동의없이 애플리케이션이 설치될 경우 다운로드/설치 취소</li><li>불법 애플리케이션이 설치된 경우 애플리케이션 관리 메뉴에서 삭제</li><li>스미싱 피해가 예상될 경우 Bolo] 휴대폰 결제 내역 확인(통신사 또는 결제대행새|</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">최신 정보기술 관련 보안동향</div><div class="row-ch">정보보안 개념</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">IoT 보안</div>
-  <p class="sub-c">라우드 보안 데이터 보안 바일 일 보안 ost eau 나 클</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">정보보호 관리체계</div><div class="row-ch">보안관리체계와 표준</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">정보보호 관리체계(ISMS)의 개요</div>
-  
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">위험관리( Management)</div>
-  
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">정보보호 및 개인정보보호 관리체계</div>
-  
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">개인정보보호</div><div class="row-ch">정보보안 개념</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 개인정보보호 수칙 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">개인정보보호 수칙</div>
-  <p class="sub-c">(1 개인정보 수집 시 동의 획득 방안 반영 개인정보 수집 SIE 이용자의 개인정보 입력 전 단계에서 동의 사항을 공지해야 하며 동의 HFS 선택 가능하도록 구 현해야 한다. 정보 수집 동의시에는 a 개인정보 수집ㆍ이용 목적, b. 수집하는 개인정보의 항목, &lt; 개인정보의 보유ㆍ이용 기간, 0. 동 의 거부시 불이익을 모두 이용자에게 알리고 동의를 받아야 </p><ul class="bul"><li>개인정보를 개인정보처리시스템에 저장하거나 네트워크를 통해 전송할 때에는 불법적인 노출 또는 위ㆍ변조 방지를 위</li><li>비밀번호는 복호화 되지 않도록 일방향 암호화하여 저장</li><li>비밀번호 분실 시 복호화가 불가능하므로 임의의 비밀번호 제공 또는 재설정을 할 수 있는 기능을 포함하여 개발</li><li>주민등록번호, 여권번호, 운전면허번호, 외국인등록번호 등 고유식별정보 및 지문, 홍채, 음성, 필적 등 바이오정보는 ot</li><li>접근방법에 떠른 위험평가 방법</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">정보보호 및 개인정보보호 관리체계(ISMS-P)</div>
-  <p class="sub-c">@® ISMS-P2} 개요 기존 정보보호관리체계(69/6)와 개인정보보호관리체계(개/9;를 단일 제도에서 체계적으로 Host + 있도록 인증제도를 통합 cou 정보보안 이해와 활용</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">03</div>
-  <div><div class="row-title">정보보호 표준 및 관련 체계</div><div class="row-ch">보안관리체계와 표준</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>다) 네트워크 공격의 유형과 대응</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">데이터베이스 보안의 개요</div>
-  
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">데이터베이스의 보안 위협 및 대응</div>
-  <p class="sub-c">02 데이터베이스 접근통제 가) 데이터베이스 접근통제 정책 어 나) 데이터베이스 접근통제 구축 방식 03 데이터베이스 암호화 M4 정보보안 이해와 활용 정보보안 이해와 활용 01 네트워크 보안의 개요 가) 네트워크 보안 개념 나) 통신 프로토콜 계층과 보안</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">네트워크 공격의 유형과 대응</div>
-  <p class="sub-c">02 보안 프로토콜과 보안 솔루션 가) IPSec 나) SSL 03 무선랜 보안 가) 무선랜의 특징 나) 보안 위협과 대응 다) 무선랜 보안 표준 M4 정보보안 이해와 활용 가) 데이터베이스 암호화 적용 시 고려사항 나) 데이터베이스 암호화 대상 및 방식 다) 데이터베이스 암호화의 유형 라) 데이터베이스 암호화 적용 마) 데이터베이스 암호화 적용절차 8/ </p>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">윈도우 시스템 보안 개요</div>
-  <p class="sub-c">나) 계정 및 패스워드 관리 다) 접근통제 라) 시스템 보안 마) 서비스 보안 바) 터미널 서비스 점검 02 유닉스(0000 계열 시스템 보안 가) 유닉스 계열 시스템 보안 개요 나) 계정 및 패스워드 관르 다) 접근통제 9/ 라) 시스템 보안 마) 서비스 보안 Vill, 네트워크보안 이해하기</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">정보보안의 개요</div><div class="row-ch">정보보안 개념</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">가용성이란</span><span class="kw">기밀성이란</span><span class="kw">무결성이란</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 정보보안의 개요 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">정보보안의 개요</div>
-  <p class="sub-c">(1 정보보안의 개념 정보보안이란 정보를 수집, 가공, 저장, 전송 등의 과정에서 정보의 훼손, 변조, 유출 Se 방지하기 위해 관리적, 물리적, 기술적으로 정보를 보호하는 것을 의미한다. @ 정보보안의 필요성 인터넷 등의 공간에서 개인 프라이버시를 보장하고 인터넷 범죄를 차단해야 할 필요성이 점차 증대하고 있다. 인터넷을 통해 전세계가 연결되어 글로벌화에</p><ul class="bul"><li>기밀성이란 정보를 저장, 전송하는 과정에서 정보의 원본에 다해 인가 되지 않은 사용자에게 노출되지 않도록 보장하는</li><li>무결성이란 정보를 송수신하는 과정에서 불법적으로 생성, 변경, 삭제되지 않고 원본이 유지되는 것을 의미한다.</li><li>가용성이란 인가 받은 사용자에 대하여 요구한 정보를 필요한 시점에 접근 및 ASS 보장해 주는 것을 의미한다.</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">제품 ㆍ서비스 설계 개발에서 시큐어 코딩, 소프트웨어, 애플리케이션 보안</div><div class="row-ch">정보보안 개념</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">보안솔루션</span><span class="kw">프로토콜</span><span class="kw">소프트웨어</span><span class="kw">단계</span></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">자)</span>
-  <div class="sub-t">악성 코드 설치 “Fileless” 공격</div>
-  <p class="sub-c">시스템에 외부 공격자가 침입해 악성코드에 감염시키는 것은 일반적으로 첨부파일 실행이나 악성실행 파일의 클릭을 통 해 이루어지지만, Fileless SAS 파일 실행 없이 사용자가 악성 사이트로 연결되는 링크를 클릭하면 악성코드는 주로 웹 정보보안 이해와 활용 ) *서비스 모델 서비스별 다양한 보안 요구사 rat</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">클라우드 보안</div>
-  <p class="sub-c">O 클라우드 보안 개요 클라우드의 특성에 따라 저장된 데이터의 정확한 위치를 파악하기 oe 371, 데이터가 집적되어 있다는 것이 클라우: 우려의 출발점이 된다. 특히, Pubic SPSS ASRS 때 외부 공간에 민감한 데이터를 aan 상에 저장해 대한 신뢰성과 안정성에 대한 의문 제기는 클라우드 도입 및 확산의 장애요인으로 자리매김 되고 있다. @ 클라</p><ul class="bul"><li>가상머신의 이동성</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">빅데이터 보안</div>
-  <p class="sub-c">(0 빅데이터 보안 개요 빅데이터 도입이 가속화되고 있는 가운데 방대한 고객정보 수집 및 진중에 따라 개인정보 유출 위험도 증대되고 있다. iol: 기존 데이터 유허는 딜리 ABS, Ie 및 eels 등 Ele 개인정보를 광범위하게 asso 수 집ㆍ분석하기 때문에 유출사고 발생시 사고의 파장이나 사고 규모가 대형화될 수 밖에 없다. 따라서 금융부문어서 빅데</p><ul class="bul"><li>빅데이터 수집단계</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">모바일 보</div>
-  <p class="sub-c">O 모바일 환경 에서의 보안 위협 및 대응방안 스마트폰은 사용자 중심의 모바일 PC SUBS 탑재하고 음성통화는 물론 이동통신 및 WAS 이용한 무선인터넷 연결성 과 웹 브라우저 및 멀티미디어 콘텐츠 서비스를 제공하고 있다. 이러한 개방형 OSHS 통해 사용자가 디바이스에 다양한 e 을 자유롭게 설치할 수 있는데, 이러한 스마트폰의 개방적인 웹 환경으로 인</p><ul class="bul"><li>개인정보 비식별화 처리기법</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">위험관리(Risk Management)</div>
-  <p class="sub-c">위험관리란, [그림 30]2} 같이 조직이 관리하고 있는 정보자산을 식별하여 가치를 산정하고 각 자산별 법적, 관리적, 물리 적, 기술적 관점에서 위험을 식별하고, 수용 가능한 목표 을 마련하는 일련의 과정이라고 볼 수 있다. [그림 30] 위험관리 1 DoA: Degree of Assurance M4 정보보안 이해와 활용 {는지 구체적으로 살펴보고자 한다</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">시큐어 코딩의 필요성</div><div class="row-ch">정보보안 개념</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">일장부</span><span class="kw">플랫폼</span><span class="kw">분산저장을</span><span class="kw">솔루션</span></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">시큐어 코딩의 필요성</div>
-  <p class="sub-c">사이버 공격의 OF 75%가 SW 지체의 보안 취약점을 악용하는 공격으로 분석되고 있다. 또한 개발단계에서 수정하는 비용 이 제품 출시 이후 수정하는 비용보다 이 배의 비용을 절감할 수 있는 것으로 분석되고 있다. 이에 따라 사이버 공격을 예방 및 위해서는 제품 출시 이전 단계인 Sw 개발단계에서 보안 취약점을 제거하는 것이 효과적인 a 부각되고 있디 시큐</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">시큐어 코딩 주요내용</div><div class="row-ch">정보보안 개념</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">원칙</span><span class="kw">증가</span><span class="kw">표적이</span><span class="kw">안티마이너(60006)</span><span class="kw">프로토콜</span><span class="kw">확장</span><span class="kw">엘가말</span><span class="kw">블록</span></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">SW 보안약점과 보안 취약점</div>
-  <p class="sub-c">@ 보안약점(//637686:: 소프트웨어의 결함, 오류, 버그 등 설계, 구현 단계에서 발생하는 에러로 소프트웨어의 취약점으로 이어질 수 있는 원인이 된다. 대표적인 ol CwE(Common Weakness 『ㅁ740160000)가 있다. @ 보안취약점(/01763800\/: 해커가 시스템이나 네트워크에 접근하여 사용할 수 있는 소프트웨어의 실수로, 접근</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">시큐어 개발 생명주기</div>
-  <p class="sub-c">요구사항 정의 yo mo oad Mm ae fm 유지보수운영 보안요구사항 | ㅣ. 굴짐 정적 동적 변경관리 e222 | | aaiae | | SHAS 보안테스트 Hee 귀 꼬암 : 4, Secure ? SDLC 1 보안요구사항 동적 woh 2) 주기적인 통합 보안테스트 가긴 재인증 아회 이즈 아이즈 보안활동정의 코드 인증 sw 보안인증 [그림 34] Sec</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">03</div>
-  <div><div class="row-title">시큐어 코딩 주요기법</div><div class="row-ch">정보보안 개념</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">빅데이터</span><span class="kw">시큐어</span><span class="kw">가상머신의</span><span class="kw">개인정보</span><span class="kw">시용하|</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) JAVA 시큐어 코딩 주요기법</li><li>가) JAVA 시큐어 코딩 주요기법 [열거형]</li><li>나) C 시큐어 코딩 주요기법</li><li>다) Android-JAVA 시큐어 코딩 주요기법</li><li>다) Android-JAVA 시큐어 코딩 주요기법 [열거형]</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">JAVA 시큐어 코딩 주요기법</div>
-  <p class="sub-c">@ SQL 삽입 공격 HSS 위한 시 데이터베이스(28/와 연동된 웹 응용프로그램에서 입력된 데이터에 대한 유효성 ASS 하지 않을 경우, 공격자가 입력 기법 어코 폼 및 내. 입력란에 SOL SS 삽입하여 8로부터 정보를 열람하거나 조작할 수 있는 보안약점을 말한다 FLs @ 공격 결과 웹서버 08 @ pp 열람 [* ) 인가되지 않은 사용자 허용 DB </p><ul class="bul"><li>공격개요</li><li>코딩기법</li><li>공격개요</li><li>공격개요</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">C 시큐어 코딩 주요기법</div>
-  <p class="sub-c">(8 메모리 버퍼 오배플로우 공격 대응을 위한 시큐어 코딩 기범 메모리 버퍼 오배플로우 공격은 연속된 메모리 공간을 AHadoop 프로그램에서 PIE! 메모리의 범위를 넘어선 위치에 사료를 읽거나 쓰려고 할 때 발싱 494 메모리 버퍼 오버플로우는 프로그램의 오동작을 유발시키거나 악의적인 BES ㄱㄴㅁㄴ 고글 M4 정보보안 이해와 활용 을 이 0모 eS m</p><ul class="bul"><li>공격개요</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">Android-JAVA 시큐어 코딩 주요기법</div>
-  <p class="sub-c">@ 외부에서 접근이 가능한 컴포 :공격개요 안드로이드 애플리케이션에서 manifestxml 파일에 android:exported=&quot;true&quot;2 설정되어 있는 컴포넌트는 외부에서 해당 컴포넌트에 인텐트를 전달하여 활성화 시킬수 있다. 이 경우 해당 컴포넌트가 원래 의도하지 않았던 상황에서 수행을 시 작함으로써 시스템 보안에 침해를 가져올 수 있다. 4 대응을</p><ul class="bul"><li>공격개요</li><li>코딩기법</li><li>공격개요</li></ul>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">08</div>
-  <div><div class="row-title">접근제어 서버</div><div class="row-ch">부적절한 HAS 인한 데이터의 무결성 훼손</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">체계</span></div>
-  <div class="subs"></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">데이터베이스 보안의 개요</div><div class="row-ch">부적절한 HAS 인한 데이터의 무결성 훼손</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">개인정보를</span><span class="kw">비밀번호</span><span class="kw">접근방법에</span><span class="kw">가능성</span><span class="kw">비밀번호는</span><span class="kw">주민등록번호,</span></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">데이터베이스 보안의 개요</div>
-  <p class="sub-c">D 데이터베이스 보안의 3원칙 데이터베이스 보안은 조직의 데이터베이스 정보의 유출, 변경 또는 파괴의 위협으로부터 기밀성. 무결성, 가용성을 확보하 기 위해 관리적, 물리적, 기술적 보호 ARIE 하는 것을 의미한다. 과거에는 DBS SSS 강조하였으나 최근에는 DBO 대한 안전한 관리 및 데이터 보호가 매우 중요시 되고 있으며 이는 T 서비스의 발전과 더</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">데이터베이스의 보안 위협 및 대응</div>
-  <p class="sub-c">(01 데이터베이스 보안 위협 데이터베이스 보안 위협은 여러 가지 요인이 있지만, 조직에서 흔히 나타날 수 있는 데이터베이스 보안위협은 다음의 지로 정리할 수 있다. &lt;표 28&gt; 데이터베이스 보안 위협 보안 위협 설 명 웹 보안위협 외부의 인가되지 않은 사용자가 SQL 인젝션 공격이나, File Upload 후 웹 셀(066 Shell) 실행 SS 통한 불</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">데이터베이스 접근통제</div><div class="row-ch">부적절한 HAS 인한 데이터의 무결성 훼손</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">스크립팅</span><span class="kw">개체</span><span class="kw">분류체계</span></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">데이터베이스 접근통제 정책</div>
-  <p class="sub-c">(8 임의적 접근통제(280) 정책 주체나 주체가 속해 있는 그룹의 신원에 근거하여 객체에 대한 접근을 제한하는 방식으로 객체의 소유자가 접근여부를 결정한다. 에: 테이블의 소유자가 다른 사람에게 권한을 부여한다. 강제적 접근통제(/^) 정책 비밀성을 갖는 객체에 대하여 주체가 갖는 권한에 근거하여 객체에 대한 접근을 제어한다. Of: 시스템 7/2 1(G</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">데이터베이스 접근통제 구축 방식</div>
-  <p class="sub-c">© 에이전트 방식 DBAH 자체에 접근통제 및 로깅 기능을 포함하는 에이전트를 설치하고, DBO] 접근하기 위한 전용 클라이언트를 사용하 여 접근하는 방식이다. 강력한 접근통제 구현이 가능하지만, 08서버에 트래픽을 발생시킴으로써 DBAS] 성능저하를 유 발시킬 수 있다. 사용자 턴 데이터베이스 [전용 클라이언트 [에이전트 [그림 의 에이전트 방식 데이터베</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">03</div>
-  <div><div class="row-title">데이터베이스 암호화</div><div class="row-ch">부적절한 HAS 인한 데이터의 무결성 훼손</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="quiz"><h4>📌 출제 포인트</h4><ul><li>다) 데이터베이스 암호화의 유형</li><li>마) 데이터베이스 암호화 적용절차</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">데이터베이스 암호화 적용 시 고려사항</div>
-  <p class="sub-c">데이터베이스 암호화를 적용 할 때에는 어떤 데이터 컬럼을 암호화 대상으로 선정 할 것인가, 어떤 암호화 알고리즘으로 암호화 할 것인가, 암호화 적용 시 성능에는 어떤 영향을 미치는가, 그리고 암호 키 관리를 어떻게 할 것인가 SS 고려하 Of 적용하여야 한다. &lt;표 30) 데이터베이스 암호화 적용 시 고려사항 고려사항 설명 암호화 대상 및 방식 국내 법ㆍ규</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">데이터베이스 암호화 대상 및 방식</div>
-  <p class="sub-c">암호화 대상은 국내 법, 규정 등에서 정한 데이터 및 그 의 중요 데이터를 우선적으로 선정한다. 각 법률 및 규정에서 명시 한 [8암호화 대상은 비밀번호, 바이오 정보, 주민등록번호, 여권번호, 운전면허번호, 외국인등록번호, 신용카드번호, 계좌 번호, 거래로그 등이 있다. 정보의 특성에 따라 암호호 was 다르게 하도록 규성하고 있으며각 특성에 맞는 암호화</p>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">데이터베이스 암호화의 유형</div>
-  <p class="sub-c">데이터베이스 암호화의 SSS APSA, 플러그인 방식 및 IDEA! 등이 있으며. 이 밖에도 APL} 000-방식을 조합한 하이브리드 방식이나 『/0%쌍식 등 다양한 유형이 존재한다 @ API 방식 데이터베이스 암호화 유형 중 ^방식은 응용프로그램 서버 내에 암복호화 PSS 설치하여 암복호화를 수행하는 방식 M4 정보보안 이해와 활용 Al SIC} 28서버</p>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">데이터베이스 암호화 적용</div>
-  <p class="sub-c">일방향 암호 알고리즘과 양방향 암호 알고리즘의 개념을 데이터베이스에 다음과 같이 적용하여 활용할 수 있다. (0 일방향 암호 알고리즘의 적용 |밀번호 등의 데이터는 일방향 암호 알 알고리즘인 해쉬 암호 알고리즘을 사용하여 데이터 원문 추출이 계산적으로 불가능 HH, SHA-256 이상의 해쉬 암호 알고리즘을 시용 하는 것이 일반적이다. 이 유 현재 일방향 </p><ul class="bul"><li>안전하지 않은 해쉬 암호 알고리즘을 사용하고 있는 경우</li><li>안전하지 않은 블록 암호 알고리즘을 사용하고 있는 경우</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">마)</span>
-  <div class="sub-t">데이터베이스 암호화 적용절차</div>
-  <p class="sub-c">데이터베이스 암호화 ASS [그림 49!와 같이 사전협의, 사전 영향도 분석, 테스트 검증, 구축 및 안정화 등의 절차로 진 행된다. M4 정보보안 이해와 활용 © 키 교체 단계 암호화키는 조직 내부의 정책에 따라 주기적으로 교체하여 보안성을 유지하고, 암호화 키교체 전에는 기존 암호화 키로 데이터 호화 한 후, 새로운 암호화 키를 생성하여 재 암호화를 수</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">04</div>
-  <div><div class="row-title">데이터베이스 암호화 | (Key) 관리</div><div class="row-ch">부적절한 HAS 인한 데이터의 무결성 훼손</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">요구사항</span><span class="kw">목표</span><span class="kw">규칙</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 데이터베이스 암호화 키의 종류</li><li>나) 암호화 키 생명주기 단계별 관리방안</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">데이터베이스 암호화 키의 종류</div>
-  <p class="sub-c">키 이중화의 원칙에 따라 암복호화 키 유 화하여 인가자만 접근 가능하도록 관리하야 한다. 스터키로 이중 출 시 암호화의 의미가 무색해지기 때문에 반드시 암복호화키와 마. &lt;표 32&gt; 데이터베이스 암호화 키 종류 설명 암복호화 키 데이터를 암호화 하고, 암호화된 데이터를 복호화 하는데 사용되는 키 마스터 키 암복호화키를 암호화하여 저장 및 분배하는데 사용되는</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">암호화 키 생명주기 단계별 관리방안</div>
-  <p class="sub-c">Ol 생성 단겨 암복호화키 생성 시 안전한 난수 발생기를 이용하고, 사용자 입력으 을 사용한다. 분배 단계 키 분배 시 비대칭키 암호 알고리즘 SS 이용하여 암호화 키를 암: 성을 유지해야 한다. (6 키 저장 단겨 암호화 키를 응용프로그램 내에 하드코딩하거나, 파일시스템 내에 파일 형태로 저장 및 DBMS 내부에 암호화 키를 저장하 기 보다 별도의 키관리</p><ul class="bul"><li>환경조사 ㆍ 사전진단 . 테스트 환경 구성 . 운명 서버 적용</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">윈도우 시스템 보안 개요</div>
-  <p class="sub-c">PC SAAS 광범위하게 사용되고 있는 윈도우 시스템은 계정 및 패스워드 관리, 전근통제, 시스템 보안, 서베스 보안 모니터링, 기타 보안관리 등의 영역에서 보안관리가 필요하다 &lt;표 33&gt; 원도우 시스템 보안 분 세부향목 계정 및 패스워드 ze) | 제정 관련 점겸불필요한 계정. Adminstrator HES 갖는 계정) 때 o* - 비밀번호 관련 점검(취</p><ul class="bul"><li>불필요한 공유 폴더 공유 중지 방법</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">계정 및 패스워드 관리</div>
-  <p class="sub-c">© Guest AS 및 불필요한 계정 삭제 (63068 계정의 ASS 제한하고 불특정 다수의 접근이 필요한 경우 Guesi7t 아닌 일반 사용자 계정을 생성해 사용하도록 해야 하며, 48070&quot;(로컬 사용자 및 그룹)에서 6068 계정 및 불필요한 계정을 삭제한다. [시작|-[프로그램 및 파일검색]에 18770「.「7SQL 입력한 후, 로컬 사용자 및 그룹</p>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">시스템 보안</div>
-  <p class="sub-c">© 관리자 계정 자동 로그온 차단 Autologon 기능을 사용하면 공격자가 해킹 oe 이용하여 윈도우 레지스트리에서 로그인 계정 및 암호를 확인할 + 있 으므로 4.440090) 기능을 차단하여야 하며, 윈도우 레지스트리에서 AutoAdminLogon 값을 “0&quot;으로 설정한다. :관리자 계정 자동 로그온 차단 방법 [시작}-{프로그램 및 파일검색]에 Re</p>
-</div><div class="sub">
-  <span class="sub-mk">바)</span>
-  <div class="sub-t">터미널 서비스 점검</div>
-  <p class="sub-c">터미널 서비스는 원격지에 있는 MHS 관리하기 위하여 제공되는 도구이지만, 취약한 비밀번호를 사용하거나. 접근통제 HOS 가 적절하지 못한 경우는 해킹의 도구로 약용될 수 있기 때문에 불필요한 터미널 서비스가 사용되지 않도록 점검하야 하 OF, 만약 터미널 서비스를 사용하는 BS, 암호화 수준을 중간' 이상으로 설정하여야 한다. M4 정보보안 이해와 활용 </p><ul class="bul"><li>CS 이용한 SFTP 적용 방법</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">유닉스 계열 시스템 보안 개요</div>
-  <p class="sub-c">서버 운영체제로 광범위하게 사용되고 있는 유닉스 계열 운영체제는 유닉스(0%&lt;와 리눅스(700 계열 운영체제 등이 있 으며, 계정 및 패스워드 관리, 접근통제, 시스템 보안, 서비스 보안, 모니터링, 기타 보안관리 등의 영역에서 보안관리가 필 요하다. &lt;표 34&gt; 유닉스 계열 시스템 보안 그 세부항목 계정 관련 점검(불필요한 계정, Root 권한을 갖는 계</p>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">계정 및 패스워드 관리</div>
-  <p class="sub-c">0) 불필요한 삭제 OSL} 패키지[^396) 설치 시 기본값26884&quot;으로 생성되는 계정은 대부분 Delaut 패스워드를 사용하는 경우가 많으며 wae 추측공격에 HSS 수 있으므로 시스템에서 사용하지 않는 것이 확실한 아래의 계정들과 의심스러운 계정을 삭 제하도록 하고, 일반적으로 로그인이 필요치 않은 시스템 계정들은 로그인을 금지시킨다. SUN / H</p><ul class="bul"><li>불필요한 계정 삭제 방법</li><li>취약한 패스워드를 사용하는 계정 점검 방법</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">접근통제</div>
-  <p class="sub-c">© 인가된 시스템만 접근 허 1080 데몬은 외부 네트워크의 요청이 있을 때 /etc/inetdconiol| 등록되어 있는 내부 프로그램인 인터넷 서비스들의 데몬 을 실행시켜주는 역할을 한다. 080.00060080.0(의 접근권한 설정이 잘못 설정되어 있을 경우 비 인가자가 약의적인 프로 ABS 이 파일에 등록하여 Root] 권한으로 실행하게 할 수 있으</p><ul class="bul"><li>세션 IDLE 타임아웃 설정 방법</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">라)</span>
-  <div class="sub-t">시스템 보안</div>
-  <p class="sub-c">(0 사용자 기본 환경설정 파일 /80/01016 IIE 로그인하는 모든 사용자들의 기본 사용환경 설정을 위한 로 설정이 잘못되어 있을 경우 비 인가자가 다양한 방법으로 사용자 환경을 변경하여 침 protie HE'S Roolin) 이외의 타사용자 쓰기 권한을 제거한다. 그인 스크립트인데, /etc/profle의 접근권한 WAS 일으킬 수 있으므로 /86/</p>
-</div><div class="sub">
-  <span class="sub-mk">마)</span>
-  <div class="sub-t">서비스 보안</div>
-  <p class="sub-c">0 불필요한 서비스 중지 불필요한 서비스 ZE(Por)SO| 열려 있으면 보안에 매우 취약할 수 있으므로 사용하지 않는 서비스는 제거해야 한다. CH 는 중지 여부를 점검해야 할 데몬 MBAS 서비스 포트의 목록이다. M4 정보보안 이해와 활용 Read contents of message from Bob to Alice Intemet or other com</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">01</div>
-  <div><div class="row-title">네트워크 보안의 개요</div><div class="row-ch">부적절한 HAS 인한 데이터의 무결성 훼손</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  <div class="kw-wrap"><span class="kw">공격개요</span><span class="kw">보안약점</span><span class="kw">코딩기법</span></div><div class="quiz"><h4>📌 출제 포인트</h4><ul><li>가) 네트워크 보안 개념</li><li>다) 네트워크 공격의 유형과 대응</li></ul></div>
-  <div class="subs"><div class="sub">
-  <span class="sub-mk">가)</span>
-  <div class="sub-t">네트워크 보안 개념</div>
-  <p class="sub-c">0 보안 공격의 유형 X 800에서는 보안 SAS 크게 소극적 공격 과 적극적 SAlactive 으로 구모하교 있다. 소극적 공 격이란 시스템의 정보를 알아내거나 악용하려고 시도는 하나 시스템 자원에 영향을 주지는 않는다. 적극적 SAS 시스템 자원을 변경하거나 동작에 영향을 주기 위한 목적을 가진다. 소극적 공격(수동적 공격이라고도 함)은 전송 데이터에 </p><ul class="bul"><li>소극적 공격</li><li>전송될 데이터에 대한 보완 관련 \</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">나)</span>
-  <div class="sub-t">통신 프로토콜 계층과 보안</div>
-  <p class="sub-c">(00) OSI 7계층 참소 SST} TCP/P 프로토콜 계층 [그림 5/]은 60/6( 7498-1:1994(E) 표준 문서의 0 System Interconnection) 7AIS 참조 모델로 개방 시스템 간의 상호 연결 구조를 나타낸다. 00SQL Open System Relay open system System Application - &gt; &lt; &gt; P</p><ul class="bul"><li>인터넷 AlAlinternet layer): 네트워크 계층이라고도 하며, 주소 지정과 라우팅(0.009) 기능을 담당한다. OS</li><li>전송 계층 관련 보안 프로토콜</li></ul>
-</div><div class="sub">
-  <span class="sub-mk">다)</span>
-  <div class="sub-t">네트워크 공격의 유형과 대응</div>
-  <p class="sub-c">@ 065 공격 DoS Hadoop 다양한 형태의 부담을 발생시켜 특정 서버가 정상 동작을 하지: 못하도록 방해하는 공격으로 보안 서비스 중하나인 가용성에 대한 공격이다. 대표적인 DoS 공격의 유형에는 Land 공격, Ping of Death 공격, Syn Alooding 공격 Boink 공격 등이 있다. FAM 동일하게 만들어서 공격 대상에게 MAS 보</p>
-</div></div>
-</div>
-</div><div class="row">
-<div class="row-hd">
-  <div class="row-num">02</div>
-  <div><div class="row-title">보안 프로토콜과 보안 솔루션</div><div class="row-ch">부적절한 HAS 인한 데이터의 무결성 훼손</div></div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  
-  <div class="subs"></div>
-</div>
-</div>
 </div>
 
-<nav class="sheet-tabs"><a class="tab " href="/topcit/01/" style=""><span class="ic">💻</span>01</a><a class="tab " href="/topcit/02/" style=""><span class="ic">🗄️</span>02</a><a class="tab " href="/topcit/03/" style=""><span class="ic">🏗️</span>03</a><a class="tab active" href="/topcit/04/" style="--active-color:#C55A11"><span class="ic">🔒</span>04</a><a class="tab " href="/topcit/05/" style=""><span class="ic">📊</span>05</a><a class="tab " href="/topcit/06/" style=""><span class="ic">📋</span>06</a></nav>
 <script>
-// 아코디언
-document.querySelectorAll('.row-hd').forEach(h=>{
-  h.addEventListener('click',()=>{
-    h.closest('.row').classList.toggle('open');
-  });
-});
+let curTab = 'all';
+let curView = 'card';
 
-// 검색
-const si=document.getElementById('search');
-if(si){
-  si.addEventListener('input',()=>{
-    const v=si.value.trim().toLowerCase();
-    document.querySelectorAll('.row').forEach(r=>{
-      if(r.classList.contains('tbl-header-row')) return;
-      const t=(r.querySelector('.row-title')?.textContent||'').toLowerCase();
-      const c=(r.querySelector('.row-ch')?.textContent||'').toLowerCase();
-      const b=(r.querySelector('.row-body')?.textContent||'').toLowerCase();
-      const show=!v||t.includes(v)||c.includes(v)||b.includes(v);
-      r.style.display=show?'':'none';
-      if(v&&show) r.classList.add('open');
-      else if(!v) r.classList.remove('open');
-    });
+// ── 뷰 전환 ──
+function switchView(view, btn) {
+  curView = view;
+  document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cardEls = ['tab-bar','card-content'];
+  const treeEl  = document.getElementById('tree-content');
+  const search  = document.querySelector('.search');
+
+  const fbEl = document.getElementById('fb-content');
+  cardEls.forEach(id => document.getElementById(id).style.display = view==='card' ? '' : 'none');
+  if (fbEl) fbEl.classList.toggle('show', view==='fb');
+  search.placeholder = '🔍  개념 검색...';
+  search.style.display = view==='fb' ? 'none' : '';
+}
+
+// ── 트리 토글 ──
+function toggleNode(el) {
+  const body = el.nextElementSibling;
+  const arr  = el.querySelector('.tree-arr');
+  const isOpen = body.classList.toggle('open');
+  arr.style.transform = isOpen ? 'rotate(90deg)' : '';
+}
+
+// ── 카드뷰 필터 ──
+function filterTab(btn, ch) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  curTab = ch;
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.querySelector('.search').value.toLowerCase();
+
+  if (curView === 'tree') {
+    filterTree(q);
+    return;
+  }
+
+  document.querySelectorAll('.section-group').forEach(grp => {
+    const chOk = curTab === 'all' || grp.dataset.chapter === curTab;
+    grp.classList.toggle('hidden', !chOk);
+    if (chOk) {
+      let any = false;
+      grp.querySelectorAll('.card').forEach(c => {
+        const show = !q || c.textContent.toLowerCase().includes(q);
+        c.classList.toggle('hidden-card', !show);
+        if (show) any = true;
+      });
+      if (q) grp.classList.toggle('hidden', !any);
+    }
   });
 }
+
+function filterTree(q) {
+  document.querySelectorAll('.tree-con').forEach(con => {
+    const show = !q || con.textContent.toLowerCase().includes(q);
+    con.style.display = show ? '' : 'none';
+    if (show && q) {
+      // 부모 열기
+      let p = con.parentElement;
+      while (p && !p.classList.contains('tree-root')) {
+        if (p.classList.contains('tree-sec-body') || p.classList.contains('tree-ch-body')) {
+          p.classList.add('open');
+          const hdr = p.previousElementSibling;
+          if (hdr) {
+            const arr = hdr.querySelector('.tree-arr');
+            if (arr) arr.style.transform = 'rotate(90deg)';
+          }
+        }
+        p = p.parentElement;
+      }
+    }
+  });
+}
+
+// ── 피쉬본 토글 ──
+function fbToggle(id) {
+  const el  = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  const arr  = el.previousElementSibling.querySelector('.fb-arr');
+  if (arr) arr.style.transform = open ? 'rotate(90deg)' : '';
+}
+
+// ── 모달 ──
+function openModal(title, bg, expl, mn) {
+  document.getElementById('m-title').textContent = title;
+  document.getElementById('m-bg').textContent    = bg   || '(준비 중)';
+  document.getElementById('m-expl').textContent  = expl || '(준비 중)';
+  document.getElementById('m-mn').textContent    = mn   || '(준비 중)';
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
 </body>
 </html>

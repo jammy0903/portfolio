@@ -1,465 +1,574 @@
-"""
-TOPCIT HTML 생성기 — 엑셀 스타일 라이트모드 / 모바일 최적화
-"""
-import json, os
+#!/usr/bin/env python3
+"""TOPCIT 공부 페이지 생성기 - 카드뷰 + 트리뷰 + 마인드맵"""
 
-SUBJECTS = {
-    '01': {'title': '소프트웨어 개발',        'icon': '💻', 'color': '#1F5C99'},
-    '02': {'title': '데이터 이해와 활용',      'icon': '🗄️', 'color': '#217346'},
-    '03': {'title': '시스템 아키텍처',         'icon': '🏗️', 'color': '#7B3FA6'},
-    '04': {'title': '정보보안',                'icon': '🔒', 'color': '#C55A11'},
-    '05': {'title': 'IT 비즈니스와 윤리',      'icon': '📊', 'color': '#2E74B5'},
-    '06': {'title': '테크니컬 커뮤니케이션',    'icon': '📋', 'color': '#375623'},
-}
+import json, math
+from pathlib import Path
 
-def esc(s):
-    return str(s).replace('&','&amp;').replace('<','&lt;').replace('>','&gt;').replace('"','&quot;')
+PINK    = "#d4789c"
+PINK_L  = "#fdf0f5"
+LAVEN   = "#8b6bae"
+LAVEN_L = "#f3eefa"
 
-CSS = """
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{font-size:15px}
-body{
-  font-family:'맑은 고딕','Malgun Gothic','Noto Sans KR',-apple-system,sans-serif;
-  background:#F2F2F2;
-  color:#1a1a1a;
-  line-height:1.5;
-  min-height:100vh;
-  padding-bottom:72px;
-}
+SUBJECTS = [
+    {"id": "01", "title": "소프트웨어 개발",   "emoji": "💻"},
+    {"id": "02", "title": "데이터 이해와 활용", "emoji": "🗄️"},
+    {"id": "03", "title": "시스템 & 네트워크", "emoji": "🖥️"},
+    {"id": "04", "title": "정보보안",           "emoji": "🔒"},
+    {"id": "05", "title": "IT 비즈니스와 윤리", "emoji": "💼"},
+    {"id": "06", "title": "커뮤니케이션 & PM",  "emoji": "📋"},
+]
 
-/* 엑셀 상단 리본 */
-.ribbon{
-  position:sticky;top:0;z-index:100;
-  background:var(--accent);
-  border-bottom:3px solid var(--accent-dark);
-  padding:0 12px;
-  display:flex;align-items:center;gap:10px;
-  height:48px;
-}
-.ribbon-back{
-  background:rgba(255,255,255,0.15);
-  border:1px solid rgba(255,255,255,0.3);
-  color:#fff;padding:6px 12px;border-radius:3px;
-  font-size:13px;text-decoration:none;
-  display:flex;align-items:center;gap:5px;white-space:nowrap;
-}
-.ribbon-back:active{background:rgba(255,255,255,0.25)}
-.ribbon-title{
-  font-size:14px;font-weight:700;color:#fff;
-  flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
+# v2 우선, 없으면 v1 사용
+JSON_V2  = Path(__file__).parent.parent.parent / "cert-study" / "topcit_json_v2"
+JSON_V1  = Path(__file__).parent.parent.parent / "cert-study" / "topcit_json"
+OUT_DIR  = Path(__file__).parent.parent / "public" / "topcit"
 
-/* 시트 탭 영역 (상단 메타 정보) */
-.sheet-info{
-  background:#fff;
-  border-bottom:2px solid #D9D9D9;
-  padding:14px 12px 12px;
-}
-.sheet-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--accent);color:#fff;
-  padding:3px 10px;border-radius:2px;
-  font-size:12px;font-weight:700;
-  margin-bottom:10px;letter-spacing:0.03em;
-}
-.sheet-info h1{
-  font-size:20px;font-weight:700;
-  color:var(--accent-dark);
-  margin-bottom:4px;
-}
-.sheet-info p{font-size:13px;color:#666}
 
-/* 통계 행 (엑셀 셀처럼) */
-.stat-row{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  border:1px solid #D9D9D9;
-  border-top:none;
-  background:#fff;
-}
-.stat-cell{
-  padding:10px 8px;text-align:center;
-  border-right:1px solid #D9D9D9;
-}
-.stat-cell:last-child{border-right:none}
-.stat-num{font-size:20px;font-weight:700;color:var(--accent)}
-.stat-label{font-size:11px;color:#888;margin-top:1px}
+def esc(s: str) -> str:
+    return (s.replace("\\", "\\\\")
+             .replace("'", "\\'")
+             .replace('"', '\\"')
+             .replace("\n", " ")
+             .replace("\r", ""))
 
-/* 검색 바 */
-.search-bar{
-  background:#fff;border-bottom:1px solid #D9D9D9;
-  padding:8px 12px;display:flex;align-items:center;gap:8px;
-}
-.search-bar label{font-size:12px;color:#888;white-space:nowrap;font-weight:600}
-.search{
-  flex:1;background:#fff;
-  border:1px solid #BFBFBF;
-  padding:7px 10px;font-size:14px;
-  color:#1a1a1a;outline:none;
-  border-radius:2px;
-  font-family:inherit;
-}
-.search:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--accent-rgb),.15)}
 
-/* 섹션 테이블 */
-.tbl-wrap{padding:0}
-.tbl-header{
-  background:var(--accent);color:#fff;
-  padding:8px 12px;
-  display:grid;grid-template-columns:40px 1fr 28px;
-  align-items:center;gap:8px;
-  font-size:12px;font-weight:700;letter-spacing:0.04em;
-  border-bottom:1px solid var(--accent-dark);
-  position:sticky;top:48px;z-index:40;
-}
+def load_data(subj_id: str) -> tuple[dict, bool]:
+    """v2 JSON 로드 (없으면 v1 변환). (data, is_v2) 반환"""
+    v2_path = JSON_V2 / f"topcit_{subj_id}.json"
+    if v2_path.exists():
+        with open(v2_path, encoding="utf-8") as f:
+            return json.load(f), True
 
-/* 섹션 행 */
-.row{
-  background:#fff;
-  border-bottom:1px solid #E8E8E8;
-}
-.row:nth-child(even) .row-hd{background:#F8F8F8}
-.row-hd{
-  display:grid;grid-template-columns:40px 1fr 28px;
-  align-items:center;gap:8px;
-  padding:13px 12px;
-  cursor:pointer;
-  min-height:52px;
-}
-.row-hd:active{background:#EDF3FB!important}
-.row-num{
-  font-size:11px;font-weight:800;
-  color:var(--accent);
-  background:rgba(var(--accent-rgb),.1);
-  border:1px solid rgba(var(--accent-rgb),.25);
-  padding:2px 4px;border-radius:2px;
-  text-align:center;font-family:monospace;
-}
-.row-title{font-size:14px;font-weight:600;line-height:1.35;color:#1a1a1a}
-.row-ch{font-size:11px;color:#999;margin-top:2px}
-.arr{font-size:10px;color:#BFBFBF;transition:transform .15s;text-align:center}
-.row.open .arr{transform:rotate(180deg)}
+    v1_path = JSON_V1 / f"topcit_{subj_id}.json"
+    if not v1_path.exists():
+        return None, False
 
-/* 펼침 영역 */
-.row-body{display:none;background:#FAFAFA;border-top:1px solid #E8E8E8;padding:14px 12px}
-.row.open .row-body{display:block}
+    with open(v1_path, encoding="utf-8") as f:
+        old = json.load(f)
 
-/* 키워드 */
-.kw-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
-.kw{
-  background:#fff;border:1px solid #D9D9D9;
-  color:#555;padding:3px 9px;border-radius:2px;
-  font-size:12px;font-family:inherit;
-}
+    # v1 → v2 인메모리 변환
+    from collections import defaultdict
+    chapter_order = [ch["title"] for ch in old.get("chapters", [])]
+    ch_secs = defaultdict(list)
+    for sec in old.get("sections", []):
+        ch_secs[sec.get("chapter", "기타")].append(sec)
 
-/* 출제 포인트 */
-.quiz{
-  background:#fff;
-  border:1px solid #D9D9D9;
-  border-left:4px solid var(--accent);
-  padding:10px 12px;margin-bottom:12px;
-  border-radius:0 2px 2px 0;
-}
-.quiz h4{
-  font-size:11px;color:var(--accent);font-weight:800;
-  text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;
-}
-.quiz li{font-size:12px;color:#444;margin-left:14px;margin-bottom:3px}
+    chapters = []
+    for ch_title in dict.fromkeys(chapter_order):
+        secs = []
+        for sec in ch_secs.get(ch_title, []):
+            concepts = [
+                {
+                    "title":       sub.get("title", ""),
+                    "keywords":    sec.get("keywords", []),
+                    "background":  sub.get("background", ""),
+                    "explanation": sub.get("explanation", ""),
+                    "mnemonic":    sub.get("mnemonic", ""),
+                }
+                for sub in sec.get("subsections", [])
+            ]
+            if concepts:
+                secs.append({"title": sec.get("title", ""), "concepts": concepts})
+        if secs:
+            chapters.append({"title": ch_title, "sections": secs})
 
-/* 세부항목 */
-.subs{display:flex;flex-direction:column;gap:8px}
-.sub{
-  background:#fff;
-  border:1px solid #D9D9D9;
-  border-radius:2px;padding:12px;
-}
-.sub-mk{
-  display:inline-block;
-  background:var(--accent);color:#fff;
-  padding:1px 7px;border-radius:1px;
-  font-size:11px;font-weight:700;
-  margin-bottom:5px;letter-spacing:.03em;
-}
-.sub-t{font-size:13px;font-weight:700;margin-bottom:5px;line-height:1.4;color:#1a1a1a}
-.sub-c{font-size:12px;color:#555;margin-bottom:6px;line-height:1.6}
-.bul{list-style:none;border-top:1px solid #F0F0F0;padding-top:6px}
-.bul li{
-  font-size:12px;color:#444;
-  padding:3px 0 3px 12px;
-  position:relative;
-  border-bottom:1px dotted #F0F0F0;
-}
-.bul li:last-child{border-bottom:none}
-.bul li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:11px;top:4px}
+    return {"id": old["id"], "title": old["title"], "chapters": chapters}, False
 
-/* 하단 시트 탭 네비 */
-.sheet-tabs{
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  background:#F0F0F0;
-  border-top:2px solid #D9D9D9;
-  display:flex;overflow-x:auto;
-  -ms-overflow-style:none;scrollbar-width:none;
-  padding:0 4px;
-  gap:2px;
-  align-items:flex-end;
-  height:48px;
-}
-.sheet-tabs::-webkit-scrollbar{display:none}
-.tab{
-  flex-shrink:0;
-  display:flex;align-items:center;gap:4px;
-  padding:6px 10px;
-  background:#DCDCDC;
-  border:1px solid #BFBFBF;border-bottom:none;
-  border-radius:3px 3px 0 0;
-  font-size:12px;color:#555;
-  text-decoration:none;
-  height:36px;
-  transition:background .1s;
-  white-space:nowrap;
-}
-.tab:active,.tab.active{
-  background:#fff;color:var(--active-color,#1a1a1a);
-  font-weight:700;border-color:#BFBFBF;
-  height:40px;
-}
-.tab .ic{font-size:14px}
 
-/* 인덱스 */
-.idx-header{
-  background:var(--accent);color:#fff;
-  padding:20px 16px;
-  border-bottom:3px solid var(--accent-dark);
-}
-.idx-header h1{font-size:22px;font-weight:700;margin-bottom:4px}
-.idx-header p{font-size:13px;opacity:.85}
-.idx-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:0;
-  border-left:1px solid #D9D9D9;
-  border-top:1px solid #D9D9D9;
-}
-.idx-card{
-  background:#fff;
-  border-right:1px solid #D9D9D9;
-  border-bottom:1px solid #D9D9D9;
-  padding:18px 14px;
-  text-decoration:none;color:inherit;
-  display:block;
-}
-.idx-card:active{background:#EDF3FB}
-.idx-card .ic{font-size:26px;margin-bottom:8px}
-.idx-card .n{font-size:11px;font-weight:800;color:var(--card-c);margin-bottom:4px}
-.idx-card h2{font-size:14px;font-weight:700;margin-bottom:4px;line-height:1.3;color:#1a1a1a}
-.idx-card .m{font-size:12px;color:#888}
-.idx-card .bar{height:3px;background:var(--card-c);border-radius:0;margin-top:10px}
+# ── 카드 뷰 ─────────────────────────────────────────────
 
-@media(min-width:600px){
-  .idx-grid{grid-template-columns:repeat(3,1fr)}
-  .sheet-info h1{font-size:24px}
-}
-@media(min-width:900px){
-  body{max-width:900px;margin:0 auto}
-  .sheet-tabs{max-width:900px;left:50%;transform:translateX(-50%)}
-  .ribbon{max-width:900px;left:50%;transform:translateX(-50%);position:sticky}
-}
-"""
+def card_html(con: dict) -> str:
+    mn      = con.get("mnemonic", "")
+    preview = mn[:38] + "…" if len(mn) > 38 else mn
+    return (
+        f'<div class="card" '
+        f"onclick=\"openModal('{esc(con['title'])}','{esc(con.get('background',''))}'"
+        f",'{esc(con.get('explanation',''))}','{esc(mn)}')\">"
+        f'<div class="card-title">{con["title"]}</div>'
+        f'<div class="card-preview">🧠 {preview}</div>'
+        f"</div>"
+    )
 
-JS = """
-// 아코디언
-document.querySelectorAll('.row-hd').forEach(h=>{
-  h.addEventListener('click',()=>{
-    h.closest('.row').classList.toggle('open');
-  });
-});
 
-// 검색
-const si=document.getElementById('search');
-if(si){
-  si.addEventListener('input',()=>{
-    const v=si.value.trim().toLowerCase();
-    document.querySelectorAll('.row').forEach(r=>{
-      if(r.classList.contains('tbl-header-row')) return;
-      const t=(r.querySelector('.row-title')?.textContent||'').toLowerCase();
-      const c=(r.querySelector('.row-ch')?.textContent||'').toLowerCase();
-      const b=(r.querySelector('.row-body')?.textContent||'').toLowerCase();
-      const show=!v||t.includes(v)||c.includes(v)||b.includes(v);
-      r.style.display=show?'':'none';
-      if(v&&show) r.classList.add('open');
-      else if(!v) r.classList.remove('open');
-    });
-  });
-}
-"""
+def card_view_html(data: dict) -> str:
+    chapters = data["chapters"]
+    ch_names = [ch["title"] for ch in chapters]
 
-def hex_to_rgb(h):
-    h = h.lstrip('#')
-    return ','.join(str(int(h[i:i+2],16)) for i in (0,2,4))
+    tab_html = '<button class="tab active" onclick="filterTab(this,\'all\')">전체</button>\n'
+    for i, name in enumerate(ch_names):
+        tab_html += f'<button class="tab" onclick="filterTab(this,\'{i}\')">{name[:18]}</button>\n'
 
-def darken(h):
-    h = h.lstrip('#')
-    r,g,b = (int(h[i:i+2],16) for i in (0,2,4))
-    return '#{:02x}{:02x}{:02x}'.format(max(0,r-30),max(0,g-30),max(0,b-30))
+    sections_html = ""
+    for ci, ch in enumerate(chapters):
+        for sec in ch["sections"]:
+            cards = "".join(card_html(c) for c in sec["concepts"])
+            if not cards:
+                continue
+            sections_html += (
+                f'<div class="section-group" data-chapter="{ci}">'
+                f'<div class="section-label">{sec["title"]}</div>'
+                f'<div class="card-grid">{cards}</div>'
+                f"</div>\n"
+            )
 
-def sheet_tabs(current):
-    tabs = ''
-    for n, info in sorted(SUBJECTS.items()):
-        active = 'active' if n == current else ''
-        style = f'--active-color:{info["color"]}' if n == current else ''
-        tabs += f'<a class="tab {active}" href="/topcit/{n}/" style="{style}">'
-        tabs += f'<span class="ic">{info["icon"]}</span>{n}</a>'
-    return f'<nav class="sheet-tabs">{tabs}</nav>'
-
-def render_subject(num, data, info):
-    color = info['color']
-    dark = darken(color)
-    rgb = hex_to_rgb(color)
-    secs = data['sections']
-    sec_n = len(secs)
-    sub_n = sum(len(s['subsections']) for s in secs)
-    kw_n  = sum(len(s['keywords']) for s in secs)
-    qp_n  = sum(len(s['quiz_points']) for s in secs)
-
-    rows = ''
-    for sec in secs:
-        kws = ''.join(f'<span class="kw">{esc(k)}</span>' for k in sec.get('keywords',[])[:8])
-        kw_html = f'<div class="kw-wrap">{kws}</div>' if kws else ''
-
-        qps = ''.join(f'<li>{esc(q)}</li>' for q in sec.get('quiz_points',[]))
-        qp_html = f'<div class="quiz"><h4>📌 출제 포인트</h4><ul>{qps}</ul></div>' if qps else ''
-
-        subs_html = ''
-        for sub in sec.get('subsections', []):
-            c = f'<p class="sub-c">{esc(sub["content"][:200])}</p>' if sub.get('content') else ''
-            b = ''.join(f'<li>{esc(x)}</li>' for x in sub.get('bullets',[])[:5])
-            bul = f'<ul class="bul">{b}</ul>' if b else ''
-            subs_html += f'''<div class="sub">
-  <span class="sub-mk">{esc(sub["marker"])}</span>
-  <div class="sub-t">{esc(sub["title"])}</div>
-  {c}{bul}
+    return f'''<div class="tabs" id="tab-bar">
+{tab_html}</div>
+<div id="card-content">
+{sections_html}
 </div>'''
 
-        ch = sec.get('chapter','')
-        ch_html = f'<div class="row-ch">{esc(ch)}</div>' if ch else ''
 
-        rows += f'''<div class="row">
-<div class="row-hd">
-  <div class="row-num">{esc(sec["num"])}</div>
-  <div><div class="row-title">{esc(sec["title"])}</div>{ch_html}</div>
-  <div class="arr">▼</div>
-</div>
-<div class="row-body">
-  {kw_html}{qp_html}
-  <div class="subs">{subs_html}</div>
-</div>
-</div>'''
+# ── 트리 뷰 ─────────────────────────────────────────────
 
+def tree_view_html(data: dict) -> str:
+    items = ""
+    for ch in data["chapters"]:
+        sec_html = ""
+        for sec in ch["sections"]:
+            con_html = ""
+            for con in sec["concepts"]:
+                has = bool(con.get("background"))
+                dot = f'<span class="tree-dot {"has" if has else "empty"}"></span>'
+                con_html += (
+                    f'<div class="tree-con" '
+                    f"onclick=\"openModal('{esc(con['title'])}','{esc(con.get('background',''))}'"
+                    f",'{esc(con.get('explanation',''))}','{esc(con.get('mnemonic',''))}')\">"
+                    f"{dot}<span>{con['title']}</span>"
+                    f"</div>"
+                )
+            sec_html += (
+                f'<div class="tree-sec-wrap">'
+                f'<div class="tree-sec" onclick="toggleNode(this)">'
+                f'<span class="tree-arr">▶</span>{sec["title"]}'
+                f'<span class="tree-count">{len(sec["concepts"])}</span>'
+                f'</div>'
+                f'<div class="tree-sec-body">{con_html}</div>'
+                f'</div>'
+            )
+        items += (
+            f'<div class="tree-ch-wrap">'
+            f'<div class="tree-ch" onclick="toggleNode(this)">'
+            f'<span class="tree-arr">▶</span>{ch["title"]}'
+            f'<span class="tree-count">{sum(len(s["concepts"]) for s in ch["sections"])}</span>'
+            f'</div>'
+            f'<div class="tree-ch-body">{sec_html}</div>'
+            f'</div>'
+        )
+    return f'<div class="tree-root" id="tree-content">{items}</div>'
+
+
+# ── 피쉬본 뷰 ───────────────────────────────────────────
+
+def fishbone_html(data: dict, subj_title: str) -> str:
+    branches = ""
+    for i, ch in enumerate(data["chapters"]):
+        side = "left" if i % 2 == 0 else "right"
+        total = sum(len(s["concepts"]) for s in ch["sections"])
+        ch_id = f"fb_ch{i}"
+
+        sec_blocks = ""
+        for j, s in enumerate(ch["sections"]):
+            sec_id = f"fb_sec{i}_{j}"
+            concepts_html = "".join(
+                f'<span class="fb-con" onclick="openModal(\'{esc(c["title"])}\',\'{esc(c.get("background",""))}\',\'{esc(c.get("explanation",""))}\',\'{esc(c.get("mnemonic",""))}\')">{c["title"]}</span>'
+                for c in s["concepts"]
+            )
+            sec_blocks += (
+                f'<div class="fb-sec-block">'
+                f'<div class="fb-sec" onclick="fbToggle(\'{sec_id}\')">'
+                f'<span class="fb-arr">▶</span>{s["title"]} <em>{len(s["concepts"])}</em>'
+                f'</div>'
+                f'<div class="fb-con-list" id="{sec_id}">{concepts_html}</div>'
+                f'</div>'
+            )
+
+        branches += (
+            f'<div class="fb-branch {side}">'
+            f'<div class="fb-inner">'
+            f'<div class="fb-ch" onclick="fbToggle(\'{ch_id}\')">'
+            f'<span class="fb-arr">▶</span>{ch["title"]}'
+            f'<span class="fb-cnt">{total}개</span>'
+            f'</div>'
+            f'<div class="fb-sec-blocks" id="{ch_id}">{sec_blocks}</div>'
+            f'</div>'
+            f'<div class="fb-connector"></div>'
+            f'</div>'
+        )
+
+    return (
+        f'<div class="fb-wrap" id="fb-content">'
+        f'<div class="fb-title">{subj_title}</div>'
+        f'<div class="fb-spine">{branches}</div>'
+        f'<div class="fb-tail">▼</div>'
+        f'</div>'
+    )
+
+
+# ── 전체 과목 페이지 ─────────────────────────────────────
+
+def subject_page(subj: dict, data: dict) -> str:
+    total = sum(len(s["concepts"]) for ch in data["chapters"] for s in ch["sections"])
     return f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="{color}">
-<title>TOPCIT {num} - {info["title"]}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOPCIT {subj["id"]} {subj["title"]}</title>
 <style>
-:root{{--accent:{color};--accent-dark:{dark};--accent-rgb:{rgb}}}
-{CSS}
+*{{box-sizing:border-box;margin:0;padding:0}}
+body{{font-family:"Pretendard","Apple SD Gothic Neo",sans-serif;background:#fdf8fb;color:#1a1a2e;min-height:100vh}}
+
+/* 헤더 */
+.header{{background:{PINK};color:#fff;padding:.85rem 1.25rem;display:flex;align-items:center;gap:.75rem;position:sticky;top:0;z-index:20;box-shadow:0 2px 10px rgba(212,120,156,.3)}}
+.header-back{{color:#fff;text-decoration:none;font-size:1.1rem;opacity:.8}}
+.header-back:hover{{opacity:1}}
+.header h1{{font-size:1rem;font-weight:700;flex:1}}
+.header-cnt{{font-size:.75rem;opacity:.7;white-space:nowrap}}
+
+/* 뷰 토글 */
+.view-toggle{{display:flex;gap:0;padding:.7rem 1.25rem .3rem;}}
+.vtab{{padding:.35rem .9rem;font-size:.78rem;font-weight:600;cursor:pointer;border:1.5px solid {PINK};background:#fff;color:{PINK};transition:all .15s}}
+.vtab:first-child{{border-radius:.5rem 0 0 .5rem}}
+.vtab:last-child{{border-radius:0 .5rem .5rem 0}}
+.vtab.active{{background:{PINK};color:#fff}}
+
+/* ── 피쉬본 뷰 ── */
+.fb-wrap{{display:none;padding:.5rem 1rem 2rem}}
+.fb-wrap.show{{display:block}}
+.fb-title{{text-align:center;background:{PINK};color:#fff;border-radius:.75rem;padding:.6rem 1rem;font-size:.92rem;font-weight:800;margin-bottom:0}}
+.fb-spine{{position:relative;padding:.4rem 0 .5rem}}
+.fb-spine::before{{content:'';position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;width:3px;background:linear-gradient({PINK},{LAVEN});border-radius:2px;z-index:0}}
+.fb-branch{{display:flex;align-items:flex-start;margin:.9rem 0;position:relative;z-index:1}}
+.fb-branch.left{{flex-direction:row-reverse;padding-right:calc(50% + 10px)}}
+.fb-branch.left .fb-inner{{align-items:flex-end;text-align:right}}
+.fb-branch.right{{padding-left:calc(50% + 10px)}}
+.fb-branch.right .fb-inner{{align-items:flex-start;text-align:left}}
+.fb-connector{{position:absolute;top:14px;height:2px;width:calc(50% - 16px);opacity:.3}}
+.fb-branch.left .fb-connector{{right:calc(50% + 3px);background:{PINK}}}
+.fb-branch.right .fb-connector{{left:calc(50% + 3px);background:{LAVEN}}}
+.fb-inner{{display:flex;flex-direction:column;gap:.4rem;width:100%}}
+.fb-ch{{display:inline-flex;align-items:center;gap:.3rem;flex-wrap:wrap;background:{PINK};color:#fff;border-radius:.5rem;padding:.36rem .7rem;font-size:.78rem;font-weight:700;cursor:pointer;user-select:none;transition:opacity .15s}}
+.fb-branch.right .fb-ch{{background:{LAVEN}}}
+.fb-ch:hover{{opacity:.85}}
+.fb-arr{{font-size:.52rem;transition:transform .2s;flex-shrink:0}}
+.fb-cnt{{font-size:.62rem;opacity:.7;font-weight:400}}
+.fb-sec-blocks{{display:none;flex-direction:column;gap:.4rem;width:100%;padding:.2rem 0}}
+.fb-sec-blocks.open{{display:flex}}
+.fb-branch.left .fb-sec-blocks{{align-items:flex-end}}
+.fb-sec-block{{display:flex;flex-direction:column;gap:.18rem;width:100%}}
+.fb-branch.left .fb-sec-block{{align-items:flex-end}}
+.fb-sec{{display:inline-flex;align-items:center;gap:.22rem;flex-wrap:wrap;background:#fff;border:1.5px solid #f0c6d8;border-radius:.4rem;padding:.2rem .52rem;font-size:.7rem;color:#555;font-weight:600;cursor:pointer;user-select:none;transition:background .15s}}
+.fb-branch.right .fb-sec{{border-color:{LAVEN_L}}}
+.fb-sec:hover{{background:{PINK_L}}}
+.fb-branch.right .fb-sec:hover{{background:{LAVEN_L}}}
+.fb-sec em{{font-style:normal;color:#ccc;font-size:.6rem;font-weight:400}}
+.fb-con-list{{display:none;flex-wrap:wrap;gap:.18rem;padding:.08rem 0}}
+.fb-con-list.open{{display:flex}}
+.fb-branch.left .fb-con-list{{justify-content:flex-end}}
+.fb-con{{background:#f9f1f6;border:1px solid #f0d8ea;border-radius:1rem;padding:.12rem .4rem;font-size:.62rem;color:#888;cursor:pointer;white-space:nowrap;transition:all .15s}}
+.fb-branch.right .fb-con{{background:#f5f1fa;border-color:#e2d5f5}}
+.fb-con:hover{{background:{PINK};color:#fff;border-color:{PINK}}}
+.fb-branch.right .fb-con:hover{{background:{LAVEN};color:#fff;border-color:{LAVEN}}}
+.fb-tail{{text-align:center;color:{PINK};opacity:.3;margin-top:.3rem;font-size:.9rem}}
+
+/* 검색 */
+.search-wrap{{padding:.5rem 1.25rem}}
+.search{{width:100%;padding:.55rem 1rem;border:2px solid #f0c6d8;border-radius:2rem;font-size:.88rem;outline:none;transition:border .2s;background:#fff}}
+.search:focus{{border-color:{PINK}}}
+
+/* 챕터 탭 (카드뷰) */
+.tabs{{display:flex;gap:.35rem;padding:.4rem 1.25rem .5rem;overflow-x:auto;scrollbar-width:none}}
+.tabs::-webkit-scrollbar{{display:none}}
+.tab{{flex-shrink:0;padding:.28rem .75rem;border-radius:2rem;border:1.5px solid {PINK};background:#fff;color:{PINK};font-size:.74rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}}
+.tab.active,.tab:hover{{background:{PINK};color:#fff}}
+
+/* 카드 그리드 */
+.section-group{{padding:.3rem 1.25rem .8rem}}
+.section-group.hidden{{display:none}}
+.section-label{{font-size:.68rem;font-weight:700;color:{LAVEN};text-transform:uppercase;letter-spacing:.05em;padding:.35rem 0 .3rem;border-bottom:2px solid {LAVEN_L};margin-bottom:.5rem}}
+.card-grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem}}
+@media(min-width:540px){{.card-grid{{grid-template-columns:repeat(3,1fr)}}}}
+@media(min-width:900px){{.card-grid{{grid-template-columns:repeat(4,1fr)}}}}
+@media(min-width:1200px){{.card-grid{{grid-template-columns:repeat(5,1fr)}}}}
+.card{{background:#fff;border-radius:.65rem;padding:.7rem;cursor:pointer;border:1.5px solid #f0e0ea;transition:all .18s;box-shadow:0 1px 3px rgba(0,0,0,.04)}}
+.card:hover{{border-color:{PINK};box-shadow:0 4px 14px rgba(212,120,156,.18);transform:translateY(-2px)}}
+.card-title{{font-size:.78rem;font-weight:700;color:#1a1a2e;margin-bottom:.3rem;line-height:1.35}}
+.card-preview{{font-size:.68rem;color:#999;line-height:1.4}}
+.card.hidden-card{{display:none!important}}
+
+/* ── 트리 뷰 ── */
+.tree-root{{padding:.5rem 1.25rem 2rem;display:none}}
+.tree-root.show{{display:block}}
+
+/* 챕터 */
+.tree-ch-wrap{{margin-bottom:.5rem}}
+.tree-ch{{display:flex;align-items:center;gap:.5rem;padding:.6rem .9rem;background:{PINK};color:#fff;border-radius:.6rem;cursor:pointer;font-size:.85rem;font-weight:700;user-select:none;transition:opacity .15s}}
+.tree-ch:hover{{opacity:.88}}
+.tree-ch-body{{display:none;padding:.4rem 0 .4rem 1.2rem;border-left:3px solid {PINK};margin-left:1rem}}
+.tree-ch-body.open{{display:block}}
+
+/* 섹션 */
+.tree-sec-wrap{{margin-bottom:.3rem}}
+.tree-sec{{display:flex;align-items:center;gap:.5rem;padding:.45rem .8rem;background:{LAVEN_L};border:1.5px solid {LAVEN};border-radius:.5rem;cursor:pointer;font-size:.8rem;font-weight:600;color:{LAVEN};user-select:none;transition:background .15s}}
+.tree-sec:hover{{background:#e8e0f5}}
+.tree-sec-body{{display:none;padding:.3rem 0 .3rem 1rem;border-left:2px solid {LAVEN_L};margin-left:.9rem}}
+.tree-sec-body.open{{display:block}}
+
+/* 개념 노드 */
+.tree-con{{display:flex;align-items:center;gap:.5rem;padding:.3rem .6rem;border-radius:.4rem;cursor:pointer;font-size:.76rem;color:#444;transition:all .15s}}
+.tree-con:hover{{background:{PINK_L};color:{PINK};font-weight:600}}
+
+/* 화살표 */
+.tree-arr{{font-size:.6rem;transition:transform .2s;display:inline-block;width:.8rem;flex-shrink:0}}
+.open > .tree-arr, .open + * > .tree-arr{{transform:rotate(90deg)}}
+
+/* 개념 dot (enriched 여부) */
+.tree-dot{{width:7px;height:7px;border-radius:50%;flex-shrink:0}}
+.tree-dot.has{{background:{PINK}}}
+.tree-dot.empty{{background:#ddd}}
+
+/* 개수 뱃지 */
+.tree-count{{margin-left:auto;font-size:.68rem;opacity:.65;font-weight:400}}
+
+/* 모달 */
+.overlay{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;padding:1rem;align-items:flex-end;justify-content:center}}
+.overlay.open{{display:flex}}
+@media(min-width:640px){{.overlay{{align-items:center}}}}
+.modal{{background:#fff;border-radius:1rem 1rem 0 0;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,.18)}}
+@media(min-width:640px){{.modal{{border-radius:1rem;max-height:85vh}}}}
+.modal-header{{background:{PINK};color:#fff;padding:.9rem 1.25rem;border-radius:1rem 1rem 0 0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}}
+.modal-header h2{{font-size:.95rem;font-weight:700;line-height:1.3}}
+.modal-close{{background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;opacity:.8;line-height:1}}
+.modal-close:hover{{opacity:1}}
+.modal-body{{padding:1.1rem;display:flex;flex-direction:column;gap:.9rem}}
+.sec-bg{{background:{PINK_L};border-left:4px solid {PINK};border-radius:0 .5rem .5rem 0;padding:.8rem 1rem}}
+.sec-expl{{background:{LAVEN_L};border-left:4px solid {LAVEN};border-radius:0 .5rem .5rem 0;padding:.8rem 1rem}}
+.sec-mn{{background:{LAVEN};color:#fff;border-radius:.75rem;padding:.95rem 1.2rem}}
+.sec-label{{font-size:.64rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}}
+.sec-bg .sec-label{{color:{PINK}}}
+.sec-expl .sec-label{{color:{LAVEN}}}
+.sec-mn .sec-label{{color:rgba(255,255,255,.75)}}
+.sec-bg p,.sec-expl p{{font-size:.85rem;line-height:1.7;color:#333}}
+.sec-mn p{{font-size:.92rem;line-height:1.6;font-weight:600}}
+.no-data{{font-size:.82rem;color:#bbb;font-style:italic}}
 </style>
 </head>
 <body>
 
-<div class="ribbon">
-  <a class="ribbon-back" href="/topcit">◀ 목록</a>
-  <div class="ribbon-title">{info["icon"]} {num}. {info["title"]}</div>
+<div class="header">
+  <a href="/topcit/" class="header-back">←</a>
+  <span style="font-size:1.2rem">{subj["emoji"]}</span>
+  <h1>TOPCIT {subj["id"]} &nbsp;{subj["title"]}</h1>
+  <span class="header-cnt">{total}개 개념</span>
 </div>
 
-<div class="sheet-info">
-  <div class="sheet-badge">기술영역 {num}</div>
-  <h1>{info["title"]}</h1>
-  <p>TOPCIT 에센스 핵심 정리</p>
-</div>
-<div class="stat-row">
-  <div class="stat-cell"><div class="stat-num">{sec_n}</div><div class="stat-label">소단원</div></div>
-  <div class="stat-cell"><div class="stat-num">{sub_n}</div><div class="stat-label">세부항목</div></div>
-  <div class="stat-cell"><div class="stat-num">{kw_n}</div><div class="stat-label">키워드</div></div>
-  <div class="stat-cell"><div class="stat-num">{qp_n}</div><div class="stat-label">출제포인트</div></div>
+<div class="view-toggle">
+  <button class="vtab active" onclick="switchView('card', this)">🃏 카드</button>
+  <button class="vtab" onclick="switchView('fb', this)">🌳 트리</button>
 </div>
 
-<div class="search-bar">
-  <label>🔍 검색</label>
-  <input id="search" class="search" type="search" placeholder="소단원명 검색..." autocomplete="off">
+<div class="search-wrap">
+  <input class="search" type="text" placeholder="🔍  개념 검색..." oninput="applyFilters()">
 </div>
 
-<div class="tbl-wrap">
-  <div class="tbl-header">
-    <div>NO</div><div>소단원</div><div></div>
+{card_view_html(data)}
+
+{fishbone_html(data, subj["emoji"] + " " + subj["title"])}
+
+<!-- 모달 -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="m-title"></h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sec-bg">
+        <div class="sec-label">💡 왜 생겼어?</div>
+        <p id="m-bg"></p>
+      </div>
+      <div class="sec-expl">
+        <div class="sec-label">📖 무슨 뜻이야?</div>
+        <p id="m-expl"></p>
+      </div>
+      <div class="sec-mn">
+        <div class="sec-label">🧠 이렇게 외워!</div>
+        <p id="m-mn"></p>
+      </div>
+    </div>
   </div>
-  {rows}
 </div>
 
-{sheet_tabs(num)}
-<script>{JS}</script>
+<script>
+let curTab = 'all';
+let curView = 'card';
+
+// ── 뷰 전환 ──
+function switchView(view, btn) {{
+  curView = view;
+  document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cardEls = ['tab-bar','card-content'];
+  const treeEl  = document.getElementById('tree-content');
+  const search  = document.querySelector('.search');
+
+  const fbEl = document.getElementById('fb-content');
+  cardEls.forEach(id => document.getElementById(id).style.display = view==='card' ? '' : 'none');
+  if (fbEl) fbEl.classList.toggle('show', view==='fb');
+  search.placeholder = '🔍  개념 검색...';
+  search.style.display = view==='fb' ? 'none' : '';
+}}
+
+// ── 트리 토글 ──
+function toggleNode(el) {{
+  const body = el.nextElementSibling;
+  const arr  = el.querySelector('.tree-arr');
+  const isOpen = body.classList.toggle('open');
+  arr.style.transform = isOpen ? 'rotate(90deg)' : '';
+}}
+
+// ── 카드뷰 필터 ──
+function filterTab(btn, ch) {{
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  curTab = ch;
+  applyFilters();
+}}
+
+function applyFilters() {{
+  const q = document.querySelector('.search').value.toLowerCase();
+
+  if (curView === 'tree') {{
+    filterTree(q);
+    return;
+  }}
+
+  document.querySelectorAll('.section-group').forEach(grp => {{
+    const chOk = curTab === 'all' || grp.dataset.chapter === curTab;
+    grp.classList.toggle('hidden', !chOk);
+    if (chOk) {{
+      let any = false;
+      grp.querySelectorAll('.card').forEach(c => {{
+        const show = !q || c.textContent.toLowerCase().includes(q);
+        c.classList.toggle('hidden-card', !show);
+        if (show) any = true;
+      }});
+      if (q) grp.classList.toggle('hidden', !any);
+    }}
+  }});
+}}
+
+function filterTree(q) {{
+  document.querySelectorAll('.tree-con').forEach(con => {{
+    const show = !q || con.textContent.toLowerCase().includes(q);
+    con.style.display = show ? '' : 'none';
+    if (show && q) {{
+      // 부모 열기
+      let p = con.parentElement;
+      while (p && !p.classList.contains('tree-root')) {{
+        if (p.classList.contains('tree-sec-body') || p.classList.contains('tree-ch-body')) {{
+          p.classList.add('open');
+          const hdr = p.previousElementSibling;
+          if (hdr) {{
+            const arr = hdr.querySelector('.tree-arr');
+            if (arr) arr.style.transform = 'rotate(90deg)';
+          }}
+        }}
+        p = p.parentElement;
+      }}
+    }}
+  }});
+}}
+
+// ── 피쉬본 토글 ──
+function fbToggle(id) {{
+  const el  = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  const arr  = el.previousElementSibling.querySelector('.fb-arr');
+  if (arr) arr.style.transform = open ? 'rotate(90deg)' : '';
+}}
+
+// ── 모달 ──
+function openModal(title, bg, expl, mn) {{
+  document.getElementById('m-title').textContent = title;
+  document.getElementById('m-bg').textContent    = bg   || '(준비 중)';
+  document.getElementById('m-expl').textContent  = expl || '(준비 중)';
+  document.getElementById('m-mn').textContent    = mn   || '(준비 중)';
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}}
+function closeModal() {{
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}}
+function overlayClick(e) {{
+  if (e.target === document.getElementById('overlay')) closeModal();
+}}
+document.addEventListener('keydown', e => {{ if (e.key === 'Escape') closeModal(); }});
+</script>
 </body>
 </html>'''
 
-def render_index():
-    color = '#1F5C99'
-    dark  = darken(color)
-    cards = ''
-    for num, info in sorted(SUBJECTS.items()):
-        p = f'/home/jammy/projects/cert-study/topcit_json/topcit_{num}.json'
-        if not os.path.exists(p): continue
-        d = json.load(open(p))
-        sec_n = len(d['sections'])
-        c = info['color']
-        cards += f'''<a class="idx-card" href="/topcit/{num}/" style="--card-c:{c}">
-  <div class="ic">{info["icon"]}</div>
-  <div class="n">{num}</div>
-  <h2>{info["title"]}</h2>
-  <div class="m">소단원 {sec_n}개</div>
-  <div class="bar"></div>
-</a>'''
 
-    tabs = sheet_tabs(None)
+# ── 인덱스 페이지 ────────────────────────────────────────
+
+def index_page() -> str:
+    cards = "".join(
+        f'<a href="/topcit/{s["id"]}/" class="subj-card">'
+        f'<div class="subj-emoji">{s["emoji"]}</div>'
+        f'<div class="subj-num">영역 {s["id"]}</div>'
+        f'<div class="subj-title">{s["title"]}</div>'
+        f'<div class="subj-arrow">→</div>'
+        f'</a>\n'
+        for s in SUBJECTS
+    )
     return f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="{color}">
-<title>TOPCIT 에센스 정리</title>
-<style>:root{{--accent:{color};--accent-dark:{dark};--accent-rgb:31,92,153}}{CSS}</style>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOPCIT 공부</title>
+<style>
+*{{box-sizing:border-box;margin:0;padding:0}}
+body{{font-family:"Pretendard","Apple SD Gothic Neo",sans-serif;background:#fdf8fb;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:3rem 1.25rem}}
+h1{{font-size:1.7rem;font-weight:800;color:#1a1a2e;margin-bottom:.35rem}}
+.sub{{color:#bbb;font-size:.88rem;margin-bottom:2.5rem}}
+.grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;width:100%;max-width:720px}}
+@media(min-width:600px){{.grid{{grid-template-columns:repeat(3,1fr)}}}}
+.subj-card{{background:#fff;border-radius:1rem;padding:1.5rem 1.25rem;text-decoration:none;border:2px solid #f0e0ea;transition:all .18s;display:flex;flex-direction:column;gap:.25rem}}
+.subj-card:hover{{border-color:{PINK};background:{PINK_L};transform:translateY(-3px);box-shadow:0 8px 24px rgba(212,120,156,.18)}}
+.subj-emoji{{font-size:2rem;margin-bottom:.2rem}}
+.subj-num{{font-size:.7rem;font-weight:700;color:{LAVEN};text-transform:uppercase;letter-spacing:.07em}}
+.subj-title{{font-size:.98rem;font-weight:700;color:#1a1a2e;line-height:1.35}}
+.subj-arrow{{font-size:.95rem;color:{PINK};margin-top:.4rem}}
+</style>
 </head>
 <body>
-<div class="idx-header" style="background:{color};border-bottom:3px solid {dark}">
-  <a href="/" style="color:rgba(255,255,255,.7);font-size:13px;text-decoration:none">← 포트폴리오</a>
-  <h1 style="margin-top:10px">📚 TOPCIT 에센스</h1>
-  <p>6개 기술영역 핵심 개념 정리</p>
-</div>
-<div class="idx-grid">{cards}</div>
-{tabs}
+<h1>📚 TOPCIT 공부</h1>
+<p class="sub">영역을 선택하세요</p>
+<div class="grid">{cards}</div>
 </body>
 </html>'''
 
-if __name__ == '__main__':
-    base = '/home/jammy/projects/portf/public/topcit'
-    jsn  = '/home/jammy/projects/cert-study/topcit_json'
 
-    # /topcit/ → index.html
-    os.makedirs(base, exist_ok=True)
-    with open(f'{base}/index.html','w',encoding='utf-8') as f:
-        f.write(render_index())
-    print('topcit/index.html')
+# ── 메인 ────────────────────────────────────────────────
 
-    # /topcit/01/ → 01/index.html  (깔끔한 경로)
-    for num, info in SUBJECTS.items():
-        p = f'{jsn}/topcit_{num}.json'
-        if not os.path.exists(p): continue
-        d = json.load(open(p))
-        html = render_subject(num, d, info)
-        folder = f'{base}/{num}'
-        os.makedirs(folder, exist_ok=True)
-        with open(f'{folder}/index.html','w',encoding='utf-8') as f:
-            f.write(html)
-        print(f'topcit/{num}/index.html ({len(d["sections"])}섹션, {len(html.encode())//1024}KB)')
+if __name__ == "__main__":
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    (OUT_DIR / "index.html").write_text(index_page(), encoding="utf-8")
+    print("✓ index.html")
 
-    print('완료!')
+    for subj in SUBJECTS:
+        data, is_v2 = load_data(subj["id"])
+        if data is None:
+            print(f'[스킵] {subj["id"]} JSON 없음')
+            continue
+
+        out_dir = OUT_DIR / subj["id"]
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / "index.html").write_text(subject_page(subj, data), encoding="utf-8")
+
+        total = sum(len(s["concepts"]) for ch in data["chapters"] for s in ch["sections"])
+        src   = "v2" if is_v2 else "v1→변환"
+        print(f'✓ {subj["id"]}/index.html  ({total}개 개념, {src})')
