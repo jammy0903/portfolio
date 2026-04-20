@@ -78,13 +78,16 @@ def load_data(subj_id: str) -> tuple[dict, bool]:
 # ── 카드 뷰 ─────────────────────────────────────────────
 
 def card_html(con: dict) -> str:
+    title   = con.get("title", "")
     mn      = con.get("mnemonic", "")
     preview = mn[:38] + "…" if len(mn) > 38 else mn
+    key     = esc(title)
     return (
-        f'<div class="card" '
-        f"onclick=\"openModal('{esc(con['title'])}','{esc(con.get('background',''))}'"
+        f'<div class="card" data-key="{key}" '
+        f"onclick=\"openModal('{key}','{esc(con.get('background',''))}'"
         f",'{esc(con.get('explanation',''))}','{esc(mn)}')\">"
-        f'<div class="card-title">{con["title"]}</div>'
+        f'<div class="card-done-badge">✓ 완료</div>'
+        f'<div class="card-title">{title}</div>'
         f'<div class="card-preview">🧠 {preview}</div>'
         f"</div>"
     )
@@ -292,8 +295,12 @@ body{{font-family:"Gowun Dodum","Apple SD Gothic Neo",sans-serif;background:#fdf
 @media(min-width:540px){{.card-grid{{grid-template-columns:repeat(3,1fr)}}}}
 @media(min-width:900px){{.card-grid{{grid-template-columns:repeat(4,1fr)}}}}
 @media(min-width:1200px){{.card-grid{{grid-template-columns:repeat(5,1fr)}}}}
-.card{{background:#fff;border-radius:.65rem;padding:.7rem;cursor:pointer;border:1.5px solid #f0e0ea;transition:all .18s;box-shadow:0 1px 3px rgba(0,0,0,.04)}}
+.card{{background:#fff;border-radius:.65rem;padding:.7rem;cursor:pointer;border:1.5px solid #f0e0ea;transition:all .18s;box-shadow:0 1px 3px rgba(0,0,0,.04);position:relative}}
 .card:hover{{border-color:{PINK};box-shadow:0 4px 14px rgba(212,120,156,.18);transform:translateY(-2px)}}
+.card.done{{background:#f0faf4;border-color:#5cb87a!important;box-shadow:0 1px 4px rgba(92,184,122,.2)}}
+.card.done .card-title{{color:#2d7a4f}}
+.card-done-badge{{position:absolute;top:.4rem;right:.4rem;font-size:.65rem;background:#5cb87a;color:#fff;border-radius:1rem;padding:.1rem .4rem;display:none}}
+.card.done .card-done-badge{{display:block}}
 .card-title{{font-size:.78rem;font-weight:700;color:#1a1a2e;margin-bottom:.3rem;line-height:1.35;font-family:"Jua",sans-serif}}
 .card-preview{{font-size:.68rem;color:#999;line-height:1.4}}
 .card.hidden-card{{display:none!important}}
@@ -354,6 +361,10 @@ body{{font-family:"Gowun Dodum","Apple SD Gothic Neo",sans-serif;background:#fdf
 .sec-mn p{{font-size:.92rem;line-height:1.6;font-weight:600}}
 .kw{{background:#ffe566;border-radius:3px;padding:0 2px;font-weight:700}}
 .kw::before{{content:"★ ";font-size:.75em;color:{PINK}}}
+.modal-footer{{padding:.9rem 1.25rem;border-top:1px solid #f5e8f0;display:flex;align-items:center;justify-content:center}}
+.done-check-label{{display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.9rem;color:#555;font-family:"Gowun Dodum",sans-serif;user-select:none}}
+.done-check-label input{{width:1.1rem;height:1.1rem;accent-color:#5cb87a;cursor:pointer}}
+.done-check-label.checked{{color:#2d7a4f;font-weight:700}}
 .no-data{{font-size:.82rem;color:#bbb;font-style:italic}}
 </style>
 </head>
@@ -399,6 +410,12 @@ body{{font-family:"Gowun Dodum","Apple SD Gothic Neo",sans-serif;background:#fdf
         <div class="sec-label">🧠 이렇게 외워!</div>
         <p id="m-mn"></p>
       </div>
+    </div>
+    <div class="modal-footer">
+      <label class="done-check-label" id="done-label">
+        <input type="checkbox" id="done-check" onchange="toggleDone(this)">
+        학습 완료 ✅
+      </label>
     </div>
   </div>
 </div>
@@ -493,6 +510,37 @@ function fbToggle(id) {{
   if (arr) arr.style.transform = open ? 'rotate(90deg)' : '';
 }}
 
+// ── 학습 완료 API ──
+let doneKeys = new Set();
+let curKey = '';
+
+async function loadDone() {{
+  try {{
+    const res = await fetch('/api/progress');
+    const keys = await res.json();
+    doneKeys = new Set(keys);
+    document.querySelectorAll('.card[data-key]').forEach(card => {{
+      if (doneKeys.has(card.dataset.key)) card.classList.add('done');
+    }});
+  }} catch(e) {{ console.warn('progress load failed', e); }}
+}}
+
+async function toggleDone(cb) {{
+  const done = cb.checked;
+  const label = document.getElementById('done-label');
+  label.classList.toggle('checked', done);
+  const card = document.querySelector(`.card[data-key="${{curKey}}"]`);
+  if (card) card.classList.toggle('done', done);
+  if (done) doneKeys.add(curKey); else doneKeys.delete(curKey);
+  try {{
+    await fetch('/api/progress', {{
+      method: 'POST',
+      headers: {{'Content-Type': 'application/json'}},
+      body: JSON.stringify({{ key: curKey, done }})
+    }});
+  }} catch(e) {{ console.warn('progress save failed', e); }}
+}}
+
 // ── **텍스트** → 형광펜+별표 변환 ──
 function formatText(text) {{
   if (!text) return '(준비 중)';
@@ -500,11 +548,15 @@ function formatText(text) {{
 }}
 
 // ── 모달 ──
-function openModal(title, bg, expl, mn) {{
-  document.getElementById('m-title').textContent = title;
+function openModal(key, bg, expl, mn) {{
+  curKey = key;
+  document.getElementById('m-title').textContent = key;
   document.getElementById('m-bg').innerHTML    = formatText(bg);
   document.getElementById('m-expl').innerHTML  = formatText(expl);
   document.getElementById('m-mn').innerHTML    = formatText(mn);
+  const isDone = doneKeys.has(key);
+  document.getElementById('done-check').checked = isDone;
+  document.getElementById('done-label').classList.toggle('checked', isDone);
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }}
@@ -516,6 +568,7 @@ function overlayClick(e) {{
   if (e.target === document.getElementById('overlay')) closeModal();
 }}
 document.addEventListener('keydown', e => {{ if (e.key === 'Escape') closeModal(); }});
+loadDone();
 </script>
 </body>
 </html>'''

@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    { "source": "/((?!topcit|cert-study|assets).*)", "destination": "/" }
-  ]
+    { "source": "/((?!topcit|cert-study|assets|api).*)", "destination": "/" }
+  ],
+  "env": {
+    "DATABASE_URL": "***REMOVED_DATABASE_URL***"
+  }
 }
