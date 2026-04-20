@@ -214,15 +214,17 @@ def subject_page(subj: dict, data: dict) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TOPCIT {subj["id"]} {subj["title"]}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
-body{{font-family:"Pretendard","Apple SD Gothic Neo",sans-serif;background:#fdf8fb;color:#1a1a2e;min-height:100vh}}
+body{{font-family:"Gowun Dodum","Apple SD Gothic Neo",sans-serif;background:#fdf8fb;color:#1a1a2e;min-height:100vh}}
 
 /* 헤더 */
 .header{{background:{PINK};color:#fff;padding:.85rem 1.25rem;display:flex;align-items:center;gap:.75rem;position:sticky;top:0;z-index:20;box-shadow:0 2px 10px rgba(212,120,156,.3)}}
 .header-back{{color:#fff;text-decoration:none;font-size:1.1rem;opacity:.8}}
 .header-back:hover{{opacity:1}}
-.header h1{{font-size:1rem;font-weight:700;flex:1}}
+.header h1{{font-size:1rem;font-weight:700;flex:1;font-family:"Jua",sans-serif}}
 .header-cnt{{font-size:.75rem;opacity:.7;white-space:nowrap}}
 
 /* 뷰 토글 */
@@ -292,7 +294,7 @@ body{{font-family:"Pretendard","Apple SD Gothic Neo",sans-serif;background:#fdf8
 @media(min-width:1200px){{.card-grid{{grid-template-columns:repeat(5,1fr)}}}}
 .card{{background:#fff;border-radius:.65rem;padding:.7rem;cursor:pointer;border:1.5px solid #f0e0ea;transition:all .18s;box-shadow:0 1px 3px rgba(0,0,0,.04)}}
 .card:hover{{border-color:{PINK};box-shadow:0 4px 14px rgba(212,120,156,.18);transform:translateY(-2px)}}
-.card-title{{font-size:.78rem;font-weight:700;color:#1a1a2e;margin-bottom:.3rem;line-height:1.35}}
+.card-title{{font-size:.78rem;font-weight:700;color:#1a1a2e;margin-bottom:.3rem;line-height:1.35;font-family:"Jua",sans-serif}}
 .card-preview{{font-size:.68rem;color:#999;line-height:1.4}}
 .card.hidden-card{{display:none!important}}
 
@@ -337,7 +339,7 @@ body{{font-family:"Pretendard","Apple SD Gothic Neo",sans-serif;background:#fdf8
 .modal{{background:#fff;border-radius:1rem 1rem 0 0;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,.18)}}
 @media(min-width:640px){{.modal{{border-radius:1rem;max-height:85vh}}}}
 .modal-header{{background:{PINK};color:#fff;padding:.9rem 1.25rem;border-radius:1rem 1rem 0 0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}}
-.modal-header h2{{font-size:.95rem;font-weight:700;line-height:1.3}}
+.modal-header h2{{font-size:.95rem;font-weight:700;line-height:1.3;font-family:"Jua",sans-serif}}
 .modal-close{{background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;opacity:.8;line-height:1}}
 .modal-close:hover{{opacity:1}}
 .modal-body{{padding:1.1rem;display:flex;flex-direction:column;gap:.9rem}}
@@ -350,6 +352,8 @@ body{{font-family:"Pretendard","Apple SD Gothic Neo",sans-serif;background:#fdf8
 .sec-mn .sec-label{{color:rgba(255,255,255,.75)}}
 .sec-bg p,.sec-expl p{{font-size:.85rem;line-height:1.7;color:#333}}
 .sec-mn p{{font-size:.92rem;line-height:1.6;font-weight:600}}
+.kw{{background:#ffe566;border-radius:3px;padding:0 2px;font-weight:700}}
+.kw::before{{content:"★ ";font-size:.75em;color:{PINK}}}
 .no-data{{font-size:.82rem;color:#bbb;font-style:italic}}
 </style>
 </head>
@@ -489,12 +493,18 @@ function fbToggle(id) {{
   if (arr) arr.style.transform = open ? 'rotate(90deg)' : '';
 }}
 
+// ── **텍스트** → 형광펜+별표 변환 ──
+function formatText(text) {{
+  if (!text) return '(준비 중)';
+  return text.replace(/\*\*(.+?)\*\*/g, '<span class="kw">$1</span>');
+}}
+
 // ── 모달 ──
 function openModal(title, bg, expl, mn) {{
   document.getElementById('m-title').textContent = title;
-  document.getElementById('m-bg').textContent    = bg   || '(준비 중)';
-  document.getElementById('m-expl').textContent  = expl || '(준비 중)';
-  document.getElementById('m-mn').textContent    = mn   || '(준비 중)';
+  document.getElementById('m-bg').innerHTML    = formatText(bg);
+  document.getElementById('m-expl').innerHTML  = formatText(expl);
+  document.getElementById('m-mn').innerHTML    = formatText(mn);
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }}
@@ -529,10 +539,12 @@ def index_page() -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TOPCIT 공부</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
-body{{font-family:"Pretendard","Apple SD Gothic Neo",sans-serif;background:#fdf8fb;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:3rem 1.25rem}}
-h1{{font-size:1.7rem;font-weight:800;color:#1a1a2e;margin-bottom:.35rem}}
+body{{font-family:"Gowun Dodum","Apple SD Gothic Neo",sans-serif;background:#fdf8fb;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:3rem 1.25rem}}
+h1{{font-size:1.7rem;font-weight:800;color:#1a1a2e;margin-bottom:.35rem;font-family:"Jua",sans-serif}}
 .sub{{color:#bbb;font-size:.88rem;margin-bottom:2.5rem}}
 .grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;width:100%;max-width:720px}}
 @media(min-width:600px){{.grid{{grid-template-columns:repeat(3,1fr)}}}}
