@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/((?!topcit|cert-study|assets|api).*)", "destination": "/" }
+    { "source": "/((?!topcit|cert-study|hankuksa|assets|api).*)", "destination": "/" }
   ],
   "env": {
     "DATABASE_URL": "postgresql://neondb_owner:npg_DWwL0C9lITxP@ep-purple-bird-a49mx0rg-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
