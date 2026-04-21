@@ -11,8 +11,8 @@ function staticHtmlMiddleware() {
     configureServer(server: any) {
       server.middlewares.use((req: any, res: any, next: any) => {
         const url = req.url?.split('?')[0] ?? '/'
-        // /topcit/... 경로만 처리
-        if (!url.startsWith('/topcit')) return next()
+        // /topcit, /hankuksa 경로만 처리
+        if (!url.startsWith('/topcit') && !url.startsWith('/hankuksa')) return next()
 
         const candidates = [
           path.join('public', url, 'index.html'),

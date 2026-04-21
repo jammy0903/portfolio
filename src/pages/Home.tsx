@@ -5,6 +5,8 @@ import { profile, skills } from "../data/profile";
 export default function Home() {
   const clickCount = useRef(0);
   const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const imnidaCount = useRef(0);
+  const imnidaTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleHelloClick = () => {
     clickCount.current += 1;
@@ -14,6 +16,17 @@ export default function Home() {
       window.location.href = '/topcit/';
     } else {
       clickTimer.current = setTimeout(() => { clickCount.current = 0; }, 1500);
+    }
+  };
+
+  const handleImnidaClick = () => {
+    imnidaCount.current += 1;
+    if (imnidaTimer.current) clearTimeout(imnidaTimer.current);
+    if (imnidaCount.current >= 3) {
+      imnidaCount.current = 0;
+      window.location.href = '/hankuksa/';
+    } else {
+      imnidaTimer.current = setTimeout(() => { imnidaCount.current = 0; }, 1500);
     }
   };
 
@@ -35,7 +48,7 @@ export default function Home() {
         <p onClick={handleHelloClick} style={{ color: '#d4789c', fontSize: '1.125rem', marginBottom: '1rem', cursor: 'default', userSelect: 'none' }}>안녕하세요</p>
         <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>
           {profile.name}
-          <span style={{ color: '#78716c', fontSize: '1.5rem', marginLeft: '0.75rem' }}>입니다</span>
+          <span onClick={handleImnidaClick} style={{ color: '#78716c', fontSize: '1.5rem', marginLeft: '0.75rem', cursor: 'default', userSelect: 'none' }}>입니다</span>
         </h1>
         <p style={{ fontSize: '1.5rem', color: '#d4789c', fontWeight: '500', marginBottom: '1.5rem' }}>
           {profile.title}
