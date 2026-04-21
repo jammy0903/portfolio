@@ -27,7 +27,7 @@ OUT_DIR  = Path(__file__).parent.parent / "public" / "topcit"
 def esc(s: str) -> str:
     return (s.replace("\\", "\\\\")
              .replace("'", "\\'")
-             .replace('"', '\\"')
+             .replace('"', '&quot;')
              .replace("\n", " ")
              .replace("\r", ""))
 
