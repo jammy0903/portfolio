@@ -119,20 +119,24 @@ body{font-family:"Gowun Dodum","Apple SD Gothic Neo",sans-serif;background:#faf6
 .ctable tr:nth-child(even) td{background:#faf3e8}
 
 /* 기출 문제 페이지 */
-.exam-page{background:#fff;border-radius:1rem;padding:1.5rem 1.4rem;border:1.5px solid #ead8c0;box-shadow:0 2px 12px rgba(0,0,0,.05)}
-.exam-meta{display:flex;gap:.5rem;margin-bottom:1.2rem;flex-wrap:wrap}
-.exam-meta span{padding:.25rem .65rem;border-radius:.45rem;font-size:.74rem;font-weight:700}
+.exam-page{background:#fff;border-radius:1rem;padding:1.4rem 1.3rem;border:1.5px solid #ead8c0;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.exam-meta{display:flex;gap:.4rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.exam-meta span{padding:.2rem .6rem;border-radius:.4rem;font-size:.72rem;font-weight:700}
 .em-no{background:#4a7d6d;color:#fff}
 .em-date{background:#f0e8d8;color:#5d4a30}
 .em-period{background:#e8eef0;color:#3e5a6e}
-.exam-q{font-size:1.04rem;line-height:1.85;color:#1a1a1a;margin-bottom:1.5rem;white-space:pre-wrap;word-break:keep-all}
-.exam-answer-wrap{margin-top:1rem;text-align:center}
-.exam-show-btn{background:#4a7d6d;color:#fff;border:none;border-radius:2rem;padding:.7rem 1.8rem;font-size:.92rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
-.exam-show-btn:hover{transform:scale(1.04);box-shadow:0 4px 14px #4a7d6d55}
-.exam-answer{display:none;background:linear-gradient(135deg,#5cb87a,#4a9c66);color:#fff;border-radius:.8rem;padding:1.2rem;margin-top:1rem;text-align:center;animation:slideIn .3s ease}
-.exam-answer.show{display:block}
-.exam-answer .ea-label{font-size:.74rem;letter-spacing:.08em;opacity:.85;margin-bottom:.4rem;font-weight:700}
-.exam-answer .ea-num{font-size:2.6rem;font-weight:800;line-height:1;font-family:"Nanum Myeongjo",serif}
+.exam-q-callout{background:#f8f4ef;border-left:4px solid #4a7d6d;border-radius:0 .6rem .6rem 0;padding:.9rem 1.1rem;margin-bottom:.65rem;font-size:.97rem;line-height:1.85;color:#1a1a1a;word-break:keep-all;white-space:pre-wrap}
+.exam-choices-callout{background:#f4f6f9;border-radius:.65rem;padding:.75rem .9rem;margin-bottom:1.1rem;display:flex;flex-direction:column;gap:.25rem}
+.exam-choice{font-size:.9rem;line-height:1.65;color:#2c2416;padding:.28rem .45rem;border-radius:.4rem;word-break:keep-all}
+.exam-choice:hover{background:rgba(0,0,0,.04)}
+.exam-answer-wrap{display:flex;justify-content:center;margin-top:.2rem}
+.exam-show-btn{background:transparent;color:#4a7d6d;border:1.5px solid #4a7d6d;border-radius:2rem;padding:.52rem 1.5rem;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.exam-show-btn:hover{background:#4a7d6d11}
+.exam-answer{display:none;align-items:center;gap:.7rem;border:2px solid #4a9c66;border-radius:2rem;padding:.48rem 1.4rem;color:#2d7d4a;animation:fadeUp .2s ease}
+.exam-answer.show{display:inline-flex}
+@keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.ea-label{font-size:.72rem;color:#5a9c72;font-weight:700;letter-spacing:.04em}
+.ea-num{font-size:1.35rem;font-weight:800;font-family:"Nanum Myeongjo",serif;color:#1e6040}
 
 /* 완료 페이지 */
 .done-page{text-align:center;padding:2.5rem 1rem}
@@ -288,7 +292,29 @@ function renderPage() {
   }
   else if (page.type === 'exam') {
     const d = page.data;
-    const ans = d.answer ? '①②③④⑤'[d.answer - 1] : '?';
+    const ansNum = d.answer || 0;
+    const ansCircle = ansNum ? '①②③④⑤'[ansNum - 1] : '?';
+
+    // 질문과 객관식 분리
+    const rawText = d.text || '';
+    const choiceIdx = rawText.search(/[①②③④⑤]/);
+    let questionHtml = '', choicesHtml = '';
+    if (choiceIdx === -1) {
+      questionHtml = `<div class="exam-q-callout">${rawText}</div>`;
+    } else {
+      const qPart = rawText.substring(0, choiceIdx).trim();
+      const cPart = rawText.substring(choiceIdx).trim();
+      // 객관식 항목 분리 (①~⑤ 기준)
+      const items = cPart.split(/(?=[①②③④⑤])/).map(s => s.trim()).filter(s => s);
+      const itemsHtml = items.map(item => {
+        const num = '①②③④⑤'.indexOf(item[0]) + 1;
+        const isAns = num === ansNum;
+        return `<div class="exam-choice" style="${isAns ? '' : ''}">${item}</div>`;
+      }).join('');
+      questionHtml = `<div class="exam-q-callout">${qPart}</div>`;
+      choicesHtml  = `<div class="exam-choices-callout">${itemsHtml}</div>`;
+    }
+
     wrap.innerHTML = `
       <div class="exam-page">
         <div class="exam-meta">
@@ -296,12 +322,13 @@ function renderPage() {
           <span class="em-date">${d.year}년 ${String(d.month).padStart(2,'0')}월</span>
           <span class="em-period">${d.period}</span>
         </div>
-        <div class="exam-q">${d.text}</div>
+        ${questionHtml}
+        ${choicesHtml}
         <div class="exam-answer-wrap">
-          <button class="exam-show-btn" onclick="this.style.display='none';this.nextElementSibling.classList.add('show')">정답 확인 👀</button>
+          <button class="exam-show-btn" onclick="this.style.display='none';this.nextElementSibling.classList.add('show')">정답 확인</button>
           <div class="exam-answer">
-            <div class="ea-label">정답</div>
-            <div class="ea-num">${ans}</div>
+            <span class="ea-label">정답</span>
+            <span class="ea-num">${ansCircle}</span>
           </div>
         </div>
       </div>`;
