@@ -301,7 +301,7 @@ body{{font-family:"Gowun Dodum","Apple SD Gothic Neo",sans-serif;background:#fdf
 .card.done .card-title{{color:#2d7a4f}}
 .card-done-badge{{position:absolute;top:.4rem;right:.4rem;font-size:.65rem;background:#5cb87a;color:#fff;border-radius:1rem;padding:.1rem .4rem;display:none}}
 .card.done .card-done-badge{{display:block}}
-.card-title{{font-size:.78rem;font-weight:700;color:#1a1a2e;margin-bottom:.3rem;line-height:1.35;font-family:"Jua",sans-serif}}
+.card-title{{font-size:.84rem;font-weight:500;color:#1a1a2e;margin-bottom:.3rem;line-height:1.35;font-family:"Gowun Dodum",sans-serif}}
 .card-preview{{font-size:.68rem;color:#999;line-height:1.4}}
 .card.hidden-card{{display:none!important}}
 
@@ -359,7 +359,7 @@ body{{font-family:"Gowun Dodum","Apple SD Gothic Neo",sans-serif;background:#fdf
 .sec-mn .sec-label{{color:rgba(255,255,255,.75)}}
 .sec-bg p,.sec-expl p{{font-size:.85rem;line-height:1.7;color:#333}}
 .sec-mn p{{font-size:.92rem;line-height:1.6;font-weight:600}}
-.kw{{background:#ffe566;border-radius:3px;padding:0 2px;font-weight:700}}
+.kw{{background:#ffe566;border-radius:3px;padding:0 2px;font-weight:700;color:#1a1a2e}}
 .kw::before{{content:"★ ";font-size:.75em;color:{PINK}}}
 .modal-footer{{padding:.9rem 1.25rem;border-top:1px solid #f5e8f0;display:flex;align-items:center;justify-content:center}}
 .done-check-label{{display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.9rem;color:#555;font-family:"Gowun Dodum",sans-serif;user-select:none}}
