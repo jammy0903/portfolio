@@ -127,7 +127,7 @@ body{font-family:"Gowun Dodum","Apple SD Gothic Neo",sans-serif;background:#faf6
 .sec-summary{background:#a2324411;border-left:5px solid #a23244;font-size:.95rem;color:#2c2416;font-weight:600}
 .sec-bg{background:#f5e8d8;border-left:5px solid #9c7a4a}
 .sec-expl{background:#e8eef0;border-left:5px solid #5a7d8c}
-.sec-mn{background:#a23244;color:#fff;font-weight:600}
+.sec-mn{background:linear-gradient(145deg,#6e1f2c 0%,#a23244 62%,#b08a58 100%);color:#fff;font-weight:600;box-shadow:0 10px 26px #a2324422}
 .sec-trap{background:#fff5e0;border:1.5px solid #d4a256;border-left:5px solid #c97a1c;color:#6e3a06}
 .sec-label{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem}
 .sec-bg .sec-label{color:#7a5c30}
@@ -137,6 +137,13 @@ body{font-family:"Gowun Dodum","Apple SD Gothic Neo",sans-serif;background:#faf6
 .sec-summary .sec-label{color:#a23244}
 .sec p{font-size:.92rem;line-height:1.7}
 .sec-mn p{font-size:.98rem}
+.mn-list{display:flex;flex-direction:column;gap:.55rem}
+.mn-line{display:flex;align-items:flex-start;gap:.72rem;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);border-radius:.9rem;padding:.72rem .8rem .68rem;backdrop-filter:blur(2px)}
+.mn-picto{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:1.6rem;height:1.6rem;border-radius:.45rem;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.2);font-size:.76rem;font-weight:800;line-height:1;color:#fffdf8;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.mn-main{display:flex;flex-direction:column;gap:.28rem;min-width:0}
+.mn-tag{display:inline-flex;align-items:center;width:fit-content;padding:.12rem .45rem;border-radius:999px;background:rgba(255,255,255,.14);color:#fff1d6;font-size:.64rem;font-weight:800;letter-spacing:.05em}
+.mn-text{font-size:.95rem;line-height:1.76;color:#fff;word-break:keep-all}
+.mn-text strong{color:#fff3cf;font-weight:800}
 
 .ctable{width:100%;border-collapse:collapse;font-size:.82rem;background:#fff;border-radius:.5rem;overflow:hidden;margin-top:.4rem}
 .ctable th{background:#a23244;color:#fff;padding:.55rem .65rem;text-align:left;font-weight:700;font-size:.78rem}
@@ -276,6 +283,52 @@ function applyFilters() {
   });
 }
 
+function escHtml(str) {
+  return (str || '').replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]);
+}
+
+function splitMnemonic(text) {
+  return (text || '')
+    .replace(/\r\n/g, '\n')
+    .replace(/\s+\/\s+/g, '\n')
+    .replace(/\s+vs\.\s+/gi, '\n')
+    .replace(/\s+→\s+/g, ' → ')
+    .replace(/\s+↔\s+/g, ' ↔ ')
+    .replace(/\.\s+/g, '.\n')
+    .replace(/다\.\s+/g, '다.\n')
+    .replace(/됨\.\s+/g, '됨.\n')
+    .split(/\n+/)
+    .map(line => line.trim())
+    .filter(Boolean);
+}
+
+function mnemonicIcon(tag, text) {
+  if (tag) return '◈';
+  if (text.includes('↔') || text.includes('=')) return '⇄';
+  if (text.includes('→')) return '→';
+  return '•';
+}
+
+function renderMnemonic(text) {
+  const lines = splitMnemonic(text);
+  if (!lines.length) return '';
+  const html = lines.map(line => {
+    const m = line.match(/^【([^】]+)】\s*(.*)$/);
+    const tag = m ? m[1].trim() : '';
+    const body = (m ? m[2] : line).trim();
+    const safeBody = escHtml(body).replace(/'([^']+)'/g, '<strong>$1</strong>');
+    return `
+      <div class="mn-line">
+        <span class="mn-picto">${mnemonicIcon(tag, body)}</span>
+        <div class="mn-main">
+          ${tag ? `<span class="mn-tag">${escHtml(tag)}</span>` : ''}
+          <div class="mn-text">${safeBody}</div>
+        </div>
+      </div>`;
+  }).join('');
+  return `<div class="sec sec-mn"><div class="sec-label">🧠 5초 암기</div><div class="mn-list">${html}</div></div>`;
+}
+
 // ── 레슨 페이지 빌드 ──
 function buildPages(lesson) {
   const ps = [];
@@ -308,7 +361,7 @@ function renderPage() {
     if (d.summary)     h += `<div class="sec sec-summary"><div class="sec-label">📌 한 줄 요약</div><p>${d.summary}</p></div>`;
     if (d.background) h += `<div class="sec sec-bg"><div class="sec-label">📜 배경·맥락</div><p>${d.background}</p></div>`;
     if (d.explanation) h += `<div class="sec sec-expl"><div class="sec-label">📖 무슨 뜻이야?</div><p>${d.explanation}</p></div>`;
-    if (d.mnemonic)    h += `<div class="sec sec-mn"><div class="sec-label">🧠 5초 암기</div><p>${d.mnemonic}</p></div>`;
+    if (d.mnemonic)    h += renderMnemonic(d.mnemonic);
     if (d.trap)        h += `<div class="sec sec-trap"><div class="sec-label">⚠️ 1급 함정</div><p>${d.trap}</p></div>`;
     if (d.table && d.table.length) {
       const cols = Object.keys(d.table[0]);
