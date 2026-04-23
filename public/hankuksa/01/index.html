@@ -309,12 +309,22 @@ function mnemonicIcon(tag, text) {
   return '•';
 }
 
+function normalizeMnemonicTag(tag) {
+  const raw = (tag || '').trim();
+  if (!raw) return '';
+  const tagMap = {
+    '특징 임베딩': '핵심 연결',
+    '의미+특별표시': '핵심 포인트',
+  };
+  return tagMap[raw] || raw;
+}
+
 function renderMnemonic(text) {
   const lines = splitMnemonic(text);
   if (!lines.length) return '';
   const html = lines.map(line => {
     const m = line.match(/^【([^】]+)】\s*(.*)$/);
-    const tag = m ? m[1].trim() : '';
+    const tag = normalizeMnemonicTag(m ? m[1] : '');
     const body = (m ? m[2] : line).trim();
     const safeBody = escHtml(body).replace(/'([^']+)'/g, '<strong>$1</strong>');
     return `
