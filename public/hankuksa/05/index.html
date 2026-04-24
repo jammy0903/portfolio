@@ -147,6 +147,14 @@ body{font-family:var(--font-sans);background:#f8f4ee;color:#2c2416;min-height:10
 .fact-item{background:#fff;border:1px solid rgba(62,41,18,.08);border-radius:.9rem;padding:.88rem .95rem}
 .fact-term{font-size:.95rem;font-weight:800;color:#2c2416;margin-bottom:.28rem}
 .fact-note{font-size:1rem;line-height:1.78;color:#352e24;word-break:keep-all;max-inline-size:66ch}
+.tf-row{display:flex;align-items:baseline;gap:.35rem;padding:.18rem 0;flex-wrap:wrap}
+.tf-char{font-size:1.25rem;font-weight:800;color:#7656a8;min-width:2.2rem}
+.tf-reading{font-size:.8rem;font-weight:700;color:#9370c8}
+.tf-sep{font-size:.85rem;color:#bbb;margin:0 .1rem}
+.tf-meaning{font-size:.88rem;color:#352e24;line-height:1.5}
+.tf-pul{margin-top:.65rem;padding:.55rem .75rem;background:#f8f5fc;border-radius:.6rem;border-left:3px solid #c9b3e8}
+.tf-pul-label{font-weight:800;color:#7656a8;margin-right:.35rem;font-size:.82rem}
+.tf-pul-text{font-size:.93rem;line-height:1.75;color:#352e24;word-break:keep-all}
 .fact-link-label{display:inline-flex;align-items:center;padding:.14rem .48rem;border-radius:999px;background:#6b422614;color:#3e2616;font-size:.72rem;font-weight:800;letter-spacing:.02em;margin-bottom:.42rem}
 .src-list{display:flex;flex-direction:column;gap:.5rem}
 .src-link{display:flex;align-items:flex-start;gap:.5rem;text-decoration:none;color:#2c2416;background:#fdfaf6;border:1px solid #eadfce;border-radius:.85rem;padding:.8rem .88rem;transition:border-color .15s,transform .15s}
@@ -343,6 +351,28 @@ function renderParagraph(text) {
   return escHtml(text || '').replace(/\n/g, '<br>');
 }
 
+function renderTermFocus(items) {
+  if (!items || !items.length) return '';
+  const html = items.map(item => {
+    const charRows = (item.chars || []).map(c =>
+      `<div class="tf-row">
+        <span class="tf-char">${escHtml(c.char)}</span>
+        <span class="tf-reading">(${escHtml(c.reading)})</span>
+        <span class="tf-sep">:</span>
+        <span class="tf-meaning">${escHtml(c.meaning)}</span>
+      </div>`
+    ).join('');
+    const pul = item['풀이'] ?
+      `<div class="tf-pul"><span class="tf-pul-label">풀이</span><span class="tf-pul-text">${renderParagraph(item['풀이'])}</span></div>` : '';
+    return `<div class="fact-item">
+      <div class="fact-term">${escHtml(item.term || '')}</div>
+      ${charRows}
+      ${pul}
+    </div>`;
+  }).join('');
+  return `<div class="sec sec-term"><div class="sec-label">🈶 용어 설명</div><div class="fact-list">${html}</div></div>`;
+}
+
 function renderFactSection(label, secClass, items) {
   if (!items || !items.length) return '';
   const html = items.map(item => `
@@ -444,7 +474,7 @@ function renderPage() {
     }
     if (d.explanation) h += `<div class="sec sec-expl"><div class="sec-label">📖 핵심 설명</div><p>${renderParagraph(d.explanation)}</p></div>`;
     if (contextText)   h += `<div class="sec sec-bg"><div class="sec-label">📜 배경·왜 이렇게 됐나</div><p>${renderParagraph(contextText)}</p></div>`;
-    if (d.term_focus && d.term_focus.length) h += renderFactSection('🈶 용어 설명', 'sec-term', d.term_focus);
+    if (d.term_focus && d.term_focus.length) h += renderTermFocus(d.term_focus);
     if (d.summary)     h += `<div class="sec sec-summary"><div class="sec-label">📌 핵심 요약</div><p>${renderParagraph(d.summary)}</p></div>`;
     h += `<div class="sec sec-trap"><div class="sec-label">⚠️ 틀리기 쉬운 부분</div><p>${renderParagraph(trapText)}</p></div>`;
     if (d.table && d.table.length) {
