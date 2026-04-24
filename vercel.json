@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/((?!topcit|cert-study|hankuksa|assets|api).*)", "destination": "/" }
+    { "source": "/((?!assets|api).*)", "destination": "/" }
   ],
   "env": {
     "DATABASE_URL": "***REMOVED_DATABASE_URL***"
