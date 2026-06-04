@@ -17,7 +17,7 @@ WebSocket 배치 처리로 렌더링 부하를 80% 줄이고, 빌드 시간을 2
 export const skills = {
   frontend: ["React", "TypeScript", "Vite", "Zustand", "MUI", "Tailwind CSS", "HTML/CSS", "JavaScript"],
   backend: ["FastAPI", "Node.js", "Express", "SQLite", "InfluxDB", "MQTT", "REST API"],
-  infra: ["Docker", "Nginx", "TLS/HTTPS", "WebSocket", "Linux", "Shell Script", "WSL"],
+  infra: ["Docker", "Nginx", "TLS/HTTPS", "mTLS", "WebSocket", "Linux", "Shell Script", "WSL"],
   security: ["Reverse Engineering", "x86/x64 Assembly", "Ghidra", "IDA", "Wireshark", "Burp Suite", "웹 취약점 분석", "CVE 분석"],
   tools: ["Git", "SVN", "Figma", "VS Code", "Notion", "Jira"],
 };
@@ -54,9 +54,9 @@ export const experience = {
     },
     {
       title: "인프라 보안 강화",
-      problem: "HTTP 통신, 하드코딩된 환경변수, SQLite 동시성 문제",
-      solution: "Nginx+TLS 도입, Pydantic Config 시스템, SQLite WAL 모드 적용",
-      result: "보안 수준 향상, DB 락 에러 0%",
+      problem: "HTTP 통신, 하드코딩된 환경변수, SQLite 동시성 문제, IoT 장비-서버 간 MQTT 평문 통신",
+      solution: "Nginx+TLS 도입, Pydantic Config 시스템, SQLite WAL 모드 적용. MQTT 브로커에 별도 TLS 포트(8884) 추가, 자체 서명 CA로 서버/클라이언트 인증서 발급해 양방향 mTLS(mutual TLS) 구성 — 게이트웨이·백엔드 모두 클라이언트 인증서 제시 필수, 미인증 기기는 브로커 연결 자체 차단",
+      result: "보안 수준 향상, DB 락 에러 0%, IoT 데이터 전송 구간 암호화 및 기기 인증 완료",
     },
     {
       title: "UI/UX 개선 및 비즈니스 기여",
