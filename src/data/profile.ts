@@ -127,6 +127,32 @@ export const experience = {
 
 export const projects = [
   {
+    slug: "dog-walk",
+    featured: true,
+    badge: "LIVE · 크롬 웹스토어 출시",
+    title: "강아지 산책 — 타자로 걷기",
+    subtitle: "Chrome 웹스토어 게시 · 타이핑하면 강아지가 걷는 확장프로그램",
+    type: "개인 프로젝트 (Chrome 웹스토어 출시)",
+    thumbnail: { emoji: "🐕", gradient: "linear-gradient(135deg, #F9A826 0%, #E8915B 100%)" },
+    description: "키보드 한 글자가 강아지의 한 걸음. 타이핑할 때마다 화면 속 강아지가 한 걸음씩 움직이고, 쌓인 걸음을 뼈 모양 코인으로 환전해 11가지 견종(Shiba·Corgi·Chihuahua·Poodle 등)을 수집하는 Manifest V3 크롬 확장프로그램. 사이드 패널에서 반려견 관리·상점을 이용하고, 스프레드시트/브라우저 배경 위장 기능과 한/영 언어 전환을 지원한다. 프라이버시 보호를 위해 키 입력 '내용'은 일절 기록하지 않고 '입력 횟수'만 추적하도록 설계. Chrome 웹스토어에 정식 게시되어 누구나 설치 가능.",
+    techStack: ["JavaScript", "Chrome Extension API (Manifest V3)", "Side Panel API", "HTML", "CSS"],
+    highlights: [
+      "Chrome 웹스토어 심사 통과 및 정식 게시 — 실제 사용자가 설치 가능한 배포 제품",
+      "타이핑 기반 반려견 산책 시뮬레이션 — 키 입력을 걸음으로 환산, 뼈 코인으로 견종 수집 게임화",
+      "프라이버시 우선 설계 — 키 입력 내용은 기록하지 않고 횟수만 카운트해 키로깅 우려 차단",
+      "Side Panel 기반 반려견 관리·상점 UI 및 스프레드시트/브라우저 배경 위장 기능 구현",
+      "11가지 견종 수집 시스템과 한국어/영어 다국어(i18n) 지원",
+    ],
+    images: [
+      { src: "/images/dog-walk/1.png", caption: "타이핑하면 실제 웹페이지 위를 걸어 다니는 강아지" },
+      { src: "/images/dog-walk/2.png", caption: "수집한 견종(시바)이 화면 위에서 노는 모습" },
+    ],
+    links: {
+      store: "https://chromewebstore.google.com/detail/glciecgcibkmbkkllmhagignmmjghkmj",
+      github: "https://github.com/jammy0903/dog-walk",
+    },
+  },
+  {
     slug: "multibucket-architecture",
     title: "InfluxDB 멀티버킷 라우팅 아키텍처",
     subtitle: "V3 하드웨어 도입 대비 5단계 점진적 마이그레이션 (Case Study)",
