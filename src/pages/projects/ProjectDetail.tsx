@@ -19,7 +19,7 @@ export default function ProjectDetail() {
     );
   }
 
-  const links = project.links as { github?: string; notion?: string };
+  const links = project.links as { github?: string; notion?: string; store?: string };
   const images = 'images' in project ? (project.images as Array<{ src: string; caption: string }>) : null;
 
   const cardStyle = {
@@ -62,8 +62,19 @@ export default function ProjectDetail() {
         </div>
 
         {/* Links */}
-        {(links.github || links.notion) && (
+        {(links.github || links.notion || links.store) && (
           <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+            {links.store && (
+              <a href={links.store} target="_blank" rel="noopener noreferrer" style={{ ...buttonStyle, backgroundColor: '#4285F4' }}>
+                <svg style={{ width: '1.25rem', height: '1.25rem' }} viewBox="0 0 48 48">
+                  <circle cx="24" cy="24" r="9.5" fill="#fff"/>
+                  <path fill="#EA4335" d="M24 4a20 20 0 0 1 17.32 10H24a10 10 0 0 0-8.66 5L8.7 7.6A19.93 19.93 0 0 1 24 4z"/>
+                  <path fill="#34A853" d="M14.5 24a9.5 9.5 0 0 0 14.2 8.24l-6.84 11.66A20 20 0 0 1 4.7 14.1l6.84 11.84A9.46 9.46 0 0 1 14.5 24z"/>
+                  <path fill="#FBBC05" d="M44 24a20 20 0 0 1-21.86 19.92L29 32.1A9.5 9.5 0 0 0 33.32 14H44z"/>
+                </svg>
+                크롬 웹스토어
+              </a>
+            )}
             {links.github && (
               <a href={links.github} target="_blank" rel="noopener noreferrer" style={buttonStyle}>
                 <svg style={{ width: '1.25rem', height: '1.25rem' }} fill="currentColor" viewBox="0 0 24 24">
