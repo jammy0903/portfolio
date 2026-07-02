@@ -153,6 +153,26 @@ export const projects = [
     },
   },
   {
+    slug: "aingan",
+    title: "마음을 줍는 로봇",
+    subtitle: "고철 로봇이 감정을 배워 인간이 되는 수채화 감성 방치형 게임",
+    type: "감성 방치형 게임 — 1인 기획·개발·아트·배포",
+    thumbnail: { emoji: "🤖", gradient: "linear-gradient(135deg, #6db4c0 0%, #e891b9 100%)" },
+    description:
+      "버려진 고철 로봇(AI)이 끝없는 길을 걸으며 사람을 만나고 감정을 하나씩 배워 마침내 인간이 되는, 수채화풍 감성 방치형(idle) 게임. 기획·게임 디자인·아트 디렉션·프론트/백엔드·PWA·배포까지 1인 개발. Cloudflare Pages + 커스텀 도메인(aingan.click)으로 실서비스 배포, Google 로그인·클라우드 세이브까지 동작하는 플레이 가능한 게임.",
+    techStack: ["Vanilla JS", "PWA / Service Worker", "Supabase", "Google OAuth", "Cloudflare Pages", "SVG/CSS Animation", "Capacitor(출시 준비)"],
+    highlights: [
+      "기획·게임 디자인·아트·프론트/백엔드·PWA·배포까지 1인 개발 — 커스텀 도메인(aingan.click) 라이브 서비스",
+      "통화를 골드가 아니라 감정·기억으로 치환 — 방치형의 중반 콘텐츠 사막을 서사의 해자로 전환하는 게임 디자인",
+      "Cowen & Keltner(2017) 학술 감정 27 + 몸 11 수집 → 반전 엔딩('넌 이미 사람이었어')",
+      "Supabase 구글 로그인·클라우드 세이브·PWA 오프라인·감정 27곡 BGM까지 완성해 배포",
+    ],
+    links: {
+      live: "https://aingan.click",
+      github: "https://github.com/jammy0903/ai-ingan",
+    },
+  },
+  {
     slug: "multibucket-architecture",
     title: "InfluxDB 멀티버킷 라우팅 아키텍처",
     subtitle: "V3 하드웨어 도입 대비 5단계 점진적 마이그레이션 (Case Study)",
