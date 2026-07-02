@@ -21,6 +21,7 @@ export default function ProjectDetail() {
 
   const links = project.links as { github?: string; notion?: string; store?: string };
   const images = 'images' in project ? (project.images as Array<{ src: string; caption: string }>) : null;
+  const dogGallery = 'dogGallery' in project ? (project.dogGallery as Array<{ src: string; label: string }>) : null;
 
   const cardStyle = {
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -119,6 +120,36 @@ export default function ProjectDetail() {
             ))}
           </div>
         </div>
+
+        {/* Dog Gallery — 수집 견종(드러누운 강아지들) */}
+        {dogGallery && (
+          <div style={{ ...cardStyle, marginBottom: '2rem' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '0.5rem' }}>수집 견종 — 걸음을 모아 만나는 강아지들 🐾</h2>
+            <p style={{ color: '#78716c', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
+              뼈 코인을 모으면 한 마리씩 해금되는 11가지 견종. 산책을 끝내면 이렇게 배 보이며 벌러덩 드러눕습니다.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+              {dogGallery.map((dog) => (
+                <div
+                  key={dog.src}
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem',
+                    padding: '0.85rem 0.5rem',
+                    backgroundColor: 'rgba(254, 247, 237, 0.7)',
+                    borderRadius: '1rem',
+                    border: '1px solid #fbe3c4',
+                    transition: 'transform 0.2s',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px) rotate(-1.5deg)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) rotate(0)'; }}
+                >
+                  <img src={dog.src} alt={dog.label} loading="lazy" style={{ width: '100%', display: 'block' }} />
+                  <span style={{ color: '#b45309', fontSize: '0.85rem', fontWeight: 600 }}>{dog.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Images */}
         {images && (
