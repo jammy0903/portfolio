@@ -154,6 +154,8 @@ export const projects = [
   },
   {
     slug: "aingan",
+    featured: true,
+    badge: "LIVE · aingan.click 플레이 가능",
     title: "마음을 줍는 로봇",
     subtitle: "고철 로봇이 감정을 배워 인간이 되는 수채화 감성 방치형 게임",
     type: "감성 방치형 게임 — 1인 기획·개발·아트·배포",

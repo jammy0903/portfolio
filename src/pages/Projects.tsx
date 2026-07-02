@@ -25,7 +25,7 @@ export default function Projects() {
 
             if (isFeatured) {
               const badge = 'badge' in project ? (project.badge as string) : 'LIVE';
-              const links = project.links as { store?: string; github?: string };
+              const links = project.links as { store?: string; live?: string; github?: string };
               return (
                 <div
                   key={project.slug}
@@ -101,6 +101,17 @@ export default function Projects() {
                           style={{ padding: '0.55rem 1.1rem', backgroundColor: '#4285F4', color: 'white', borderRadius: '0.5rem', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 600 }}
                         >
                           🛒 크롬 웹스토어에서 설치
+                        </a>
+                      )}
+                      {links.live && (
+                        <a
+                          href={links.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{ padding: '0.55rem 1.1rem', backgroundColor: '#e891b9', color: 'white', borderRadius: '0.5rem', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 600 }}
+                        >
+                          🎮 지금 플레이하기
                         </a>
                       )}
                       {links.github && (
