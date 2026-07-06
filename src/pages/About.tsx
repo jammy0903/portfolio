@@ -1,4 +1,4 @@
-import { profile, skills, education } from "../data/profile";
+import { profile, skills, education, certifications } from "../data/profile";
 
 export default function About() {
   const cardStyle = {
@@ -108,6 +108,26 @@ export default function About() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Certifications */}
+        <div style={{ marginTop: '2rem' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1.5rem' }}>Certifications</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            {certifications.map((cert) => (
+              <div key={cert.name} style={cardStyle}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#334155', marginBottom: '0.25rem' }}>{cert.name}</h3>
+                    <p style={{ color: '#d4789c', fontWeight: '600', marginBottom: '0.5rem' }}>{cert.score}</p>
+                    <p style={{ color: '#78716c', fontSize: '0.875rem', marginBottom: '0.125rem' }}>{cert.issuer}</p>
+                    <p style={{ color: '#a8a29e', fontSize: '0.8125rem' }}>{cert.examNoLabel} {cert.examNo}</p>
+                  </div>
+                  <p style={{ color: '#a8a29e', fontSize: '0.875rem' }}>{cert.date}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
