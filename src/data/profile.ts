@@ -359,7 +359,7 @@ export const certifications = [
     name: "TOPCIT (정보기술 실무능력 평가)",
     issuer: "과학기술정보통신부 · 정보통신기획평가원(IITP)",
     date: "2026.05.16",
-    score: "59점 / 75점 · 수준 3",
+    score: "75문항 중 59문항 득점 · 수준 3",
     examNoLabel: "응시번호",
     examNo: "TP26010021796",
   },
