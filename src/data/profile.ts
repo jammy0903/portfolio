@@ -354,6 +354,25 @@ export const projects = [
   },
 ];
 
+export const certifications = [
+  {
+    name: "TOPCIT (정보기술 실무능력 평가)",
+    issuer: "과학기술정보통신부 · 정보통신기획평가원(IITP)",
+    date: "2026.05.16",
+    score: "484점 / 1000점 · 수준 3",
+    examNoLabel: "응시번호",
+    examNo: "TP26010021796",
+  },
+  {
+    name: "한국사능력검정시험 (제78회)",
+    issuer: "교육부 국사편찬위원회",
+    date: "2026.06.05",
+    score: "심화 2급 합격",
+    examNoLabel: "인증번호",
+    examNo: "78-236315",
+  },
+];
+
 export const education = [
   {
     school: "연세대학교 미래캠퍼스",
