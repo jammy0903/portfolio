@@ -371,6 +371,14 @@ export const certifications = [
     examNoLabel: "인증번호",
     examNo: "78-236315",
   },
+  {
+    name: "TOEIC Speaking Test",
+    issuer: "ETS · YBM",
+    date: "2024.12.29",
+    score: "Intermediate High (Speaking Score 140)",
+    examNoLabel: "등록번호",
+    examNo: "102871",
+  },
 ];
 
 export const education = [
