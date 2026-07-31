@@ -1,6 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { projects } from "../../data/profile";
 
+// **강조** 표기를 굵은 글씨로 렌더링. 홀수 번째 조각이 강조 구간이 된다.
+function renderBold(text: string) {
+  return text.split('**').map((part, i) =>
+    i % 2 === 1
+      ? <strong key={i} style={{ color: '#334155', fontWeight: 700 }}>{part}</strong>
+      : <span key={i}>{part}</span>
+  );
+}
+
 export default function ProjectDetail() {
   const navigate = useNavigate();
   const { slug } = useParams();
@@ -121,7 +130,7 @@ export default function ProjectDetail() {
             {project.highlights.map((highlight, idx) => (
               <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                 <span style={{ color: '#16a34a', marginTop: '0.125rem', flexShrink: 0 }}>✓</span>
-                <span style={{ color: '#64748b', lineHeight: '1.6' }}>{highlight}</span>
+                <span style={{ color: '#64748b', lineHeight: '1.6' }}>{renderBold(highlight)}</span>
               </div>
             ))}
           </div>
