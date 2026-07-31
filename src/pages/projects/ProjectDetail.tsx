@@ -19,7 +19,7 @@ export default function ProjectDetail() {
     );
   }
 
-  const links = project.links as { github?: string; notion?: string; store?: string };
+  const links = project.links as { github?: string; notion?: string; store?: string; live?: string };
   const images = 'images' in project ? (project.images as Array<{ src: string; caption: string }>) : null;
   const dogGallery = 'dogGallery' in project ? (project.dogGallery as Array<{ src: string; label: string }>) : null;
 
@@ -63,8 +63,14 @@ export default function ProjectDetail() {
         </div>
 
         {/* Links */}
-        {(links.github || links.notion || links.store) && (
+        {(links.github || links.notion || links.store || links.live) && (
           <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+            {links.live && (
+              <a href={links.live} target="_blank" rel="noopener noreferrer" style={{ ...buttonStyle, backgroundColor: '#e891b9' }}>
+                <span style={{ fontSize: '1.05rem' }}>🌐</span>
+                사이트 바로가기
+              </a>
+            )}
             {links.store && (
               <a href={links.store} target="_blank" rel="noopener noreferrer" style={{ ...buttonStyle, backgroundColor: '#4285F4' }}>
                 <svg style={{ width: '1.25rem', height: '1.25rem' }} viewBox="0 0 48 48">
