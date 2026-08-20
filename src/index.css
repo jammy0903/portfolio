@@ -4,13 +4,13 @@
 :root {
   color: #10233f;
   background: #f4f7fa;
-  font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  font-family: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --ink: #10233f;
-  --ink-soft: #40536d;
-  --muted: #687a91;
-  --line: #d9e2ea;
+  --ink-soft: #2f435d;
+  --muted: #50637b;
+  --line: #cfdae4;
   --surface: #ffffff;
   --surface-soft: #edf3f6;
   --accent: #0c7c86;
@@ -33,9 +33,9 @@ body {
   min-height: 100vh;
   background: #f4f7fa;
   color: var(--ink);
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.7;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.75;
 }
 
 button,
@@ -89,17 +89,17 @@ button:focus-visible {
 }
 
 .site-brand span {
-  font-size: 0.93rem;
+  font-size: 1rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
 }
 
 .site-brand small {
   margin-top: 0.3rem;
   color: var(--muted);
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
 }
 
 .site-nav__desktop {
@@ -111,7 +111,7 @@ button:focus-visible {
 .site-nav__desktop a,
 .site-nav__mobile a {
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 0.96rem;
   font-weight: 650;
   text-decoration: none;
   transition: color 160ms ease;
@@ -176,9 +176,9 @@ button:focus-visible {
 .eyebrow,
 .section-kicker {
   color: var(--accent-dark);
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
 }
 
 .eyebrow {
@@ -200,7 +200,7 @@ button:focus-visible {
   max-width: 720px;
   font-size: clamp(2.75rem, 6.2vw, 5.4rem);
   line-height: 1.12;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.02em;
   word-break: keep-all;
 }
 
@@ -241,7 +241,7 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 0.65rem;
-  font-size: 0.9rem;
+  font-size: 0.96rem;
   font-weight: 750;
   text-decoration: none;
   transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
@@ -300,9 +300,9 @@ button:focus-visible {
   align-items: center;
   justify-content: space-between;
   color: var(--muted);
-  font-size: 0.66rem;
+  font-size: 0.76rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
 }
 
 .system-card__status {
@@ -341,7 +341,7 @@ button:focus-visible {
   flex: 0 0 auto;
   background: var(--ink);
   color: #fff;
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 800;
 }
 
@@ -352,12 +352,12 @@ button:focus-visible {
 
 .system-node strong {
   color: var(--ink);
-  font-size: 0.91rem;
+  font-size: 0.98rem;
 }
 
 .system-node div span {
   color: var(--muted);
-  font-size: 0.76rem;
+  font-size: 0.84rem;
 }
 
 .system-flow__line {
@@ -373,7 +373,7 @@ button:focus-visible {
   border-radius: 0.65rem;
   background: var(--ink);
   color: #eef7f9;
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   font-weight: 650;
   text-align: center;
 }
@@ -400,12 +400,12 @@ button:focus-visible {
 .metric strong {
   color: var(--accent-dark);
   font-size: clamp(1.4rem, 2.5vw, 2rem);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
 }
 
 .metric span {
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   font-weight: 650;
 }
 
@@ -429,14 +429,14 @@ button:focus-visible {
   color: var(--ink);
   font-size: clamp(1.9rem, 4vw, 3.2rem);
   line-height: 1.2;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   word-break: keep-all;
 }
 
 .section-heading > a {
   color: var(--accent-dark);
   flex: 0 0 auto;
-  font-size: 0.86rem;
+  font-size: 0.94rem;
   font-weight: 750;
   text-decoration: none;
 }
@@ -475,15 +475,15 @@ button:focus-visible {
   place-items: center;
   background: var(--surface-soft);
   color: var(--accent-dark);
-  font-size: 0.76rem;
+  font-size: 0.84rem;
   font-weight: 800;
 }
 
 .work-card > p {
   color: var(--accent-dark);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
 }
 
 .work-card h3 {
@@ -495,7 +495,7 @@ button:focus-visible {
 .work-card__description {
   margin-top: 0.85rem;
   color: var(--ink-soft);
-  font-size: 0.9rem;
+  font-size: 0.96rem;
   line-height: 1.75;
   word-break: keep-all;
 }
@@ -504,14 +504,14 @@ button:focus-visible {
   margin-top: auto;
   padding-top: 1.2rem;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.84rem;
   font-weight: 650;
 }
 
 .work-card__link {
   margin-top: 0.7rem;
   color: var(--accent-dark);
-  font-size: 0.83rem;
+  font-size: 0.9rem;
   font-weight: 800;
 }
 
@@ -563,7 +563,7 @@ button:focus-visible {
   border-radius: 99px;
   background: rgba(255, 255, 255, 0.11);
   color: #d6e3ed;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 750;
 }
 
@@ -577,7 +577,7 @@ button:focus-visible {
   margin-top: 1rem;
   padding-left: 1.15rem;
   color: #c8d4df;
-  font-size: 0.86rem;
+  font-size: 0.94rem;
 }
 
 .direction-card li + li {
@@ -620,7 +620,7 @@ button:focus-visible {
   color: var(--ink);
   font-size: clamp(2.35rem, 5.5vw, 4.8rem);
   line-height: 1.14;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.02em;
   word-break: keep-all;
 }
 
@@ -666,19 +666,19 @@ button:focus-visible {
   flex: 0 0 auto;
   background: var(--signal);
   color: var(--ink);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 850;
 }
 
 .projects-section-heading h2 {
   color: var(--ink);
   font-size: clamp(1.35rem, 3vw, 2rem);
-  letter-spacing: -0.035em;
+  letter-spacing: -0.02em;
 }
 
 .projects-section-heading > p {
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 0.88rem;
   font-weight: 650;
   text-align: right;
 }
@@ -734,7 +734,7 @@ button:focus-visible {
   place-items: center;
   background: rgba(16, 35, 63, 0.72);
   color: #fff;
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 800;
   backdrop-filter: blur(8px);
 }
@@ -756,7 +756,7 @@ button:focus-visible {
 .project-feature-card__body > p,
 .project-archive-card__body > p {
   color: var(--accent-dark);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.05em;
 }
@@ -770,13 +770,13 @@ button:focus-visible {
 .project-feature-card__subtitle {
   margin-top: 0.35rem;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
 }
 
 .project-feature-card__highlight {
   margin-top: 1rem;
   color: var(--ink-soft);
-  font-size: 0.86rem;
+  font-size: 0.94rem;
   line-height: 1.7;
   word-break: keep-all;
 }
@@ -793,7 +793,7 @@ button:focus-visible {
   border-radius: 0.3rem;
   background: var(--surface-soft);
   color: var(--muted);
-  font-size: 0.67rem;
+  font-size: 0.77rem;
   font-weight: 650;
 }
 
@@ -802,7 +802,7 @@ button:focus-visible {
   margin-top: auto;
   padding-top: 1.3rem;
   color: var(--accent-dark);
-  font-size: 0.8rem;
+  font-size: 0.88rem;
 }
 
 .projects-archive__grid {
@@ -853,7 +853,7 @@ button:focus-visible {
 .project-archive-card__body > span {
   margin-top: 0.35rem;
   color: var(--muted);
-  font-size: 0.77rem;
+  font-size: 0.84rem;
   line-height: 1.55;
 }
 
