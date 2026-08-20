@@ -1,190 +1,151 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Fragment } from "react";
+import { Link, useParams } from "react-router-dom";
 import { projects } from "../../data/profile";
 
-// **강조** 표기를 굵은 글씨로 렌더링. 홀수 번째 조각이 강조 구간이 된다.
+const linkLabels = {
+  live: "라이브 서비스",
+  store: "스토어",
+  github: "GitHub",
+  notion: "프로젝트 문서",
+} as const;
+
 function renderBold(text: string) {
-  return text.split('**').map((part, i) =>
-    i % 2 === 1
-      ? <strong key={i} style={{ color: '#334155', fontWeight: 700 }}>{part}</strong>
-      : <span key={i}>{part}</span>
-  );
+  return text.split("**").map((part, index) => (
+    index % 2 === 1
+      ? <strong key={`bold-${index}`}>{part}</strong>
+      : <Fragment key={`text-${index}`}>{part}</Fragment>
+  ));
 }
 
 export default function ProjectDetail() {
-  const navigate = useNavigate();
   const { slug } = useParams();
-  const project = projects.find((p) => p.slug === slug);
+  const project = projects.find((item) => item.slug === slug);
 
   if (!project) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center' }}>
-          <h1 style={{ fontSize: '2rem', color: '#334155', marginBottom: '1rem' }}>프로젝트를 찾을 수 없습니다</h1>
-          <button onClick={() => navigate('/projects')} style={{ color: '#d4789c', background: 'none', border: 'none', cursor: 'pointer' }}>
-            ← 프로젝트 목록으로
-          </button>
-        </div>
+      <div className="project-not-found">
+        <p className="section-kicker">404 · PROJECT NOT FOUND</p>
+        <h1>프로젝트를 찾을 수 없습니다.</h1>
+        <Link to="/projects">← 프로젝트 목록으로</Link>
       </div>
     );
   }
 
-  const links = project.links as { github?: string; notion?: string; store?: string; live?: string };
-  const images = 'images' in project ? (project.images as Array<{ src: string; caption: string }>) : null;
-  const dogGallery = 'dogGallery' in project ? (project.dogGallery as Array<{ src: string; label: string }>) : null;
-
-  const cardStyle = {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: '1rem',
-    padding: '2rem',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+  const links = project.links as {
+    github?: string;
+    notion?: string;
+    store?: string;
+    live?: string;
   };
-
-  const buttonStyle = {
-    padding: '0.75rem 1.5rem',
-    backgroundColor: '#334155',
-    color: 'white',
-    borderRadius: '0.5rem',
-    textDecoration: 'none' as const,
-    display: 'inline-flex' as const,
-    alignItems: 'center' as const,
-    gap: '0.5rem',
-  };
+  const externalLinks = (Object.entries(links) as Array<[keyof typeof linkLabels, string]>)
+    .filter(([key, url]) => Boolean(linkLabels[key] && url));
+  const images = "images" in project
+    ? project.images as Array<{ src: string; caption: string }>
+    : [];
+  const dogGallery = "dogGallery" in project
+    ? project.dogGallery as Array<{ src: string; label: string }>
+    : [];
 
   return (
-    <div style={{ minHeight: '100vh', paddingTop: '5rem', paddingBottom: '5rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
-      <div style={{ maxWidth: '56rem', margin: '0 auto' }}>
-        {/* Back Button */}
-        <button
-          onClick={() => navigate('/projects')}
-          style={{ color: '#78716c', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-        >
-          ← 프로젝트 목록으로
-        </button>
+    <article className="project-detail-page">
+      <Link className="project-detail-back" to="/projects">← 프로젝트 목록</Link>
 
-        {/* Header */}
-        <div style={{ marginBottom: '3rem' }}>
-          <span style={{ display: 'inline-block', padding: '0.25rem 0.75rem', backgroundColor: 'rgba(212, 120, 156, 0.08)', color: '#d4789c', borderRadius: '9999px', fontSize: '0.875rem', marginBottom: '1rem' }}>
-            {project.type}
-          </span>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#334155', marginBottom: '0.5rem' }}>{project.title}</h1>
-          <p style={{ fontSize: '1.25rem', color: '#d4789c', marginBottom: '1.5rem' }}>{project.subtitle}</p>
-          <p style={{ color: '#64748b', lineHeight: '1.8', fontSize: '1.05rem' }}>{project.description}</p>
-        </div>
-
-        {/* Links */}
-        {(links.github || links.notion || links.store || links.live) && (
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-            {links.live && (
-              <a href={links.live} target="_blank" rel="noopener noreferrer" style={{ ...buttonStyle, backgroundColor: '#e891b9' }}>
-                <span style={{ fontSize: '1.05rem' }}>🌐</span>
-                사이트 바로가기
-              </a>
-            )}
-            {links.store && (
-              <a href={links.store} target="_blank" rel="noopener noreferrer" style={{ ...buttonStyle, backgroundColor: '#4285F4' }}>
-                <svg style={{ width: '1.25rem', height: '1.25rem' }} viewBox="0 0 48 48">
-                  <circle cx="24" cy="24" r="9.5" fill="#fff"/>
-                  <path fill="#EA4335" d="M24 4a20 20 0 0 1 17.32 10H24a10 10 0 0 0-8.66 5L8.7 7.6A19.93 19.93 0 0 1 24 4z"/>
-                  <path fill="#34A853" d="M14.5 24a9.5 9.5 0 0 0 14.2 8.24l-6.84 11.66A20 20 0 0 1 4.7 14.1l6.84 11.84A9.46 9.46 0 0 1 14.5 24z"/>
-                  <path fill="#FBBC05" d="M44 24a20 20 0 0 1-21.86 19.92L29 32.1A9.5 9.5 0 0 0 33.32 14H44z"/>
-                </svg>
-                크롬 웹스토어
-              </a>
-            )}
-            {links.github && (
-              <a href={links.github} target="_blank" rel="noopener noreferrer" style={buttonStyle}>
-                <svg style={{ width: '1.25rem', height: '1.25rem' }} fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-                GitHub
-              </a>
-            )}
-            {links.notion && (
-              <a href={links.notion} target="_blank" rel="noopener noreferrer" style={{ ...buttonStyle, backgroundColor: '#000' }}>
-                <svg style={{ width: '1.25rem', height: '1.25rem' }} fill="currentColor" viewBox="0 0 100 100">
-                  <path d="M6.017 4.313l55.333 -4.087c6.797 -0.583 8.543 -0.19 12.817 2.917l17.663 12.443c2.913 2.14 3.883 2.723 3.883 5.053v68.243c0 4.277 -1.553 6.807 -6.99 7.193L24.467 99.967c-4.08 0.193 -6.023 -0.39 -8.16 -3.113L3.3 79.94c-2.333 -3.113 -3.3 -5.443 -3.3 -8.167V11.113c0 -3.497 1.553 -6.413 6.017 -6.8z"/>
-                  <path d="M61.35 0.227l-55.333 4.087C0.553 4.7 0 7.617 0 11.113v60.66c0 2.723 0.967 5.053 3.3 8.167l13.007 16.913c2.137 2.723 4.08 3.307 8.16 3.113l64.257 -3.89c5.433 -0.387 6.99 -2.917 6.99 -7.193V20.64c0 -2.21 -0.873 -2.847 -3.443 -4.733L74.167 3.143c-4.273 -3.107 -6.02 -3.5 -12.817 -2.917zM25.92 19.523c-5.247 0.353 -6.437 0.433 -9.417 -1.99L8.927 11.507c-0.77 -0.78 -0.383 -1.753 1.557 -1.947l53.193 -3.887c4.467 -0.39 6.793 1.167 8.54 2.527l9.123 6.61c0.39 0.197 1.36 1.36 0.193 1.36l-54.933 3.307 -0.68 0.047zM19.803 88.3V30.367c0 -2.53 0.777 -3.697 3.103 -3.893L86 22.78c2.14 -0.193 3.107 1.167 3.107 3.693v57.547c0 2.53 -0.39 4.67 -3.883 4.863l-60.377 3.5c-3.493 0.193 -5.043 -0.97 -5.043 -4.083zM71.867 30.56c0.39 1.75 0 3.5 -1.75 3.7l-2.92 0.577v42.773c-2.527 1.36 -4.853 2.137 -6.797 2.137 -3.107 0 -3.883 -0.973 -6.21 -3.887l-19.03 -29.94v28.967l6.077 1.36s0 3.5 -4.853 3.5l-13.39 0.777c-0.39 -0.78 0 -2.723 1.357 -3.11l3.497 -0.97v-38.3L20.91 35.03c-0.39 -1.75 0.58 -4.277 3.3 -4.473l14.367 -0.967 19.8 30.327v-26.83l-5.047 -0.58c-0.39 -2.143 1.163 -3.7 3.103 -3.89l14.433 -0.86z" fill="white"/>
-                </svg>
-                Notion
-              </a>
-            )}
-          </div>
-        )}
-
-        {/* Tech Stack */}
-        <div style={{ ...cardStyle, marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>기술 스택</h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {project.techStack.map((tech) => (
-              <span key={tech} style={{ padding: '0.25rem 0.75rem', backgroundColor: 'rgba(254, 242, 248, 0.8)', color: '#64748b', borderRadius: '0.5rem', fontSize: '0.875rem' }}>
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Highlights */}
-        <div style={{ ...cardStyle, marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>Highlights</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {project.highlights.map((highlight, idx) => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <span style={{ color: '#16a34a', marginTop: '0.125rem', flexShrink: 0 }}>✓</span>
-                <span style={{ color: '#64748b', lineHeight: '1.6' }}>{renderBold(highlight)}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Dog Gallery — 수집 견종(드러누운 강아지들) */}
-        {dogGallery && (
-          <div style={{ ...cardStyle, marginBottom: '2rem' }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '0.5rem' }}>수집 견종 — 걸음을 모아 만나는 강아지들 🐾</h2>
-            <p style={{ color: '#78716c', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
-              뼈 코인을 모으면 한 마리씩 해금되는 11가지 견종. 산책을 끝내면 이렇게 배 보이며 벌러덩 드러눕습니다.
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
-              {dogGallery.map((dog) => (
-                <div
-                  key={dog.src}
-                  style={{
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem',
-                    padding: '0.85rem 0.5rem',
-                    backgroundColor: 'rgba(254, 247, 237, 0.7)',
-                    borderRadius: '1rem',
-                    border: '1px solid #fbe3c4',
-                    transition: 'transform 0.2s',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px) rotate(-1.5deg)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) rotate(0)'; }}
+      <header className="project-detail-hero">
+        <div className="project-detail-hero__copy">
+          <p className="section-kicker">{project.type}</p>
+          <h1>{project.title}</h1>
+          <h2>{project.subtitle}</h2>
+          <p>{project.description}</p>
+          {externalLinks.length > 0 ? (
+            <div className="project-detail-links">
+              {externalLinks.map(([key, url], index) => (
+                <a
+                  className={index === 0 ? "project-detail-link project-detail-link--primary" : "project-detail-link"}
+                  href={url}
+                  key={key}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  <img src={dog.src} alt={dog.label} loading="lazy" style={{ width: '100%', display: 'block' }} />
-                  <span style={{ color: '#b45309', fontSize: '0.85rem', fontWeight: 600 }}>{dog.label}</span>
-                </div>
+                  {linkLabels[key]} ↗
+                </a>
               ))}
             </div>
-          </div>
-        )}
+          ) : null}
+        </div>
+        <div
+          aria-label={`${project.title} 프로젝트 표지`}
+          className="project-detail-visual"
+          style={{ background: project.thumbnail.gradient }}
+        >
+          <span aria-hidden="true">{project.thumbnail.emoji}</span>
+          <small>CASE STUDY · {project.slug.toUpperCase()}</small>
+        </div>
+      </header>
 
-        {/* Images */}
-        {images && (
-          <div style={{ ...cardStyle }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1.5rem' }}>Screenshots</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem' }}>
-              {images.map((img, idx) => (
-                <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <img
-                    src={img.src}
-                    alt={img.caption}
-                    style={{ width: '100%', borderRadius: '0.75rem', border: '1px solid rgba(0,0,0,0.06)' }}
-                  />
-                  <p style={{ color: '#78716c', fontSize: '0.85rem', textAlign: 'center' }}>{img.caption}</p>
-                </div>
-              ))}
-            </div>
+      <section className="project-detail-evidence" aria-labelledby="project-evidence-title">
+        <aside>
+          <p className="section-kicker">TECHNICAL SCOPE</p>
+          <h2>사용 기술</h2>
+          <div>
+            {project.techStack.map((technology) => <span key={technology}>{technology}</span>)}
           </div>
-        )}
-      </div>
-    </div>
+        </aside>
+        <div>
+          <p className="section-kicker">KEY EVIDENCE</p>
+          <h2 id="project-evidence-title">핵심 구현과 결과</h2>
+          <ol>
+            {project.highlights.map((highlight, index) => (
+              <li key={highlight}>
+                <span>0{index + 1}</span>
+                <p>{renderBold(highlight)}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {dogGallery.length > 0 ? (
+        <section className="project-detail-gallery" aria-labelledby="dog-gallery-title">
+          <div className="project-detail-section-heading">
+            <p className="section-kicker">PRODUCT CONTENT</p>
+            <h2 id="dog-gallery-title">수집 견종 11종</h2>
+            <p>걸음을 모아 해금하는 제품 콘텐츠입니다.</p>
+          </div>
+          <div className="project-detail-gallery__dogs">
+            {dogGallery.map((dog) => (
+              <figure key={dog.src}>
+                <img alt={dog.label} loading="lazy" src={dog.src} />
+                <figcaption>{dog.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {images.length > 0 ? (
+        <section className="project-detail-gallery" aria-labelledby="screenshots-title">
+          <div className="project-detail-section-heading">
+            <p className="section-kicker">PRODUCT SCREENS</p>
+            <h2 id="screenshots-title">구현 화면</h2>
+          </div>
+          <div className="project-detail-gallery__screens">
+            {images.map((image) => (
+              <figure key={image.src}>
+                <img alt={image.caption} loading="lazy" src={image.src} />
+                <figcaption>{image.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <footer className="project-detail-footer">
+        <div>
+          <p className="section-kicker">MORE WORK</p>
+          <h2>다른 문제 해결 사례도 확인해 보세요.</h2>
+        </div>
+        <Link to="/projects">전체 프로젝트 보기 →</Link>
+      </footer>
+    </article>
   );
 }

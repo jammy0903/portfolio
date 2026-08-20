@@ -1,91 +1,187 @@
 import { Link } from "react-router-dom";
-import { profile, skills } from "../data/profile";
+import { profile } from "../data/profile";
+
+const metrics = [
+  { value: "470대", label: "IoT 장비 실시간 운영" },
+  { value: "80%", label: "불필요한 렌더링 감소" },
+  { value: "12배", label: "빌드 속도 개선" },
+  { value: "1인", label: "분석부터 배포까지 담당" },
+];
+
+const featuredWork = [
+  {
+    eyebrow: "PRODUCTION EXPERIENCE",
+    title: "산업 IoT 모니터링 대시보드",
+    description:
+      "MQTT부터 WebSocket, 데이터 저장, 고객용 UI까지 470대 장비의 운영 흐름을 1인으로 개선했습니다.",
+    proof: "B2B 운영 · 실시간 장애 알림 · 24/7 안정화",
+    to: "/experience",
+  },
+  {
+    eyebrow: "ARCHITECTURE CASE STUDY",
+    title: "멀티버킷 라우팅 전환",
+    description:
+      "운영 중인 시계열 데이터 구조를 5단계로 분해해, 중단과 롤백 위험을 통제한 점진적 마이그레이션입니다.",
+    proof: "55대 백필 · 조회 경로 25곳 통합 · 단계별 롤백",
+    to: "/projects/multibucket-architecture",
+  },
+  {
+    eyebrow: "DATA & AUTOMATION",
+    title: "memedics 데이터 파이프라인",
+    description:
+      "자동 수집은 후보만 제안하고 사람의 승인을 거치게 설계했습니다. 벡터 검색과 서버 API 경계도 함께 구현했습니다.",
+    proof: "Human-in-the-loop · pgvector · 자동 수집",
+    to: "/projects/memedics",
+  },
+];
+
+const foundations = [
+  "현장 장비와 웹 서비스를 잇는 MQTT·WebSocket 파이프라인",
+  "React·FastAPI 기반 B2B 제품 개발과 운영",
+  "권한·보안·배포·장애 대응까지 포함한 엔드투엔드 경험",
+];
+
+const nextProof = [
+  "사내 문서·운영 데이터를 찾고 답하는 RAG",
+  "사람의 승인 단계를 포함한 반복 업무 워크플로",
+  "Azure 환경의 배포·권한·관측 가능성까지 담은 사례",
+];
 
 export default function Home() {
-  const buttonBase = {
-    padding: '0.75rem 1.5rem',
-    borderRadius: '0.5rem',
-    fontWeight: '500',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    textDecoration: 'none',
-    transition: 'all 0.2s',
-  };
-
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '5rem 1rem' }}>
-      {/* Hero Section */}
-      <div style={{ textAlign: 'center', maxWidth: '48rem', margin: '0 auto' }}>
-        <p style={{ color: '#d4789c', fontSize: '1.125rem', marginBottom: '1rem' }}>안녕하세요</p>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>
-          {profile.name}
-          <span style={{ color: '#78716c', fontSize: '1.5rem', marginLeft: '0.75rem' }}>입니다</span>
-        </h1>
-        <p style={{ fontSize: '1.5rem', color: '#d4789c', fontWeight: '500', marginBottom: '1.5rem' }}>
-          {profile.title}
-        </p>
-        <p style={{ fontSize: '1.125rem', color: '#64748b', marginBottom: '2rem', lineHeight: '1.75' }}>
-          "{profile.tagline}"
-        </p>
+    <div className="home-page">
+      <section className="home-hero" aria-labelledby="home-title">
+        <div className="home-hero__copy">
+          <p className="eyebrow">
+            <span className="eyebrow__dot" aria-hidden="true" />
+            SEOUL · OPEN TO OPPORTUNITIES
+          </p>
+          <h1 id="home-title">
+            현장 데이터를
+            <span>운영 가능한 제품으로.</span>
+          </h1>
+          <p className="home-hero__role">{profile.title}</p>
+          <p className="home-hero__summary">{profile.tagline}</p>
 
-        {/* CTA Buttons */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', marginBottom: '3rem' }}>
-          <a
-            href={profile.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ ...buttonBase, backgroundColor: '#334155', color: 'white' }}
-          >
-            <svg style={{ width: '1.25rem', height: '1.25rem' }} fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-            GitHub
-          </a>
-          <a
-            href={profile.blog}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ ...buttonBase, backgroundColor: '#475569', color: 'white' }}
-          >
-            <svg style={{ width: '1.25rem', height: '1.25rem' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
-            </svg>
-            Blog
-          </a>
-          <a
-            href={`mailto:${profile.email}`}
-            style={{ ...buttonBase, backgroundColor: '#d4789c', color: 'white' }}
-          >
-            Contact Me
-          </a>
-          <Link
-            to="/experience"
-            style={{ ...buttonBase, border: '1px solid #f0c6d8', color: '#d4789c', backgroundColor: 'transparent' }}
-          >
-            View Experience
-          </Link>
+          <div className="home-actions">
+            <Link className="button button--primary" to="/experience">
+              업무 성과 보기
+              <span aria-hidden="true">→</span>
+            </Link>
+            <Link className="button button--secondary" to="/projects">
+              프로젝트 보기
+            </Link>
+            <a className="button button--ghost" href={`mailto:${profile.email}`}>
+              이메일
+            </a>
+          </div>
         </div>
-      </div>
 
-      {/* Tech Stack */}
-      <div style={{ width: '100%', maxWidth: '56rem', margin: '2rem auto 0' }}>
-        <h2 style={{ textAlign: 'center', color: '#a8a29e', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>
-          Tech Stack
-        </h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.75rem' }}>
-          {[...skills.frontend.slice(0, 3), ...skills.backend.slice(0, 3), ...skills.infra.slice(0, 2)].map(
-            (skill) => (
-              <span
-                key={skill}
-                style={{ padding: '0.5rem 1rem', backgroundColor: 'white', color: '#64748b', borderRadius: '0.5rem', fontSize: '0.875rem', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}
-              >
-                {skill}
-              </span>
-            )
-          )}
+        <div className="system-card" aria-label="산업 IoT 데이터 처리 흐름">
+          <div className="system-card__header">
+            <span>SYSTEM PROFILE</span>
+            <span className="system-card__status">운영 경험</span>
+          </div>
+          <div className="system-flow">
+            <div className="system-node">
+              <span className="system-node__icon" aria-hidden="true">01</span>
+              <div>
+                <strong>현장 장비</strong>
+                <span>센서 · 차단기 · 게이트웨이</span>
+              </div>
+            </div>
+            <span className="system-flow__line" aria-hidden="true" />
+            <div className="system-node">
+              <span className="system-node__icon" aria-hidden="true">02</span>
+              <div>
+                <strong>실시간 처리</strong>
+                <span>MQTT · FastAPI · WebSocket</span>
+              </div>
+            </div>
+            <span className="system-flow__line" aria-hidden="true" />
+            <div className="system-node system-node--accent">
+              <span className="system-node__icon" aria-hidden="true">03</span>
+              <div>
+                <strong>업무에 쓰이는 제품</strong>
+                <span>모니터링 · 알림 · 의사결정</span>
+              </div>
+            </div>
+          </div>
+          <p className="system-card__note">
+            다음 단계: 이 운영 경험을 기업용 AI 업무자동화로 확장
+          </p>
         </div>
-      </div>
+      </section>
+
+      <section className="metric-strip" aria-label="핵심 성과">
+        {metrics.map((metric) => (
+          <div className="metric" key={metric.label}>
+            <strong>{metric.value}</strong>
+            <span>{metric.label}</span>
+          </div>
+        ))}
+      </section>
+
+      <section className="home-section" aria-labelledby="featured-title">
+        <div className="section-heading">
+          <div>
+            <p className="section-kicker">SELECTED WORK</p>
+            <h2 id="featured-title">기업이 확인할 수 있는 증거</h2>
+          </div>
+          <Link to="/projects">전체 프로젝트 보기 →</Link>
+        </div>
+
+        <div className="featured-grid">
+          {featuredWork.map((work, index) => (
+            <Link className="work-card" to={work.to} key={work.title}>
+              <div className="work-card__number">0{index + 1}</div>
+              <p>{work.eyebrow}</p>
+              <h3>{work.title}</h3>
+              <span className="work-card__description">{work.description}</span>
+              <span className="work-card__proof">{work.proof}</span>
+              <span className="work-card__link">사례 자세히 보기 →</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="direction-section" aria-labelledby="direction-title">
+        <div className="direction-section__intro">
+          <p className="section-kicker">CAREER DIRECTION</p>
+          <h2 id="direction-title">산업 IoT에서 기업용 AI 자동화로</h2>
+          <p>
+            AI라는 이름보다 실제 업무 흐름을 이해하고, 데이터·권한·운영 조건을
+            제품에 연결하는 능력을 먼저 증명합니다.
+          </p>
+        </div>
+        <div className="direction-grid">
+          <article className="direction-card">
+            <span className="direction-card__label">검증된 기반</span>
+            <h3>이미 운영해 본 것</h3>
+            <ul>
+              {foundations.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </article>
+          <article className="direction-card direction-card--next">
+            <span className="direction-card__label">다음 검증 과제</span>
+            <h3>포트폴리오에 추가할 것</h3>
+            <ul>
+              {nextProof.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section className="home-contact" aria-labelledby="contact-title">
+        <div>
+          <p className="section-kicker">LET&apos;S WORK TOGETHER</p>
+          <h2 id="contact-title">운영 현장의 문제를 제품으로 풀 개발자를 찾고 있나요?</h2>
+        </div>
+        <a className="button button--primary" href={`mailto:${profile.email}`}>
+          {profile.email}
+          <span aria-hidden="true">→</span>
+        </a>
+      </section>
     </div>
   );
 }

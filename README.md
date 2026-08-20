@@ -2,8 +2,6 @@
 
 개인 포트폴리오 웹사이트입니다.
 
-🔗 **Live Demo**: [Vercel에서 확인](https://portfolio-jammy0903.vercel.app)
-
 ## 기술 스택
 
 | 분류 | 기술 |
@@ -48,7 +46,7 @@ npm run preview
 ## 주요 기능
 
 - **반응형 디자인**: 모바일/데스크톱 최적화
-- **다크 테마**: 어두운 배경의 모던한 UI
+- **라이트 테마**: 따뜻한 색상의 가독성 높은 UI
 - **SPA 라우팅**: React Router를 활용한 페이지 전환
 - **타입 안정성**: TypeScript로 타입 체크
 
@@ -82,4 +80,4 @@ git push origin main
 
 ---
 
-© 2025 김소정. All rights reserved.
+© 2026 김소정. All rights reserved.

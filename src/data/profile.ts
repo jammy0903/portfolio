@@ -1,22 +1,21 @@
 export const profile = {
   name: "김소정",
   nameEn: "Kim So Jeong",
-  title: "Fullstack Developer",
-  tagline: "하드웨어 데이터를 웹으로 번역하는 개발자",
+  title: "산업 IoT 풀스택 개발자",
+  tagline: "470대 장비의 실시간 서비스를 운영한 경험을 바탕으로, 현장 데이터를 기업용 AI 업무자동화로 확장합니다.",
   email: "l89192164@gmail.com",
-  phone: "010-5130-2164",
   github: "https://github.com/jammy0903",
   blog: "https://jammy0903.github.io",
-  location: "서울시 서대문구",
+  location: "서울",
 
-  summary: `470대 IoT 디바이스의 실시간 데이터를 처리하는 모니터링 대시보드를 1인 개발한 풀스택 개발자입니다.
+  summary: `470대 IoT 디바이스의 실시간 데이터를 처리하는 B2B 모니터링 대시보드를 1인 개발·운영한 풀스택 개발자입니다.
 WebSocket 배치 처리로 렌더링 부하를 80% 줄이고, 빌드 시간을 2분에서 10초로 단축(12배 개선)한 경험이 있습니다.
-복잡한 시스템 데이터를 직관적인 UI로 전달하는 일에 강점이 있습니다.`,
+복잡한 현장 데이터와 업무 흐름을 안정적인 제품으로 바꾸는 데 강점이 있으며, 다음 직무 방향은 기업용 AI 업무자동화 개발입니다.`,
 };
 
 export const skills = {
   frontend: ["React", "TypeScript", "Vite", "Zustand", "MUI", "Tailwind CSS", "HTML/CSS", "JavaScript"],
-  backend: ["FastAPI", "Node.js", "Express", "SQLite", "InfluxDB", "MQTT", "REST API"],
+  backend: ["FastAPI", "Node.js", "Express", "PostgreSQL", "pgvector", "SQLite", "InfluxDB", "MQTT", "REST API"],
   infra: ["Docker", "Nginx", "TLS/HTTPS", "mTLS", "WebSocket", "Linux", "Shell Script", "WSL"],
   security: ["Reverse Engineering", "x86/x64 Assembly", "Ghidra", "IDA", "Wireshark", "Burp Suite", "웹 취약점 분석", "CVE 분석"],
   tools: ["Git", "SVN", "Figma", "VS Code", "Notion", "Jira"],
@@ -27,7 +26,7 @@ export const experience = {
   companyDesc: "IoT 아크차단기 및 통신 반도체 팹리스 기업",
   position: "연구원 (웹 개발)",
   period: "2025.04 - 현재",
-  duration: "8개월",
+  startDate: "2025-04",
   project: "아크차단기 IoT 모니터링 대시보드",
   role: "사내 유일 웹 개발자로서 레거시 시스템 분석부터 리팩토링, 신규 기능 개발, 배포까지 전 과정 1인 담당",
   scale: "470대 차단기 실시간 모니터링, 다수 고객사 대상 B2B 서비스",
@@ -194,7 +193,7 @@ export const projects = [
     type: "개인 프로젝트 · 1인 개발",
     thumbnail: { emoji: "🗂️", gradient: "linear-gradient(135deg, #1f7a4d 0%, #8fd6a8 100%)" },
     description:
-      "유튜브 댓글·네이버 블로그 등 여러 소스에서 밈의 활성도를 매일 측정해 '새로 올라온 / 스테디' 순위로 보여주는 밈 사전. 원칙은 '기계는 밈을 등록하지 않는다, 측정과 후보 제안만'으로 크롤러는 후보만 올리고 등록 결정은 사람이 한다(human-in-the-loop). 브라우저가 Supabase에 직결되던 정적 MVP를 SvelteKit SSR + 서버 라우트 API 경계 구조로 스트랭글러 방식으로 이전했고, 짤 보관소에는 키워드·부분일치·벡터 유사도 3단 폴백 검색을 붙였다. memedics.space 커스텀 도메인으로 실서비스 운영 중.",
+      "여러 소스에서 밈의 활성도를 매일 측정하고, 자동 수집은 후보만 제안하며 최종 등록은 사람이 승인하는 밈 사전입니다. 정적 MVP를 SvelteKit SSR과 서버 API 경계 구조로 점진적으로 이전하고, 키워드·부분일치·벡터 유사도 3단 검색을 구현했습니다. memedics.space에서 실서비스로 운영 중입니다.",
     techStack: ["SvelteKit 2", "Svelte 5", "TypeScript", "SSR", "Supabase / PostgreSQL", "pgvector", "HuggingFace Inference (e5-large)", "Vercel (adapter-vercel)", "GitHub Actions (cron)", "Node.js", "Python (Playwright 크롤러)", "Paraglide i18n"],
     highlights: [
       "**홈 SSR 응답 1995ms → 1053ms.** 총량 조회(count=exact)가 집계 뷰를 전부 구체화해 되레 느린 걸 실측으로 확인하고, 앞 2페이지를 그냥 병렬로 쏴 2왕복을 1왕복으로 줄였다.",
@@ -223,7 +222,7 @@ export const projects = [
     subtitle: "V3 하드웨어 도입 대비 5단계 점진적 마이그레이션 (Case Study)",
     type: "IoT 대시보드 — 아키텍처 작업",
     thumbnail: { emoji: "🗂️", gradient: "linear-gradient(135deg, #0369A1 0%, #8B5CF6 100%)" },
-    description: "기존 단일 InfluxDB 버킷(arcBucket)에 V1(RD)·V2(x20·x70)·V3(x83·x90, 도입 예정) 데이터가 혼재되는 구조에서, 모델별 버킷 분리가 가능한 라우팅 아키텍처로 점진적으로 전환한 작업. 운영 무중단·롤백 가능성·기존 코드 영향 최소화를 모두 지키기 위해 5단계 Phase로 쪼개 진행. 라우팅 비활성 상태로 골격을 먼저 깔고, read 경로 25곳을 단일 진입점으로 통합한 뒤, 미등록 게이트웨이 raw payload 보존 → 모델 관리 UI 신설 → 쓰기 경로 라우팅 활성화 순서로 마이그레이션. ModelRegistry 테이블, BucketResolver, GW.model_id 컬럼·백필, devType 자동감지까지 한 묶음으로 설계.",
+    description: "여러 하드웨어 버전의 데이터가 섞인 단일 InfluxDB 버킷을 모델별로 라우팅할 수 있도록 전환한 운영 아키텍처 사례입니다. 조회 경로 25곳을 단일 진입점으로 통합하고, raw payload 보존·모델 관리·쓰기 라우팅을 5단계로 나눠 각 단계의 롤백 가능성을 확보했습니다. 55대 백필과 devType 자동감지까지 함께 구현했습니다.",
     techStack: ["Python", "FastAPI", "InfluxDB", "SQLAlchemy", "SQLite", "Alembic-style migration", "MQTT", "Docker", "React"],
     highlights: [
       "Phase 0~4 점진적 마이그레이션 — 컬럼 추가(라우팅 비활성) → read 통합 → 미등록 보존 → 관리 UI → 쓰기 라우팅 순으로 5단계 분해, 각 단계 독립 롤백 가능",
@@ -253,7 +252,6 @@ export const projects = [
       "LessonPage(1042→276줄), MemoryPanel(1057→57줄) 등 7단계 체계적 리팩토링으로 총 3,500줄 이상 분해",
     ],
     links: {
-      live: "https://codeinsight.online/",
       github: "https://github.com/jammy0903/CodeInsight",
     },
   },
@@ -390,24 +388,18 @@ export const certifications = [
     issuer: "과학기술정보통신부 · 정보통신기획평가원(IITP)",
     date: "2026.05.16",
     score: "75문항 중 59문항 득점 · 수준 3",
-    examNoLabel: "응시번호",
-    examNo: "TP26010021796",
   },
   {
     name: "한국사능력검정시험 (제78회)",
     issuer: "교육부 국사편찬위원회",
     date: "2026.06.05",
-    score: "심화 2급 합격",
-    examNoLabel: "인증번호",
-    examNo: "78-236315",
+    score: "심화 1급 합격",
   },
   {
     name: "TOEIC Speaking Test",
     issuer: "ETS · YBM",
     date: "2024.12.29",
     score: "Intermediate High (Speaking Score 140)",
-    examNoLabel: "등록번호",
-    examNo: "102871",
   },
 ];
 

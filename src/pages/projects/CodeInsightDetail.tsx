@@ -110,14 +110,6 @@ export default function CodeInsightDetail() {
         {/* Links */}
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
           <a
-            href="https://codeinsight.online/"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ padding: '0.75rem 1.5rem', backgroundColor: '#3b82f6', color: 'white', borderRadius: '0.5rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-          >
-            🌐 Live Demo
-          </a>
-          <a
             href="https://github.com/jammy0903/CodeInsight"
             target="_blank"
             rel="noopener noreferrer"

@@ -1,108 +1,200 @@
+import { Link } from "react-router-dom";
 import { experience } from "../data/profile";
 
+const careerCases = [
+  {
+    category: "BUSINESS IMPACT",
+    title: "엔지니어 중심 화면을 고객의 의사결정 화면으로",
+    problem: "아크 이벤트 중심의 복잡한 5탭 구조가 실제 사용 목적과 맞지 않았습니다.",
+    action: "현황·문제장비·장비상세 3단계로 정보 구조를 다시 설계하고, 1,700줄 화면을 컨테이너와 8개 컴포넌트로 분리했습니다.",
+    result: "고객사 재계약에 기여했고, 영업팀으로부터 대시보드가 계약의 핵심이라는 평가를 받았습니다.",
+    metric: "재계약 기여",
+  },
+  {
+    category: "REAL-TIME PERFORMANCE",
+    title: "장애는 즉시, 일반 데이터는 묶어서 처리",
+    problem: "초당 수십 건의 WebSocket 데이터를 도착 즉시 렌더링해 화면 부하가 커졌습니다.",
+    action: "50건·50ms 배치 매니저와 Fault 우선순위 큐를 설계해 이벤트의 중요도에 따라 처리 경로를 분리했습니다.",
+    result: "불필요한 렌더링을 80% 줄이면서 장애 알림은 지연 없이 전달했습니다.",
+    metric: "렌더링 80%↓",
+  },
+  {
+    category: "SECURITY & RELIABILITY",
+    title: "평문 IoT 통신을 기기 인증 기반 구조로",
+    problem: "HTTP와 MQTT 평문 통신, 하드코딩 환경변수, SQLite 락 문제가 함께 존재했습니다.",
+    action: "Nginx·TLS, Pydantic 설정 관리, SQLite WAL을 도입하고 게이트웨이와 백엔드에 상호 인증 mTLS를 적용했습니다.",
+    result: "미인증 기기의 브로커 연결을 차단하고 데이터 구간을 암호화했으며 DB 락 오류를 0건으로 낮췄습니다.",
+    metric: "DB 락 0건",
+  },
+  {
+    category: "OPERATIONS AUTOMATION",
+    title: "대시보드를 보고 있지 않아도 장애를 알도록",
+    problem: "담당자가 화면에 접속하지 않은 상태에서는 아크 장애를 즉시 인지하기 어려웠습니다.",
+    action: "Fault 이벤트 감지부터 고객사별 수신자 관리, 카카오톡 알림 발송까지 하나의 자동화 흐름으로 구현했습니다.",
+    result: "장애 인지 경로를 수동 모니터링에서 이벤트 기반 알림으로 전환했습니다.",
+    metric: "이벤트 기반 대응",
+  },
+  {
+    category: "DATA ARCHITECTURE",
+    title: "새 하드웨어를 받아들이는 점진적 데이터 전환",
+    problem: "하드웨어 버전이 늘어나며 모델별 데이터 스키마와 저장 위치를 안전하게 분리해야 했습니다.",
+    action: "운영 영향을 통제하는 5단계 라우팅 전환을 설계하고 raw payload를 분석해 devType 기반 자동 분류를 구현했습니다.",
+    result: "55대 게이트웨이를 100% 자동 분류하고, 신규 모델은 설정 추가만으로 확장할 수 있게 했습니다.",
+    metric: "55대 100% 분류",
+  },
+];
+
+const engineeringScope = [
+  "MQTT → FastAPI → WebSocket 실시간 파이프라인",
+  "SQLite + InfluxDB 데이터 분리",
+  "Root·Admin·User·Guest 4단계 RBAC",
+  "지수 백오프 재연결과 요청 중복 방지",
+  "Docker·Nginx 기반 배포와 TLS 운영",
+  "CRA → Vite 전환 및 프론트엔드 리팩토링",
+];
+
+function formatCareerDuration(startDate: string) {
+  const start = new Date(`${startDate}-01T00:00:00`);
+  const now = new Date();
+  const totalMonths = Math.max(
+    0,
+    (now.getFullYear() - start.getFullYear()) * 12 + now.getMonth() - start.getMonth(),
+  );
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+
+  if (years === 0) return `${months}개월`;
+  if (months === 0) return `${years}년`;
+  return `${years}년 ${months}개월`;
+}
+
 export default function Experience() {
-  const cardStyle = {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: '1rem',
-    padding: '2rem',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-  };
-
   return (
-    <div style={{ minHeight: '100vh', paddingTop: '5rem', paddingBottom: '5rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
-      <div style={{ maxWidth: '56rem', margin: '0 auto' }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>Experience</h1>
-          <div style={{ width: '5rem', height: '4px', backgroundColor: '#e891b9', margin: '0 auto' }}></div>
+    <div className="experience-page">
+      <header className="career-hero">
+        <div className="career-hero__copy">
+          <p className="section-kicker">PRODUCTION EXPERIENCE</p>
+          <h1>470대의 현장 데이터를<br />{" "}고객이 쓰는 서비스로 운영했습니다.</h1>
+          <p>
+            문서가 부족한 레거시를 분석하는 일부터 실시간 파이프라인, 화면,
+            보안, 배포, 장애 대응까지 웹 서비스 전 과정을 1인으로 맡고 있습니다.
+          </p>
         </div>
 
-        {/* Work Experience */}
-        <div style={{ marginBottom: '4rem' }}>
-          <div style={cardStyle}>
-            {/* Company Header */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', gap: '1rem' }}>
-              <div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '0.25rem' }}>{experience.company}</h2>
-                <p style={{ color: '#78716c' }}>{experience.companyDesc}</p>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <p style={{ color: '#d4789c', fontWeight: '500' }}>{experience.position}</p>
-                <p style={{ color: '#a8a29e' }}>{experience.period} ({experience.duration})</p>
-              </div>
+        <aside className="career-summary" aria-label="현재 경력 요약">
+          <span className="career-summary__status">현재 재직 중</span>
+          <h2>{experience.company}</h2>
+          <p>{experience.companyDesc}</p>
+          <dl>
+            <div>
+              <dt>역할</dt>
+              <dd>{experience.position}</dd>
             </div>
+            <div>
+              <dt>기간</dt>
+              <dd>{experience.period} · {formatCareerDuration(experience.startDate)}</dd>
+            </div>
+            <div>
+              <dt>담당</dt>
+              <dd>사내 유일 웹 개발자</dd>
+            </div>
+          </dl>
+        </aside>
+      </header>
 
-            {/* Project Info */}
-            <div style={{ backgroundColor: 'rgba(254, 242, 248, 0.6)', borderRadius: '0.75rem', padding: '1.5rem', marginBottom: '1.5rem' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#334155', marginBottom: '0.5rem' }}>{experience.project}</h3>
-              <p style={{ color: '#78716c', marginBottom: '1rem' }}>{experience.role}</p>
-              <p style={{ color: '#a8a29e', fontSize: '0.875rem' }}>{experience.scale}</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '1rem' }}>
-                {experience.techStack.map((tech) => (
-                  <span key={tech} style={{ padding: '0.25rem 0.5rem', backgroundColor: 'white', color: '#64748b', borderRadius: '0.25rem', fontSize: '0.75rem', boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}>
-                    {tech}
-                  </span>
-                ))}
-              </div>
-              {experience.notion && (
-                <div style={{ marginTop: '1rem' }}>
-                  <a
-                    href={experience.notion}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', backgroundColor: '#000', color: 'white', borderRadius: '0.5rem', fontSize: '0.875rem', textDecoration: 'none' }}
-                  >
-                    <svg style={{ width: '1rem', height: '1rem' }} fill="currentColor" viewBox="0 0 100 100">
-                      <path d="M6.017 4.313l55.333 -4.087c6.797 -0.583 8.543 -0.19 12.817 2.917l17.663 12.443c2.913 2.14 3.883 2.723 3.883 5.053v68.243c0 4.277 -1.553 6.807 -6.99 7.193L24.467 99.967c-4.08 0.193 -6.023 -0.39 -8.16 -3.113L3.3 79.94c-2.333 -3.113 -3.3 -5.443 -3.3 -8.167V11.113c0 -3.497 1.553 -6.413 6.017 -6.8z"/>
-                    </svg>
-                    프로젝트 메인 페이지 (Notion)
-                  </a>
-                </div>
-              )}
-            </div>
+      <section className="career-metrics" aria-label="경력 핵심 수치">
+        <div><strong>470대</strong><span>실시간 장비 운영</span></div>
+        <div><strong>80%</strong><span>렌더링 부하 감소</span></div>
+        <div><strong>12배</strong><span>빌드 속도 개선</span></div>
+        <div><strong>55대</strong><span>모델 자동 분류</span></div>
+        <p>회사 내부 개발·운영 측정 기준</p>
+      </section>
 
-            {/* Achievements */}
-            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#334155', marginBottom: '1rem' }}>주요 성과</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              {experience.achievements.map((achievement, index) => (
-                <div key={index} style={{ borderLeft: '2px solid #e891b9', paddingLeft: '1rem' }}>
-                  <h4 style={{ color: '#334155', fontWeight: '500', marginBottom: '0.5rem' }}>{achievement.title}</h4>
-                  <div style={{ fontSize: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                    <p style={{ color: '#78716c' }}>
-                      <span style={{ color: '#a8a29e' }}>문제:</span> {achievement.problem}
-                    </p>
-                    <p style={{ color: '#78716c' }}>
-                      <span style={{ color: '#a8a29e' }}>해결:</span> {achievement.solution}
-                    </p>
-                    <p style={{ color: '#16a34a' }}>
-                      <span style={{ color: '#a8a29e' }}>결과:</span> {achievement.result}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+      <section className="career-system" aria-labelledby="ownership-title">
+        <div className="career-section-heading">
+          <p className="section-kicker">END-TO-END OWNERSHIP</p>
+          <h2 id="ownership-title">{experience.project}</h2>
+          <p>{experience.scale}</p>
+        </div>
 
-            {/* News */}
-            <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #fce4ec' }}>
-              <h4 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#a8a29e', marginBottom: '0.75rem' }}>언론 보도</h4>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                {experience.news.map((news) => (
-                  <a
-                    key={news.title}
-                    href={news.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ padding: '0.5rem 1rem', backgroundColor: 'rgba(212, 120, 156, 0.06)', color: '#d4789c', borderRadius: '0.5rem', fontSize: '0.875rem', textDecoration: 'none' }}
-                  >
-                    {news.title}
-                  </a>
-                ))}
-              </div>
-            </div>
+        <div className="career-flow" aria-label="담당 시스템 흐름">
+          <div><span>01</span><strong>Device</strong><small>차단기 · 게이트웨이</small></div>
+          <i aria-hidden="true">→</i>
+          <div><span>02</span><strong>Transport</strong><small>MQTT · mTLS</small></div>
+          <i aria-hidden="true">→</i>
+          <div><span>03</span><strong>Backend</strong><small>FastAPI · InfluxDB</small></div>
+          <i aria-hidden="true">→</i>
+          <div><span>04</span><strong>Product</strong><small>React · WebSocket</small></div>
+        </div>
+
+        <div className="career-stack">
+          {experience.techStack.map((technology) => <span key={technology}>{technology}</span>)}
+        </div>
+      </section>
+
+      <section className="career-cases" aria-labelledby="career-cases-title">
+        <div className="career-section-heading career-section-heading--row">
+          <div>
+            <p className="section-kicker">SELECTED OUTCOMES</p>
+            <h2 id="career-cases-title">채용 담당자가 먼저 볼 5가지 성과</h2>
           </div>
+          <p>문제 → 판단과 구현 → 결과 순으로 정리했습니다.</p>
         </div>
 
-      </div>
+        <div className="career-cases__grid">
+          {careerCases.map((careerCase, index) => (
+            <article className={index === 0 ? "career-case career-case--wide" : "career-case"} key={careerCase.title}>
+              <div className="career-case__header">
+                <p>{careerCase.category}</p>
+                <span>{careerCase.metric}</span>
+              </div>
+              <h3>{careerCase.title}</h3>
+              <dl>
+                <div>
+                  <dt>문제</dt>
+                  <dd>{careerCase.problem}</dd>
+                </div>
+                <div>
+                  <dt>판단과 구현</dt>
+                  <dd>{careerCase.action}</dd>
+                </div>
+                <div>
+                  <dt>결과</dt>
+                  <dd>{careerCase.result}</dd>
+                </div>
+              </dl>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="career-scope" aria-labelledby="scope-title">
+        <div>
+          <p className="section-kicker">ADDITIONAL SCOPE</p>
+          <h2 id="scope-title">그 밖에 직접 책임진 범위</h2>
+        </div>
+        <ul>
+          {engineeringScope.map((item) => <li key={item}>{item}</li>)}
+        </ul>
+      </section>
+
+      <section className="career-proof" aria-labelledby="proof-title">
+        <div>
+          <p className="section-kicker">EXTERNAL PROOF</p>
+          <h2 id="proof-title">구현 기록과 외부 자료</h2>
+        </div>
+        <div className="career-proof__links">
+          {experience.notion ? (
+            <a href={experience.notion} rel="noopener noreferrer" target="_blank">프로젝트 문서 ↗</a>
+          ) : null}
+          <Link to="/projects/multibucket-architecture">아키텍처 사례 →</Link>
+          {experience.news.map((news) => (
+            <a href={news.url} key={news.title} rel="noopener noreferrer" target="_blank">
+              {news.title} 보도 ↗
+            </a>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,159 +1,162 @@
-import { profile, skills, education, certifications } from "../data/profile";
+import { certifications, education, profile, skills } from "../data/profile";
+
+const strengths = [
+  {
+    number: "01",
+    title: "시스템 전체를 책임집니다",
+    description: "프론트엔드 한 영역에 머무르지 않고 장비 데이터 수집부터 API, 화면, 배포와 운영까지 연결합니다.",
+  },
+  {
+    number: "02",
+    title: "운영 데이터로 판단합니다",
+    description: "감이 아니라 raw payload, 응답시간, 렌더링 횟수와 장애 기록을 확인해 구조와 우선순위를 결정합니다.",
+  },
+  {
+    number: "03",
+    title: "기술을 업무 가치로 번역합니다",
+    description: "엔지니어 중심 화면을 고객의 의사결정 흐름으로 다시 설계해 실제 재계약과 운영 개선에 연결했습니다.",
+  },
+  {
+    number: "04",
+    title: "보안과 복구 경로를 함께 봅니다",
+    description: "mTLS, RBAC, 단계별 마이그레이션과 롤백처럼 실서비스가 지속되기 위한 조건을 구현에 포함합니다.",
+  },
+];
+
+const skillGroups = [
+  { label: "PRODUCT WEB", items: skills.frontend },
+  { label: "BACKEND & DATA", items: skills.backend },
+  { label: "INFRA & OPERATIONS", items: skills.infra },
+  { label: "SECURITY FOUNDATION", items: skills.security },
+];
+
+const automationEvidence = [
+  "자동 수집은 후보를 제안하고 최종 등록은 사람이 승인하는 Human-in-the-loop 흐름",
+  "키워드·부분일치·벡터 유사도를 결합한 검색 파이프라인과 임베딩 캐시",
+  "장애 이벤트 감지부터 고객사별 수신자 관리와 알림 발송까지 이어지는 운영 자동화",
+];
+
+const learningNow = [
+  "SQLD 자격 준비",
+  "Azure 클라우드 기초 및 자격 준비",
+  "RAG·승인형 워크플로 기반 기업용 AI 자동화 사례 설계",
+];
 
 export default function About() {
-  const cardStyle = {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: '1rem',
-    padding: '1.5rem',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-  };
-
-  const skillBadgeBase = {
-    padding: '0.375rem 0.75rem',
-    borderRadius: '0.5rem',
-    fontSize: '0.875rem',
-    display: 'inline-block',
-    margin: '0.25rem',
-  };
-
   return (
-    <div style={{ minHeight: '100vh', paddingTop: '6rem', paddingBottom: '3rem', paddingLeft: '2rem', paddingRight: '2rem' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1rem' }}>About Me</h1>
-          <div style={{ width: '5rem', height: '4px', backgroundColor: '#e891b9', margin: '0 auto' }}></div>
-        </div>
-
-        {/* Profile Section */}
-        <div style={{ ...cardStyle, marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '0.5rem' }}>
-            {profile.name}
-            <span style={{ color: '#78716c', fontSize: '1rem', marginLeft: '0.5rem' }}>({profile.nameEn})</span>
-          </h2>
-          <p style={{ color: '#d4789c', fontWeight: '500', marginBottom: '1rem' }}>{profile.title}</p>
-
-          <div style={{ marginBottom: '1rem', color: '#64748b' }}>
-            <p style={{ marginBottom: '0.5rem' }}>📍 {profile.location}</p>
-            <p style={{ marginBottom: '0.5rem' }}>📧 {profile.email}</p>
-            <p>🐙 <a href={profile.github} target="_blank" rel="noopener noreferrer" style={{ color: '#d4789c' }}>github.com/jammy0903</a></p>
-          </div>
-
-          <p style={{ color: '#64748b', lineHeight: '1.8', whiteSpace: 'pre-line' }}>{profile.summary}</p>
-        </div>
-
-        {/* Core Strengths */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1.5rem' }}>Core Strengths</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
-            <div style={cardStyle}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>⚡</div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#334155', marginBottom: '0.5rem' }}>실시간 데이터 최적화</h3>
-              <p style={{ color: '#78716c', fontSize: '0.9rem' }}>WebSocket 배치 매니저 설계, 우선순위 큐 구현으로 렌더링 부하 80% 감소</p>
-            </div>
-            <div style={cardStyle}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🔧</div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#334155', marginBottom: '0.5rem' }}>레거시 리팩토링</h3>
-              <p style={{ color: '#78716c', fontSize: '0.9rem' }}>문서 없는 코드 분석, Context 분리, CRA→Vite 전환으로 빌드 12배 개선</p>
-            </div>
-            <div style={cardStyle}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🎨</div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#334155', marginBottom: '0.5rem' }}>UI/UX 설계</h3>
-              <p style={{ color: '#78716c', fontSize: '0.9rem' }}>Figma 와이어프레임, 반응형 웹 구현으로 고객사 재계약 기여</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Skills */}
+    <div className="about-page">
+      <header className="about-hero">
         <div>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1.5rem' }}>Skills</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
-            <div>
-              <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#a8a29e', marginBottom: '0.75rem' }}>Frontend</h3>
-              <div>
-                {skills.frontend.map((skill) => (
-                  <span key={skill} style={{ ...skillBadgeBase, backgroundColor: 'rgba(212, 120, 156, 0.08)', color: '#c4688c' }}>{skill}</span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#a8a29e', marginBottom: '0.75rem' }}>Backend</h3>
-              <div>
-                {skills.backend.map((skill) => (
-                  <span key={skill} style={{ ...skillBadgeBase, backgroundColor: 'rgba(34, 197, 94, 0.08)', color: '#16a34a' }}>{skill}</span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#a8a29e', marginBottom: '0.75rem' }}>Infrastructure</h3>
-              <div>
-                {skills.infra.map((skill) => (
-                  <span key={skill} style={{ ...skillBadgeBase, backgroundColor: 'rgba(168, 85, 247, 0.08)', color: '#7c3aed' }}>{skill}</span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#a8a29e', marginBottom: '0.75rem' }}>Security</h3>
-              <div>
-                {skills.security.map((skill) => (
-                  <span key={skill} style={{ ...skillBadgeBase, backgroundColor: 'rgba(239, 68, 68, 0.08)', color: '#dc2626' }}>{skill}</span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#a8a29e', marginBottom: '0.75rem' }}>Tools</h3>
-              <div>
-                {skills.tools.map((skill) => (
-                  <span key={skill} style={{ ...skillBadgeBase, backgroundColor: 'rgba(249, 115, 22, 0.08)', color: '#ea580c' }}>{skill}</span>
-                ))}
-              </div>
-            </div>
+          <p className="section-kicker">ABOUT SOJEONG</p>
+          <h1>복잡한 시스템을 읽고,<br />{" "}운영 가능한 제품으로 바꿉니다.</h1>
+        </div>
+        <div className="about-hero__profile">
+          <span>산업 IoT 풀스택 개발자</span>
+          <h2>{profile.name} <small>{profile.nameEn}</small></h2>
+          <p>{profile.summary}</p>
+          <div>
+            <span>{profile.location}</span>
+            <a href={`mailto:${profile.email}`}>{profile.email}</a>
+            <a href={profile.github} rel="noopener noreferrer" target="_blank">GitHub ↗</a>
           </div>
         </div>
+      </header>
 
-        {/* Certifications */}
-        <div style={{ marginTop: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1.5rem' }}>Certifications</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {certifications.map((cert) => (
-              <div key={cert.name} style={cardStyle}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
-                  <div>
-                    <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#334155', marginBottom: '0.25rem' }}>{cert.name}</h3>
-                    <p style={{ color: '#d4789c', fontWeight: '600', marginBottom: '0.5rem' }}>{cert.score}</p>
-                    <p style={{ color: '#78716c', fontSize: '0.875rem', marginBottom: '0.125rem' }}>{cert.issuer}</p>
-                    <p style={{ color: '#a8a29e', fontSize: '0.8125rem' }}>{cert.examNoLabel} {cert.examNo}</p>
-                  </div>
-                  <p style={{ color: '#a8a29e', fontSize: '0.875rem' }}>{cert.date}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+      <section className="about-strengths" aria-labelledby="strengths-title">
+        <div className="about-section-heading">
+          <p className="section-kicker">CORE STRENGTHS</p>
+          <h2 id="strengths-title">제가 반복해서 보여준 일하는 방식</h2>
         </div>
+        <div className="about-strengths__grid">
+          {strengths.map((strength) => (
+            <article key={strength.number}>
+              <span>{strength.number}</span>
+              <h3>{strength.title}</h3>
+              <p>{strength.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        {/* Education & Training */}
-        <div style={{ marginTop: '2rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#334155', marginBottom: '1.5rem' }}>Education & Training</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {education.map((edu, index) => (
-              <div key={index} style={{ ...cardStyle }}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
-                  <div>
-                    <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#334155', marginBottom: '0.25rem' }}>{edu.school}</h3>
-                    <p style={{ color: '#78716c' }}>{edu.major}</p>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <p style={{ color: '#a8a29e', marginBottom: '0.25rem' }}>{edu.period}</p>
-                    <span style={{ display: 'inline-block', padding: '0.125rem 0.5rem', backgroundColor: 'rgba(212, 120, 156, 0.08)', color: '#d4789c', borderRadius: '0.25rem', fontSize: '0.875rem' }}>
-                      {edu.status}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
+      <section className="about-direction" aria-labelledby="about-direction-title">
+        <div className="about-direction__intro">
+          <p className="section-kicker">WHY AI AUTOMATION</p>
+          <h2 id="about-direction-title">AI 모델 자체보다,<br />{" "}AI가 실제 업무에 들어가는 과정에 관심이 있습니다.</h2>
+          <p>
+            기업용 AI는 모델 호출만으로 끝나지 않습니다. 기존 데이터의 위치,
+            사용자 권한, 사람의 승인, 실패 시 복구와 운영 지표까지 제품 안에
+            연결되어야 합니다. 산업 IoT 서비스를 운영하며 익힌 이 조건들이
+            제 다음 직무의 기반입니다.
+          </p>
+        </div>
+        <div className="about-direction__evidence">
+          <h3>이미 증명한 자동화의 단서</h3>
+          <ul>
+            {automationEvidence.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+          <div className="about-learning">
+            <span>현재 학습·구축 중</span>
+            {learningNow.map((item) => <p key={item}>{item}</p>)}
           </div>
         </div>
-      </div>
+      </section>
+
+      <section className="about-skills" aria-labelledby="skills-title">
+        <div className="about-section-heading">
+          <p className="section-kicker">TECHNICAL FOUNDATION</p>
+          <h2 id="skills-title">실제로 사용해 본 기술</h2>
+          <p>목표 기술과 보유 기술을 섞지 않고, 프로젝트 또는 업무에서 사용한 항목만 적었습니다.</p>
+        </div>
+        <div className="about-skills__grid">
+          {skillGroups.map((group) => (
+            <article key={group.label}>
+              <h3>{group.label}</h3>
+              <div>
+                {group.items.map((skill) => <span key={skill}>{skill}</span>)}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="about-background" aria-labelledby="background-title">
+        <div className="about-section-heading">
+          <p className="section-kicker">CREDENTIALS & EDUCATION</p>
+          <h2 id="background-title">자격과 교육</h2>
+        </div>
+        <div className="about-background__columns">
+          <div>
+            <h3>자격·평가</h3>
+            <div className="credential-list">
+              {certifications.map((certification) => (
+                <article key={certification.name}>
+                  <div>
+                    <h4>{certification.name}</h4>
+                    <p>{certification.issuer}</p>
+                  </div>
+                  <div>
+                    <strong>{certification.score}</strong>
+                    <span>{certification.date}</span>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h3>교육</h3>
+            <div className="education-list">
+              {education.map((item) => (
+                <article key={`${item.school}-${item.period}`}>
+                  <span>{item.period}</span>
+                  <h4>{item.school}</h4>
+                  <p>{item.major}</p>
+                  <strong>{item.status}</strong>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

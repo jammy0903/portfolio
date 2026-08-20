@@ -3,9 +3,9 @@ import Navbar from "./Navbar";
 
 export default function Layout() {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#fef7fa' }}>
+    <div className="site-shell">
       <Navbar />
-      <main className="pt-16">
+      <main>
         <Outlet />
       </main>
     </div>
