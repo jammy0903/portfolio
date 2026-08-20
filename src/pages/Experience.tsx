@@ -3,7 +3,7 @@ import { experience } from "../data/profile";
 
 const careerCases = [
   {
-    category: "BUSINESS IMPACT",
+    category: "고객 경험",
     title: "엔지니어 중심 화면을 고객의 의사결정 화면으로",
     problem: "아크 이벤트 중심의 복잡한 5탭 구조가 실제 사용 목적과 맞지 않았습니다.",
     action: "현황·문제장비·장비상세 3단계로 정보 구조를 다시 설계하고, 1,700줄 화면을 컨테이너와 8개 컴포넌트로 분리했습니다.",
@@ -11,7 +11,7 @@ const careerCases = [
     metric: "재계약 기여",
   },
   {
-    category: "REAL-TIME PERFORMANCE",
+    category: "실시간 성능",
     title: "장애는 즉시, 일반 데이터는 묶어서 처리",
     problem: "초당 수십 건의 WebSocket 데이터를 도착 즉시 렌더링해 화면 부하가 커졌습니다.",
     action: "50건·50ms 배치 매니저와 Fault 우선순위 큐를 설계해 이벤트의 중요도에 따라 처리 경로를 분리했습니다.",
@@ -19,7 +19,7 @@ const careerCases = [
     metric: "렌더링 80%↓",
   },
   {
-    category: "SECURITY & RELIABILITY",
+    category: "보안과 안정성",
     title: "평문 IoT 통신을 기기 인증 기반 구조로",
     problem: "HTTP와 MQTT 평문 통신, 하드코딩 환경변수, SQLite 락 문제가 함께 존재했습니다.",
     action: "Nginx·TLS, Pydantic 설정 관리, SQLite WAL을 도입하고 게이트웨이와 백엔드에 상호 인증 mTLS를 적용했습니다.",
@@ -27,7 +27,7 @@ const careerCases = [
     metric: "DB 락 0건",
   },
   {
-    category: "OPERATIONS AUTOMATION",
+    category: "운영 자동화",
     title: "대시보드를 보고 있지 않아도 장애를 알도록",
     problem: "담당자가 화면에 접속하지 않은 상태에서는 아크 장애를 즉시 인지하기 어려웠습니다.",
     action: "Fault 이벤트 감지부터 고객사별 수신자 관리, 카카오톡 알림 발송까지 하나의 자동화 흐름으로 구현했습니다.",
@@ -35,7 +35,7 @@ const careerCases = [
     metric: "이벤트 기반 대응",
   },
   {
-    category: "DATA ARCHITECTURE",
+    category: "데이터 구조",
     title: "새 하드웨어를 받아들이는 점진적 데이터 전환",
     problem: "하드웨어 버전이 늘어나며 모델별 데이터 스키마와 저장 위치를 안전하게 분리해야 했습니다.",
     action: "운영 영향을 통제하는 5단계 라우팅 전환을 설계하고 raw payload를 분석해 devType 기반 자동 분류를 구현했습니다.",
@@ -73,7 +73,7 @@ export default function Experience() {
     <div className="experience-page">
       <header className="career-hero">
         <div className="career-hero__copy">
-          <p className="section-kicker">PRODUCTION EXPERIENCE</p>
+          <p className="section-kicker">WORK EXPERIENCE</p>
           <h1>470대의 현장 데이터를<br />{" "}고객이 쓰는 서비스로 운영했습니다.</h1>
           <p>
             문서가 부족한 레거시를 분석하는 일부터 실시간 파이프라인, 화면,
@@ -112,7 +112,7 @@ export default function Experience() {
 
       <section className="career-system" aria-labelledby="ownership-title">
         <div className="career-section-heading">
-          <p className="section-kicker">END-TO-END OWNERSHIP</p>
+          <p className="section-kicker">SYSTEM</p>
           <h2 id="ownership-title">{experience.project}</h2>
           <p>{experience.scale}</p>
         </div>
@@ -135,10 +135,10 @@ export default function Experience() {
       <section className="career-cases" aria-labelledby="career-cases-title">
         <div className="career-section-heading career-section-heading--row">
           <div>
-            <p className="section-kicker">SELECTED OUTCOMES</p>
-            <h2 id="career-cases-title">채용 담당자가 먼저 볼 5가지 성과</h2>
+            <p className="section-kicker">WORK HIGHLIGHTS</p>
+            <h2 id="career-cases-title">직접 해결한 다섯 가지 문제</h2>
           </div>
-          <p>문제 → 판단과 구현 → 결과 순으로 정리했습니다.</p>
+          <p>문제와 해결 과정, 결과를 함께 정리했습니다.</p>
         </div>
 
         <div className="career-cases__grid">
@@ -170,7 +170,7 @@ export default function Experience() {
 
       <section className="career-scope" aria-labelledby="scope-title">
         <div>
-          <p className="section-kicker">ADDITIONAL SCOPE</p>
+          <p className="section-kicker">RESPONSIBILITIES</p>
           <h2 id="scope-title">그 밖에 직접 책임진 범위</h2>
         </div>
         <ul>
@@ -180,8 +180,8 @@ export default function Experience() {
 
       <section className="career-proof" aria-labelledby="proof-title">
         <div>
-          <p className="section-kicker">EXTERNAL PROOF</p>
-          <h2 id="proof-title">구현 기록과 외부 자료</h2>
+          <p className="section-kicker">RELATED LINKS</p>
+          <h2 id="proof-title">관련 문서와 보도 자료</h2>
         </div>
         <div className="career-proof__links">
           {experience.notion ? (

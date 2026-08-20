@@ -12,7 +12,7 @@ export default function Contact() {
       <section className="contact-hero" aria-labelledby="contact-page-title">
         <div className="contact-hero__copy">
           <p className="section-kicker">CONTACT</p>
-          <h1 id="contact-page-title">운영 현장의 문제를<br />{" "}제품으로 풀 팀을 찾습니다.</h1>
+          <h1 id="contact-page-title">운영 현장의 문제를<br />{" "}제품으로 해결하는 팀에서 일하고 싶습니다.</h1>
           <p>
             산업 IoT 실서비스를 혼자 책임진 경험을 바탕으로, 기업의 데이터와
             반복 업무를 안전하게 연결하는 제품을 만들고 싶습니다.
@@ -27,10 +27,10 @@ export default function Contact() {
         <aside className="contact-fit" aria-label="희망 역할과 근무 지역">
           <div className="contact-fit__status">
             <span aria-hidden="true" />
-            이직 기회 탐색 중
+            새로운 기회를 찾고 있습니다
           </div>
           <div>
-            <p>관심 역할</p>
+            <p>관심 분야</p>
             <ul>
               {targetRoles.map((role) => <li key={role}>{role}</li>)}
             </ul>

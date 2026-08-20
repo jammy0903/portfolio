@@ -21,7 +21,7 @@ export default function Navbar() {
       <div className="site-nav__inner">
         <Link className="site-brand" to="/" onClick={() => setIsOpen(false)}>
           <span>SOJEONG.KIM</span>
-          <small>PRODUCT-MINDED DEVELOPER</small>
+          <small>FULL-STACK DEVELOPER</small>
         </Link>
 
         <div className="site-nav__desktop">

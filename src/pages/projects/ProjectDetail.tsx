@@ -78,21 +78,21 @@ export default function ProjectDetail() {
           style={{ background: project.thumbnail.gradient }}
         >
           <span aria-hidden="true">{project.thumbnail.emoji}</span>
-          <small>CASE STUDY · {project.slug.toUpperCase()}</small>
+          <small>PROJECT · {project.slug.toUpperCase()}</small>
         </div>
       </header>
 
       <section className="project-detail-evidence" aria-labelledby="project-evidence-title">
         <aside>
-          <p className="section-kicker">TECHNICAL SCOPE</p>
+          <p className="section-kicker">TECH STACK</p>
           <h2>사용 기술</h2>
           <div>
             {project.techStack.map((technology) => <span key={technology}>{technology}</span>)}
           </div>
         </aside>
         <div>
-          <p className="section-kicker">KEY EVIDENCE</p>
-          <h2 id="project-evidence-title">핵심 구현과 결과</h2>
+          <p className="section-kicker">HIGHLIGHTS</p>
+          <h2 id="project-evidence-title">주요 구현과 결과</h2>
           <ol>
             {project.highlights.map((highlight, index) => (
               <li key={highlight}>
@@ -107,7 +107,7 @@ export default function ProjectDetail() {
       {dogGallery.length > 0 ? (
         <section className="project-detail-gallery" aria-labelledby="dog-gallery-title">
           <div className="project-detail-section-heading">
-            <p className="section-kicker">PRODUCT CONTENT</p>
+            <p className="section-kicker">CONTENT</p>
             <h2 id="dog-gallery-title">수집 견종 11종</h2>
             <p>걸음을 모아 해금하는 제품 콘텐츠입니다.</p>
           </div>
@@ -125,7 +125,7 @@ export default function ProjectDetail() {
       {images.length > 0 ? (
         <section className="project-detail-gallery" aria-labelledby="screenshots-title">
           <div className="project-detail-section-heading">
-            <p className="section-kicker">PRODUCT SCREENS</p>
+            <p className="section-kicker">SCREENS</p>
             <h2 id="screenshots-title">구현 화면</h2>
           </div>
           <div className="project-detail-gallery__screens">
@@ -141,8 +141,8 @@ export default function ProjectDetail() {
 
       <footer className="project-detail-footer">
         <div>
-          <p className="section-kicker">MORE WORK</p>
-          <h2>다른 문제 해결 사례도 확인해 보세요.</h2>
+          <p className="section-kicker">MORE PROJECTS</p>
+          <h2>다른 프로젝트도 살펴보세요.</h2>
         </div>
         <Link to="/projects">전체 프로젝트 보기 →</Link>
       </footer>

@@ -2,7 +2,7 @@ export const profile = {
   name: "김소정",
   nameEn: "Kim So Jeong",
   title: "산업 IoT 풀스택 개발자",
-  tagline: "470대 장비의 실시간 서비스를 운영한 경험을 바탕으로, 현장 데이터를 기업용 AI 업무자동화로 확장합니다.",
+  tagline: "470대 장비의 실시간 서비스를 운영해 왔고, 최근에는 이 경험을 기업용 AI 업무자동화로 넓히고 있습니다.",
   email: "l89192164@gmail.com",
   github: "https://github.com/jammy0903",
   blog: "https://jammy0903.github.io",
@@ -10,7 +10,7 @@ export const profile = {
 
   summary: `470대 IoT 디바이스의 실시간 데이터를 처리하는 B2B 모니터링 대시보드를 1인 개발·운영한 풀스택 개발자입니다.
 WebSocket 배치 처리로 렌더링 부하를 80% 줄이고, 빌드 시간을 2분에서 10초로 단축(12배 개선)한 경험이 있습니다.
-복잡한 현장 데이터와 업무 흐름을 안정적인 제품으로 바꾸는 데 강점이 있으며, 다음 직무 방향은 기업용 AI 업무자동화 개발입니다.`,
+복잡한 현장 데이터와 업무 흐름을 안정적인 제품으로 바꾸는 데 강점이 있습니다. 최근에는 이 경험을 기업용 AI 업무자동화 개발로 넓히고 있습니다.`,
 };
 
 export const skills = {

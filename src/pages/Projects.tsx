@@ -38,11 +38,11 @@ export default function Projects() {
   return (
     <div className="projects-page">
       <header className="projects-header">
-        <p className="section-kicker">PROJECT EVIDENCE</p>
-        <h1>무엇을 만들었는지보다,<br />{" "}어떤 문제를 끝까지 풀었는지.</h1>
+        <p className="section-kicker">PROJECTS</p>
+        <h1>만든 결과뿐 아니라,<br />{" "}문제를 풀어간 과정까지 담았습니다.</h1>
         <p>
-          산업 IoT 운영, 데이터 자동화, 복잡한 시스템 설계 순으로 대표 사례를
-          배치했습니다. 각 상세 페이지에서 문제·판단·구현·결과를 확인할 수 있습니다.
+          실무와 개인 프로젝트 중 운영 환경, 데이터 처리, 시스템 설계가
+          잘 드러나는 작업을 먼저 정리했습니다.
         </p>
       </header>
 
@@ -50,9 +50,9 @@ export default function Projects() {
         <div className="projects-section-heading">
           <div>
             <span>01</span>
-            <h2 id="relevant-projects">목표 직무와 가까운 대표 사례</h2>
+            <h2 id="relevant-projects">주요 프로젝트</h2>
           </div>
-          <p>기업용 AI 자동화에 필요한 운영·데이터·시스템 기반</p>
+          <p>운영 환경과 데이터 흐름을 다룬 세 가지 프로젝트입니다.</p>
         </div>
 
         <div className="projects-featured__grid">
@@ -79,7 +79,7 @@ export default function Projects() {
                     <span key={technology}>{technology}</span>
                   ))}
                 </div>
-                <strong>케이스 스터디 보기 →</strong>
+                <strong>프로젝트 자세히 보기 →</strong>
               </div>
             </Link>
           ))}
@@ -90,9 +90,9 @@ export default function Projects() {
         <div className="projects-section-heading">
           <div>
             <span>02</span>
-            <h2 id="other-projects">제품 출시·보안·협업 경험</h2>
+            <h2 id="other-projects">그 밖의 프로젝트</h2>
           </div>
-          <p>범용 개발 역량과 실행 범위를 보여주는 프로젝트</p>
+          <p>제품 출시, 보안, 협업을 경험한 작업들입니다.</p>
         </div>
 
         <div className="projects-archive__grid">
