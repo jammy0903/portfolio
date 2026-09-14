@@ -1,0 +1,527 @@
+/* ─────────────────────────────────────────────────────────────
+   픽셀 게임 테마 — 8비트 UI 레이어
+   index.css / detail-pages.css 다음에 마지막으로 로드된다.
+   기본 구조(레이아웃/간격)는 그대로 두고 표면만 픽셀로 바꾼다:
+   직각 모서리 + 2px 외곽선 + 하드 오프셋 그림자 + steps() 전환.
+   ───────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: "Galmuri11";
+  src: url("/fonts/Galmuri11.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Galmuri11";
+  src: url("/fonts/Galmuri11-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --pixel: "Galmuri11", "IBM Plex Sans KR", "Apple SD Gothic Neo", monospace;
+
+  --ink: #14213d;
+  --ink-soft: #33455f;
+  --muted: #5b6c84;
+  --line: #2b4059;
+  --line-soft: #aebfd2;
+  --surface: #ffffff;
+  --surface-soft: #e6ecf5;
+  --accent: #0c7c86;
+  --accent-dark: #075b63;
+  --signal: #d6f064;
+
+  /* 하드 그림자(블러 0) — 8비트 블록감 */
+  --px-shade: #c2cfe0;
+  --px-shade-strong: #0c7c86;
+  --px-bg: #e9eef6;
+  --px-grid: rgba(20, 33, 61, 0.05);
+
+  color: var(--ink);
+  background: var(--px-bg);
+  font-family: var(--pixel);
+  text-rendering: geometricPrecision;
+}
+
+/* 픽셀 폰트는 안티에일리어싱을 끄고 자간을 0으로 둬야 격자가 산다 */
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--pixel);
+}
+
+body {
+  background: var(--px-bg);
+  letter-spacing: 0;
+  line-height: 1.9;
+  font-size: 16.5px;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+}
+
+/* 사진(갤러리 스크린샷)에는 픽셀 보간을 걸지 않는다 — 축소 시 거칠어진다 */
+svg {
+  image-rendering: pixelated;
+}
+
+/* 픽셀 폰트에 음수 자간은 글자를 붙여버린다 — 전부 해제 */
+h1,
+h2,
+h3,
+h4,
+strong,
+.metric strong,
+.section-heading h2,
+.projects-header h1,
+.home-hero h1 {
+  letter-spacing: 0;
+  word-break: keep-all;
+}
+
+/* 제목은 11의 배수로 — Galmuri11의 격자에 맞아떨어진다 */
+.home-hero h1 {
+  font-size: clamp(33px, 5.6vw, 66px);
+  line-height: 1.25;
+}
+
+.section-heading h2,
+.direction-section h2,
+.home-contact h2 {
+  font-size: clamp(22px, 3.4vw, 33px);
+  line-height: 1.35;
+}
+
+.about-hero h1,
+.contact-hero h1,
+.projects-header h1,
+.project-detail-hero h1 {
+  font-size: clamp(28px, 4.4vw, 44px);
+  line-height: 1.3;
+}
+
+.career-hero__copy h1 {
+  font-size: clamp(22px, 2.8vw, 33px);
+  line-height: 1.35;
+}
+
+/* ── 바탕: 픽셀 모눈 ─────────────────────────────────────────── */
+.site-shell {
+  background:
+    repeating-linear-gradient(0deg, var(--px-grid) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(90deg, var(--px-grid) 0 1px, transparent 1px 8px),
+    var(--px-bg);
+}
+
+/* ── 네비게이션: 블러 대신 단색 + 굵은 밑선 ──────────────────── */
+.site-nav {
+  border-bottom: 3px solid var(--line);
+  background: var(--surface);
+  box-shadow: 0 4px 0 0 var(--px-shade);
+}
+
+.site-brand span {
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+
+.site-brand small {
+  color: var(--accent-dark);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.site-nav__desktop a,
+.site-nav__mobile a {
+  padding: 0.35rem 0.6rem;
+  border: 2px solid transparent;
+  font-size: 14px;
+  transition: none;
+}
+
+.site-nav__desktop a:hover,
+.site-nav__mobile a:hover {
+  border-color: var(--line-soft);
+  color: var(--accent-dark);
+}
+
+.site-nav__desktop a.is-active,
+.site-nav__mobile a.is-active {
+  border-color: var(--line);
+  background: var(--signal);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 2px 2px 0 0 var(--line);
+}
+
+.site-nav__toggle {
+  border: 2px solid var(--line);
+  box-shadow: 2px 2px 0 0 var(--px-shade);
+}
+
+.site-nav__mobile {
+  border-top: 2px solid var(--line);
+  background: var(--surface);
+}
+
+/* ── 8비트 버튼: 눌리는 블록 ─────────────────────────────────── */
+.button,
+.project-detail-link,
+.project-detail-back {
+  border: 2px solid var(--line);
+  box-shadow: 3px 3px 0 0 var(--line);
+  font-size: 14px;
+  letter-spacing: 0;
+  transition:
+    transform 80ms steps(2),
+    box-shadow 80ms steps(2),
+    background 80ms steps(2);
+}
+
+.button:hover,
+.project-detail-link:hover,
+.project-detail-back:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 0 var(--line);
+}
+
+.button:active,
+.project-detail-link:active,
+.project-detail-back:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 0 var(--line);
+}
+
+.button--primary {
+  background: var(--ink);
+  color: #fff;
+}
+
+.button--secondary {
+  background: var(--signal);
+  color: var(--ink);
+}
+
+.button--ghost {
+  background: var(--surface);
+  color: var(--ink-soft);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ── 카드류: 8비트 다이얼로그 박스 ───────────────────────────── */
+.system-card,
+.work-card,
+.project-feature-card,
+.project-archive-card,
+.system-node,
+.career-summary,
+.career-case,
+.career-flow,
+.about-strengths article,
+.about-skills article,
+.education-list article,
+.contact-email,
+.project-detail-visual {
+  border: 2px solid var(--line);
+  background: var(--surface);
+  box-shadow: 4px 4px 0 0 var(--px-shade);
+}
+
+/* 색 강조선을 쓰던 카드는 그 선을 더 굵은 픽셀 띠로 살린다 */
+.about-skills article {
+  border-top: 5px solid var(--accent);
+}
+
+.education-list article {
+  border-left: 5px solid var(--accent);
+}
+
+/* 어두운 블록(콘솔 화면) — 배경은 그대로 두고 외곽선/그림자만 픽셀로 */
+.career-scope,
+.career-proof,
+.contact-fit,
+.direction-card,
+.about-direction__evidence {
+  border: 2px solid var(--line);
+  box-shadow: 5px 5px 0 0 rgba(20, 33, 61, 0.35);
+}
+
+.career-proof {
+  border-color: var(--ink);
+}
+
+.career-scope li,
+.contact-fit li,
+.about-direction__evidence {
+  border-color: rgba(214, 240, 100, 0.35);
+}
+
+/* 수치 스트립 형제 */
+.career-metrics {
+  border: 3px solid var(--line);
+  background: var(--surface);
+  box-shadow: 5px 5px 0 0 var(--px-shade);
+}
+
+.work-card,
+.project-feature-card,
+.project-archive-card {
+  transition:
+    transform 100ms steps(2),
+    box-shadow 100ms steps(2),
+    border-color 100ms steps(2);
+}
+
+.work-card:hover,
+.project-feature-card:hover,
+.project-archive-card:hover {
+  transform: translate(-3px, -3px);
+  border-color: var(--accent);
+  box-shadow: 7px 7px 0 0 var(--px-shade-strong);
+}
+
+.work-card:active,
+.project-feature-card:active,
+.project-archive-card:active {
+  transform: translate(0, 0);
+  box-shadow: 2px 2px 0 0 var(--px-shade-strong);
+}
+
+/* 원형 장식 → 카드 모서리에 붙은 픽셀 스티커(카드 바깥으로 나온다) */
+.system-card::before {
+  z-index: 0;
+  width: 26px;
+  height: 26px;
+  right: -15px;
+  top: -15px;
+  border: 2px solid var(--line);
+  background: var(--signal);
+  opacity: 1;
+}
+
+.eyebrow__dot,
+.about-hero__profile span[aria-hidden],
+.contact-fit__status::before {
+  border-radius: 0;
+}
+
+.eyebrow__dot {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--line);
+  background: var(--signal);
+  box-shadow: none;
+  animation: pxBlink 1.2s steps(1, end) infinite;
+}
+
+@keyframes pxBlink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
+.eyebrow,
+.section-kicker,
+.about-section-heading > p,
+.career-section-heading > p {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+/* ── 상태 칩 / 태그: 픽셀 라벨 ───────────────────────────────── */
+.system-card__status,
+.career-summary__status,
+.contact-fit__status,
+.direction-card__label,
+.project-feature-card__stack span,
+.career-stack span,
+.about-skills li,
+.projects-section-heading > div > span,
+.work-card__number,
+.system-node__icon,
+.project-feature-card__index {
+  border: 2px solid var(--line);
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.projects-section-heading > div > span,
+.work-card__number,
+.system-node__icon,
+.project-feature-card__index {
+  box-shadow: 2px 2px 0 0 var(--px-shade);
+}
+
+.project-feature-card__index {
+  border-color: #fff;
+  background: var(--ink);
+  box-shadow: 2px 2px 0 0 rgba(20, 33, 61, 0.5);
+}
+
+.system-node--accent .system-node__icon {
+  box-shadow: 2px 2px 0 0 var(--accent-dark);
+}
+
+/* ── 흐름선: 8px 계단 ────────────────────────────────────────── */
+.system-flow__line {
+  width: 4px;
+  background: repeating-linear-gradient(180deg, var(--accent) 0 4px, transparent 4px 8px);
+}
+
+/* ── 수치 스트립: 격자 셀 ────────────────────────────────────── */
+.metric-strip {
+  border: 3px solid var(--line);
+  background: var(--surface);
+  box-shadow: 5px 5px 0 0 var(--px-shade);
+}
+
+.metric + .metric {
+  border-left: 2px solid var(--line);
+}
+
+.metric strong {
+  font-size: clamp(22px, 2.6vw, 33px);
+}
+
+.metric span {
+  font-size: 13px;
+}
+
+/* ── 어두운 섹션: 콘솔 화면 ──────────────────────────────────── */
+.direction-section {
+  border-top: 3px solid var(--line);
+  border-bottom: 3px solid var(--line);
+  background: var(--ink);
+}
+
+.direction-card {
+  border: 2px solid rgba(214, 240, 100, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.35);
+}
+
+.direction-card--next {
+  border-color: var(--signal);
+}
+
+.direction-card__label {
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  font-size: 12px;
+}
+
+.direction-card li::marker {
+  content: "▪ ";
+  color: var(--signal);
+}
+
+/* ── 프로젝트 비주얼: 그라데이션 대신 평면 + 굵은 구분선 ──────── */
+.project-feature-card__visual {
+  border-bottom: 2px solid var(--line);
+}
+
+/* 썸네일의 매끈한 그라데이션을 디더링(체커 8px)으로 덮어 레트로 램프처럼 보이게 한다 */
+.project-feature-card__visual::after,
+.project-archive-card__visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-conic-gradient(rgba(20, 33, 61, 0.18) 0% 25%, transparent 0% 50%);
+  background-size: 8px 8px;
+}
+
+.project-archive-card__visual {
+  position: relative;
+}
+
+/* 상세 페이지 히어로 썸네일도 같은 디더 처리 */
+.project-detail-visual::after {
+  background: repeating-conic-gradient(rgba(20, 33, 61, 0.18) 0% 25%, transparent 0% 50%);
+  background-size: 8px 8px;
+}
+
+.project-feature-card__emoji,
+.project-archive-card__visual span {
+  filter: none;
+}
+
+.project-archive-card__visual {
+  border-right: 2px solid var(--line);
+  background: var(--surface-soft);
+}
+
+/* ── 본문 가독성: 픽셀 폰트는 줄간격을 넉넉히 ────────────────── */
+p,
+li {
+  font-size: 15px;
+  line-height: 1.95;
+}
+
+.home-hero__summary {
+  font-size: 16.5px;
+}
+
+.home-hero__role {
+  font-size: 16.5px;
+}
+
+/* ── 선택 영역 / 스크롤바 ────────────────────────────────────── */
+::selection {
+  background: var(--signal);
+  color: var(--ink);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-soft);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid var(--line);
+  background: var(--accent);
+}
+
+/* ── 히어로 강조줄에 커서 깜빡임 ─────────────────────────────── */
+.home-hero h1 span::after {
+  content: "_";
+  margin-left: 0.15em;
+  color: var(--signal);
+  animation: pxCaret 1s steps(1, end) infinite;
+}
+
+@keyframes pxCaret {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow__dot,
+  .home-hero h1 span::after {
+    animation: none;
+  }
+}

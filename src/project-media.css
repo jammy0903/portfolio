@@ -1,0 +1,10 @@
+/* Project media uses its own selectors to preserve the existing pixel theme. */
+.project-archive-card__visual:has(.project-card-cover) { overflow: hidden; background: #17161f !important; }
+.project-card-cover { display: block; width: 100%; height: 100%; min-width: 0; object-fit: cover; }
+.project-detail-visual.project-detail-visual--screen { min-height: 0; align-self: center; background: #17161f !important; }
+.project-detail-visual--screen > img { display: block; width: 100%; height: auto; }
+.project-detail-visual--screen::after, .project-detail-visual--screen > small { display: none; }
+.project-demo video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #17161f; border: 2px solid var(--line); box-shadow: 4px 4px 0 var(--px-shade); }
+.project-video-download { display: inline-block; margin-top: 1rem; color: var(--ink); text-underline-offset: 4px; }
+.project-video-download:focus-visible { outline: 3px solid currentColor; outline-offset: 4px; }
+@media (max-width: 720px) { .project-detail-page:has(.project-demo) .project-detail-gallery__screens { grid-template-columns: 1fr; } }

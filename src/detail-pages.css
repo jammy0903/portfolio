@@ -46,16 +46,16 @@
 
 .career-summary {
   padding: 1.7rem;
-  border: 1px solid var(--line);
-  border-radius: 1rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.86);
-  box-shadow: 0 24px 54px rgba(29, 59, 83, 0.1);
+  box-shadow: 4px 4px 0 0 var(--px-shade);
 }
 
 .career-summary__status {
   display: inline-flex;
   padding: 0.3rem 0.65rem;
-  border-radius: 99px;
+  border-radius: 0;
   background: #e5f5ee;
   color: #147152;
   font-size: 0.8rem;
@@ -76,12 +76,12 @@
 
 .career-summary dl {
   margin-top: 1.5rem;
-  border-top: 1px solid var(--line);
+  border-top: 2px solid var(--line);
 }
 
 .career-summary dl > div {
   padding: 0.8rem 0;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 2px solid var(--line);
   display: grid;
   grid-template-columns: 70px 1fr;
   gap: 1rem;
@@ -103,8 +103,8 @@
 .career-metrics {
   position: relative;
   margin-top: 80px;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border-top: 2px solid var(--line);
+  border-bottom: 2px solid var(--line);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
@@ -118,7 +118,7 @@
 }
 
 .career-metrics > div + div {
-  border-left: 1px solid var(--line);
+  border-left: 2px solid var(--line);
 }
 
 .career-metrics strong {
@@ -186,8 +186,8 @@
 .career-flow {
   margin-top: 2.2rem;
   padding: 1.2rem;
-  border: 1px solid var(--line);
-  border-radius: 1rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
   align-items: center;
@@ -198,7 +198,7 @@
 .career-flow > div {
   min-height: 126px;
   padding: 1rem;
-  border-radius: 0.7rem;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -242,8 +242,8 @@
 
 .career-stack span {
   padding: 0.35rem 0.65rem;
-  border: 1px solid var(--line);
-  border-radius: 99px;
+  border: 2px solid var(--line);
+  border-radius: 0;
   background: #fff;
   color: var(--muted);
   font-size: 0.8rem;
@@ -258,8 +258,8 @@
 
 .career-case {
   padding: 1.55rem;
-  border: 1px solid var(--line);
-  border-radius: 1rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.82);
 }
 
@@ -286,7 +286,7 @@
 
 .career-case__header span {
   padding: 0.28rem 0.55rem;
-  border-radius: 99px;
+  border-radius: 0;
   background: var(--signal);
   color: var(--ink);
   font-size: 0.78rem;
@@ -315,7 +315,7 @@
 
 .career-case dl > div {
   padding-top: 0.8rem;
-  border-top: 1px solid var(--line);
+  border-top: 2px solid var(--line);
   display: grid;
   grid-template-columns: 72px 1fr;
   gap: 0.8rem;
@@ -341,7 +341,7 @@
 
 .career-scope {
   padding: 2.2rem;
-  border-radius: 1.1rem;
+  border-radius: 0;
   display: grid;
   grid-template-columns: 0.72fr 1.28fr;
   gap: 4rem;
@@ -367,8 +367,8 @@
 
 .career-scope li {
   padding: 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0.65rem;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
   color: #c8d4df;
   font-size: 0.88rem;
 }
@@ -382,7 +382,7 @@
 
 .career-proof {
   padding: 2.2rem;
-  border-radius: 1.1rem;
+  border-radius: 0;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -399,8 +399,8 @@
 
 .career-proof__links a {
   padding: 0.65rem 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.26);
-  border-radius: 0.45rem;
+  border: 2px solid rgba(255, 255, 255, 0.26);
+  border-radius: 0;
   color: #fff;
   font-size: 0.84rem;
   font-weight: 700;
@@ -409,7 +409,7 @@
 
 .about-hero {
   padding-bottom: 88px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 2px solid var(--line);
 }
 
 .about-hero__profile {
@@ -452,8 +452,8 @@
 
 .about-hero__profile > div > * {
   padding: 0.4rem 0.65rem;
-  border: 1px solid var(--line);
-  border-radius: 99px;
+  border: 2px solid var(--line);
+  border-radius: 0;
   background: #fff;
   color: var(--muted);
   font-size: 0.8rem;
@@ -475,15 +475,15 @@
 .about-strengths article {
   min-height: 255px;
   padding: 1.35rem;
-  border: 1px solid var(--line);
-  border-radius: 0.9rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.76);
 }
 
 .about-strengths article > span {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: 0;
   display: grid;
   place-items: center;
   background: var(--surface-soft);
@@ -537,8 +537,8 @@
 
 .about-direction__evidence {
   padding: 1.6rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -565,7 +565,7 @@
 .about-learning {
   margin-top: 1.4rem;
   padding-top: 1.2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.13);
+  border-top: 2px solid rgba(255, 255, 255, 0.13);
 }
 
 .about-learning > span {
@@ -607,8 +607,8 @@
 
 .about-skills article span {
   padding: 0.32rem 0.55rem;
-  border: 1px solid var(--line);
-  border-radius: 0.35rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   background: #fff;
   color: var(--muted);
   font-size: 0.82rem;
@@ -623,8 +623,8 @@
 
 .about-background__columns > div {
   padding: 1.4rem;
-  border: 1px solid var(--line);
-  border-radius: 0.9rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.76);
 }
 
@@ -643,7 +643,7 @@
 
 .credential-list article {
   padding: 0.9rem 0;
-  border-top: 1px solid var(--line);
+  border-top: 2px solid var(--line);
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 1rem;
@@ -710,8 +710,8 @@
   max-width: 620px;
   margin-top: 2rem;
   padding: 1rem;
-  border: 1px solid var(--line);
-  border-radius: 0.7rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -724,7 +724,7 @@
 
 .contact-email:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 32px rgba(29, 59, 83, 0.1);
+  box-shadow: 4px 4px 0 0 var(--px-shade);
 }
 
 .contact-email > span {
@@ -747,7 +747,7 @@
 
 .contact-fit {
   padding: 1.6rem;
-  border-radius: 1rem;
+  border-radius: 0;
   background: var(--ink);
   color: #fff;
 }
@@ -764,7 +764,7 @@
 .contact-fit__status span {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--signal);
   box-shadow: 0 0 0 5px rgba(214, 240, 100, 0.15);
 }
@@ -789,20 +789,20 @@
 
 .contact-fit li {
   padding: 0.42rem 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 99px;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 0;
   color: #dce6ee;
   font-size: 0.82rem;
 }
 
 .contact-fit dl {
   margin-top: 1.6rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 2px solid rgba(255, 255, 255, 0.14);
 }
 
 .contact-fit dl > div {
   padding: 0.8rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.14);
   display: grid;
   grid-template-columns: 80px 1fr;
   gap: 1rem;
@@ -821,7 +821,7 @@
 
 .contact-links {
   margin-top: 76px;
-  border-top: 1px solid var(--line);
+  border-top: 2px solid var(--line);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
@@ -834,7 +834,7 @@
 }
 
 .contact-links > * + * {
-  border-left: 1px solid var(--line);
+  border-left: 2px solid var(--line);
 }
 
 .contact-links > * > span {
@@ -878,7 +878,7 @@
 .project-detail-hero {
   margin-top: 2rem;
   padding-bottom: 88px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 2px solid var(--line);
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
@@ -920,8 +920,8 @@
 .project-detail-link {
   min-height: 44px;
   padding: 0.65rem 0.85rem;
-  border: 1px solid var(--line);
-  border-radius: 0.5rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   display: inline-flex;
   align-items: center;
   background: #fff;
@@ -941,10 +941,10 @@
   position: relative;
   min-height: 390px;
   overflow: hidden;
-  border-radius: 1rem;
+  border-radius: 0;
   display: grid;
   place-items: center;
-  box-shadow: 0 28px 62px rgba(29, 59, 83, 0.14);
+  box-shadow: 4px 4px 0 0 var(--px-shade);
 }
 
 .project-detail-visual::after {
@@ -958,7 +958,7 @@
   position: relative;
   z-index: 1;
   font-size: 7rem;
-  filter: drop-shadow(0 18px 22px rgba(16, 35, 63, 0.24));
+  filter: drop-shadow(3px 3px 0 rgba(16, 35, 63, 0.24));
 }
 
 .project-detail-visual small {
@@ -1002,8 +1002,8 @@
 
 .project-detail-evidence aside span {
   padding: 0.35rem 0.6rem;
-  border: 1px solid var(--line);
-  border-radius: 0.35rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   background: #fff;
   color: var(--muted);
   font-size: 0.8rem;
@@ -1012,13 +1012,13 @@
 
 .project-detail-evidence ol {
   margin-top: 1.4rem;
-  border-top: 1px solid var(--line);
+  border-top: 2px solid var(--line);
   list-style: none;
 }
 
 .project-detail-evidence li {
   padding: 1rem 0;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 2px solid var(--line);
   display: grid;
   grid-template-columns: 38px 1fr;
   gap: 0.9rem;
@@ -1027,7 +1027,7 @@
 .project-detail-evidence li > span {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 0;
   display: grid;
   place-items: center;
   background: var(--surface-soft);
@@ -1072,8 +1072,8 @@
 .project-detail-gallery__dogs figure,
 .project-detail-gallery__screens figure {
   overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 0.8rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.78);
 }
 
@@ -1108,7 +1108,7 @@
 .project-detail-footer {
   margin-top: 104px;
   padding: 2rem;
-  border-radius: 1rem;
+  border-radius: 0;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -1128,8 +1128,8 @@
 .project-detail-footer > a {
   flex: 0 0 auto;
   padding: 0.7rem 0.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 0.45rem;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-radius: 0;
   color: #fff;
   font-size: 0.84rem;
   font-weight: 750;
@@ -1242,7 +1242,7 @@
   }
 
   .career-metrics > div:nth-child(n + 3) {
-    border-top: 1px solid var(--line);
+    border-top: 2px solid var(--line);
   }
 
   .career-system,
@@ -1358,7 +1358,7 @@
   }
 
   .contact-links > * + * {
-    border-top: 1px solid var(--line);
+    border-top: 2px solid var(--line);
     border-left: 0;
   }
 

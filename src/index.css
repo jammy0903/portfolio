@@ -66,9 +66,8 @@ button:focus-visible {
   top: 0;
   right: 0;
   left: 0;
-  border-bottom: 1px solid rgba(16, 35, 63, 0.1);
+  border-bottom: 2px solid rgba(16, 35, 63, 0.1);
   background: rgba(244, 247, 250, 0.9);
-  backdrop-filter: blur(18px);
 }
 
 .site-nav__inner {
@@ -135,8 +134,8 @@ button:focus-visible {
   display: none;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
+  border: 2px solid var(--line);
+  border-radius: 0;
   background: var(--surface);
   cursor: pointer;
 }
@@ -191,7 +190,7 @@ button:focus-visible {
 .eyebrow__dot {
   width: 9px;
   height: 9px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--signal);
   box-shadow: 0 0 0 5px rgba(214, 240, 100, 0.25);
 }
@@ -235,8 +234,8 @@ button:focus-visible {
 .button {
   min-height: 48px;
   padding: 0.76rem 1.15rem;
-  border: 1px solid transparent;
-  border-radius: 0.55rem;
+  border: 2px solid transparent;
+  border-radius: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -254,7 +253,7 @@ button:focus-visible {
 .button--primary {
   background: var(--ink);
   color: #fff;
-  box-shadow: 0 12px 28px rgba(16, 35, 63, 0.16);
+  box-shadow: 4px 4px 0 0 var(--px-shade);
 }
 
 .button--primary:hover {
@@ -274,10 +273,10 @@ button:focus-visible {
 .system-card {
   position: relative;
   padding: clamp(1.3rem, 3vw, 2rem);
-  border: 1px solid rgba(16, 35, 63, 0.12);
-  border-radius: 1.25rem;
+  border: 2px solid rgba(16, 35, 63, 0.12);
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 28px 70px rgba(29, 59, 83, 0.13);
+  box-shadow: 4px 4px 0 0 var(--px-shade);
 }
 
 .system-card::before {
@@ -288,14 +287,14 @@ button:focus-visible {
   height: 150px;
   right: -50px;
   top: -50px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--signal);
   opacity: 0.7;
 }
 
 .system-card__header {
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 2px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -307,7 +306,7 @@ button:focus-visible {
 
 .system-card__status {
   padding: 0.27rem 0.55rem;
-  border-radius: 99px;
+  border-radius: 0;
   background: #e5f5ee;
   color: #147152;
   letter-spacing: 0;
@@ -320,13 +319,13 @@ button:focus-visible {
 .system-node {
   min-height: 82px;
   padding: 0.95rem 1rem;
-  border: 1px solid var(--line);
-  border-radius: 0.9rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   display: flex;
   align-items: center;
   gap: 1rem;
   background: #fff;
-  box-shadow: 0 8px 24px rgba(29, 59, 83, 0.045);
+  box-shadow: 4px 4px 0 0 var(--px-shade);
 }
 
 .system-node--accent {
@@ -337,8 +336,8 @@ button:focus-visible {
 .system-node__icon {
   width: 38px;
   height: 38px;
-  border: 1px solid rgba(12, 124, 134, 0.28);
-  border-radius: 50%;
+  border: 2px solid rgba(12, 124, 134, 0.28);
+  border-radius: 0;
   display: grid;
   place-items: center;
   flex: 0 0 auto;
@@ -386,12 +385,12 @@ button:focus-visible {
   margin-left: calc(1rem + 19px);
   display: block;
   background: linear-gradient(180deg, #b7cbd2, var(--accent));
-  border-radius: 99px;
+  border-radius: 0;
 }
 
 .system-card__note {
   padding: 0.85rem 1rem;
-  border-radius: 0.65rem;
+  border-radius: 0;
   background: var(--ink);
   color: #eef7f9;
   font-size: 0.86rem;
@@ -400,8 +399,8 @@ button:focus-visible {
 }
 
 .metric-strip {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border-top: 2px solid var(--line);
+  border-bottom: 2px solid var(--line);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
@@ -415,7 +414,7 @@ button:focus-visible {
 }
 
 .metric + .metric {
-  border-left: 1px solid var(--line);
+  border-left: 2px solid var(--line);
 }
 
 .metric strong {
@@ -471,8 +470,8 @@ button:focus-visible {
 .work-card {
   min-height: 385px;
   padding: 1.5rem;
-  border: 1px solid var(--line);
-  border-radius: 1rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.82);
@@ -484,14 +483,14 @@ button:focus-visible {
 .work-card:hover {
   transform: translateY(-5px);
   border-color: rgba(12, 124, 134, 0.45);
-  box-shadow: 0 20px 40px rgba(29, 59, 83, 0.1);
+  box-shadow: 4px 4px 0 0 var(--px-shade);
 }
 
 .work-card__number {
   width: 42px;
   height: 42px;
   margin-bottom: 3rem;
-  border-radius: 50%;
+  border-radius: 0;
   display: grid;
   place-items: center;
   background: var(--surface-soft);
@@ -568,8 +567,8 @@ button:focus-visible {
 
 .direction-card {
   padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.06);
 }
 
@@ -581,7 +580,7 @@ button:focus-visible {
 .direction-card__label {
   display: inline-flex;
   padding: 0.3rem 0.6rem;
-  border-radius: 99px;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.11);
   color: #d6e3ed;
   font-size: 0.8rem;
@@ -657,7 +656,7 @@ button:focus-visible {
 .projects-featured,
 .projects-archive {
   padding-top: 3rem;
-  border-top: 1px solid var(--line);
+  border-top: 2px solid var(--line);
 }
 
 .projects-archive {
@@ -681,7 +680,7 @@ button:focus-visible {
 .projects-section-heading > div > span {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 0;
   display: grid;
   place-items: center;
   flex: 0 0 auto;
@@ -712,8 +711,8 @@ button:focus-visible {
 
 .project-feature-card {
   overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 1rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.86);
@@ -725,7 +724,7 @@ button:focus-visible {
 .project-feature-card:hover {
   transform: translateY(-5px);
   border-color: rgba(12, 124, 134, 0.4);
-  box-shadow: 0 20px 42px rgba(29, 59, 83, 0.11);
+  box-shadow: 4px 4px 0 0 var(--px-shade);
 }
 
 .project-feature-card__visual {
@@ -749,22 +748,21 @@ button:focus-visible {
   left: 1rem;
   width: 36px;
   height: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-radius: 0;
   display: grid;
   place-items: center;
   background: rgba(16, 35, 63, 0.72);
   color: #fff;
   font-size: 0.78rem;
   font-weight: 800;
-  backdrop-filter: blur(8px);
 }
 
 .project-feature-card__emoji {
   position: relative;
   z-index: 1;
   font-size: 4.2rem;
-  filter: drop-shadow(0 12px 18px rgba(16, 35, 63, 0.2));
+  filter: drop-shadow(3px 3px 0 rgba(16, 35, 63, 0.2));
 }
 
 .project-feature-card__body {
@@ -811,7 +809,7 @@ button:focus-visible {
 
 .project-feature-card__stack span {
   padding: 0.25rem 0.48rem;
-  border-radius: 0.3rem;
+  border-radius: 0;
   background: var(--surface-soft);
   color: var(--muted);
   font-size: 0.77rem;
@@ -835,8 +833,8 @@ button:focus-visible {
 .project-archive-card {
   overflow: hidden;
   min-height: 220px;
-  border: 1px solid var(--line);
-  border-radius: 0.85rem;
+  border: 2px solid var(--line);
+  border-radius: 0;
   display: grid;
   grid-template-columns: 112px 1fr;
   background: rgba(255, 255, 255, 0.72);
@@ -898,7 +896,7 @@ button:focus-visible {
   }
 
   .metric:nth-child(n + 3) {
-    border-top: 1px solid var(--line);
+    border-top: 2px solid var(--line);
   }
 
   .featured-grid {
@@ -952,7 +950,7 @@ button:focus-visible {
   .site-nav__mobile {
     padding: 0.5rem 1rem 1rem;
     display: grid;
-    border-top: 1px solid var(--line);
+    border-top: 2px solid var(--line);
     background: rgba(244, 247, 250, 0.97);
   }
 

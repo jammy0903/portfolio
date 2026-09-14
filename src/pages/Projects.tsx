@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { projects } from "../data/profile";
+import "../project-media.css";
 
 const priority = [
   "multibucket-architecture",
   "memedics",
   "codeinsight",
+  "plush-club",
   "cve-matcher",
   "messenger-forensics",
   "malware-analysis",
@@ -102,7 +104,9 @@ export default function Projects() {
                 className="project-archive-card__visual"
                 style={{ background: project.thumbnail.gradient }}
               >
-                <span aria-hidden="true">{project.thumbnail.emoji}</span>
+                {"cover" in project && project.cover ? (
+                  <img className="project-card-cover" src={project.cover.src} alt="" loading="lazy" width={1280} height={720} />
+                ) : <span aria-hidden="true">{project.thumbnail.emoji}</span>}
               </div>
               <div className="project-archive-card__body">
                 <p>{project.type}</p>

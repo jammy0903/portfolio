@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Link, useParams } from "react-router-dom";
 import { projects } from "../../data/profile";
+import "../../project-media.css";
 
 const linkLabels = {
   live: "라이브 서비스",
@@ -42,6 +43,8 @@ export default function ProjectDetail() {
   const images = "images" in project
     ? project.images as Array<{ src: string; caption: string }>
     : [];
+  const cover = "cover" in project ? project.cover : undefined;
+  const video = "video" in project ? project.video : undefined;
   const dogGallery = "dogGallery" in project
     ? project.dogGallery as Array<{ src: string; label: string }>
     : [];
@@ -74,13 +77,28 @@ export default function ProjectDetail() {
         </div>
         <div
           aria-label={`${project.title} 프로젝트 표지`}
-          className="project-detail-visual"
+          className={`project-detail-visual${cover ? " project-detail-visual--screen" : ""}`}
           style={{ background: project.thumbnail.gradient }}
         >
-          <span aria-hidden="true">{project.thumbnail.emoji}</span>
+          {cover ? <img src={cover.src} alt={cover.alt} width={1280} height={720} /> : <span aria-hidden="true">{project.thumbnail.emoji}</span>}
           <small>PROJECT · {project.slug.toUpperCase()}</small>
         </div>
       </header>
+
+      {video ? (
+        <section className="project-detail-gallery project-demo" aria-labelledby="project-demo-title">
+          <div className="project-detail-section-heading">
+            <p className="section-kicker">PLAY DEMO</p>
+            <h2 id="project-demo-title">{video.title}</h2>
+            <p id="project-demo-description">{video.description}</p>
+          </div>
+          <video controls playsInline muted preload="none" poster={video.poster} aria-label={video.title} aria-describedby="project-demo-description" width={1280} height={720}>
+            <source src={video.src} type="video/mp4" />
+            동영상을 재생할 수 없습니다. 아래 링크로 영상을 열어주세요.
+          </video>
+          <a className="project-video-download" href={video.src} download>시연 영상 다운로드 (MP4)</a>
+        </section>
+      ) : null}
 
       <section className="project-detail-evidence" aria-labelledby="project-evidence-title">
         <aside>
@@ -131,7 +149,7 @@ export default function ProjectDetail() {
           <div className="project-detail-gallery__screens">
             {images.map((image) => (
               <figure key={image.src}>
-                <img alt={image.caption} loading="lazy" src={image.src} />
+                <img alt={image.caption} loading="lazy" src={image.src} width={video ? 1280 : undefined} height={video ? 720 : undefined} />
                 <figcaption>{image.caption}</figcaption>
               </figure>
             ))}

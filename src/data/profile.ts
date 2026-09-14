@@ -126,6 +126,69 @@ export const experience = {
 
 export const projects = [
   {
+    "slug": "plush-club",
+    "title": "PLUSH CLUB — 두근두근 인형 탐험대",
+    "subtitle": "인형뽑기에서 탐험과 책상 꾸미기로 이어지는 3D 웹게임",
+    "type": "웹게임 프로젝트 · 2026.09",
+    "thumbnail": {
+      "emoji": "🧸",
+      "gradient": "linear-gradient(135deg, #f6c6da 0%, #d3e9df 100%)"
+    },
+    "cover": {
+      "src": "/images/plush-club/claw.png",
+      "alt": "PLUSH CLUB의 3D 인형뽑기 기계와 집게 조작 화면"
+    },
+    "description": "설치 없이 브라우저에서 집게를 움직여 인형을 뽑고, 모은 인형을 탐험에 보내 얻은 소품으로 나만의 책상을 꾸미는 웹게임입니다. Three.js 기반 3D 화면부터 서버의 게임 진행 판정, 수집 데이터 저장, 실시간 관전과 Fly.io 배포까지 구현했습니다. AI 코딩 도구와 일부 소품의 생성형 AI 일러스트를 활용하고, 직접 플레이하며 조작과 화면을 다듬었습니다.",
+    "techStack": [
+      "JavaScript",
+      "Three.js",
+      "Rapier",
+      "Node.js",
+      "Express",
+      "SQLite",
+      "SSE",
+      "Vite",
+      "Docker",
+      "Fly.io",
+      "Playwright"
+    ],
+    "highlights": [
+      "**3D 인형뽑기와 물리 상호작용** — 집게의 하강·닫힘·상승·운반·배출 단계를 표현하고, 인형의 충돌·낙하와 플레이 후 남는 배치를 처리했습니다.",
+      "**실시간 공유 기계와 대기열** — 서버에서 차례와 진행 상태를 관리하고 SSE로 관전자에게 전달합니다. 새로고침 후 진행 중인 판을 복구하고, 조작 권한과 중복 보상 지급을 서버에서 검사합니다.",
+      "**수집 → 탐험 → 꾸미기** — 획득한 인형으로 탐험을 보내고 소품을 모아 3D 책상을 구성합니다. 완성한 책상은 회전해서 감상하거나 PNG로 저장할 수 있습니다.",
+      "**PC·모바일 입력 대응** — 키보드와 터치 조이스틱, 카메라 회전·확대, 전체화면을 지원합니다. 모바일 주소창에 따라 바뀌는 화면 높이를 반영해 조작부가 가려지는 문제를 다뤘습니다.",
+      "**계정·저장·다국어** — SQLite 기반 수집 데이터 저장, Google 로그인, 랭킹과 공용 채팅을 구현하고 한국어·영어·일본어·중국어 화면을 제공합니다.",
+      "**배포와 회귀 검증** — Docker·Fly.io 배포 환경을 구성하고 Node 테스트 및 Playwright로 상태 전이, 권한, 보상 처리와 브라우저 조작을 검증했습니다."
+    ],
+    "links": {
+      "live": "https://plush-club.fly.dev/?lang=ko"
+    },
+    "video": {
+      "src": "/videos/plush-club/demo.mp4",
+      "poster": "/images/plush-club/claw.png",
+      "title": "PLUSH CLUB 실제 플레이 영상",
+      "description": "약 26초 · 인형뽑기 → 탐험 → 소품 배치 → 책상 감상 순서의 실제 시연입니다. 일부 장면은 배속했으며, 시연 계정에는 소품을 미리 준비했습니다. 배경 음악이 포함되어 있고 기본 재생은 음소거입니다."
+    },
+    "images": [
+      {
+        "src": "/images/plush-club/claw.png",
+        "caption": "집게를 직접 움직여 인형을 잡는 3D 인형뽑기 화면"
+      },
+      {
+        "src": "/images/plush-club/adventure.png",
+        "caption": "수집한 인형을 탐험에 보내 꾸미기 소품을 얻는 화면"
+      },
+      {
+        "src": "/images/plush-club/decorate.png",
+        "caption": "탐험으로 얻은 가구와 소품으로 구성한 책상"
+      },
+      {
+        "src": "/images/plush-club/desk.png",
+        "caption": "완성한 책상을 다른 각도에서 감상하고 PNG로 저장하는 화면"
+      }
+    ]
+  },
+  {
     slug: "dog-walk",
     featured: true,
     badge: "LIVE · 크롬 웹스토어 출시",
