@@ -1,3 +1,4 @@
+import { blogActivityPeriod } from "../data/activity-dates";
 import { certifications, education, profile, skills } from "../data/profile";
 
 const strengths = [
@@ -56,6 +57,7 @@ export default function About() {
           <p>{profile.summary}</p>
           <div>
             <span>{profile.location}</span>
+            <a href={profile.blog} rel="noopener noreferrer" target="_blank">기술 블로그 · {blogActivityPeriod}</a>
             <a href={`mailto:${profile.email}`}>{profile.email}</a>
             <a href={profile.github} rel="noopener noreferrer" target="_blank">GitHub ↗</a>
           </div>

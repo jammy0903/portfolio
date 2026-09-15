@@ -1,3 +1,4 @@
+import { projectDates } from "../../data/activity-dates";
 import { Fragment } from "react";
 import { Link, useParams } from "react-router-dom";
 import { projects } from "../../data/profile";
@@ -58,6 +59,7 @@ export default function ProjectDetail() {
           <p className="section-kicker">{project.type}</p>
           <h1>{project.title}</h1>
           <h2>{project.subtitle}</h2>
+                {projectDates[project.slug] && <p title={projectDates[project.slug].basis}>{projectDates[project.slug].period} · {projectDates[project.slug].basis}</p>}
           <p>{project.description}</p>
           {externalLinks.length > 0 ? (
             <div className="project-detail-links">

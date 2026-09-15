@@ -81,3 +81,7 @@ git push origin main
 ---
 
 © 2026 김소정. All rights reserved.
+
+## 활동 기간
+
+프로젝트·블로그의 날짜와 근거는 [활동 날짜 기록](docs/activity-dates.md), 화면 표시 값은 `src/data/activity-dates.ts`에서 관리합니다. 개발 기록 범위와 전체 수행 기간을 구분합니다.

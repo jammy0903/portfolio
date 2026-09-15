@@ -1,3 +1,4 @@
+import { projectDates } from "../data/activity-dates";
 import { Link } from "react-router-dom";
 import { projects } from "../data/profile";
 import "../project-media.css";
@@ -72,6 +73,7 @@ export default function Projects() {
               <div className="project-feature-card__body">
                 <p>{featuredLabels[project.slug]}</p>
                 <h3>{project.title}</h3>
+                {projectDates[project.slug] && <p title={projectDates[project.slug].basis}>{projectDates[project.slug].period} · {projectDates[project.slug].basis}</p>}
                 <span className="project-feature-card__subtitle">{project.subtitle}</span>
                 <span className="project-feature-card__highlight">
                   {cleanHighlight(project.highlights[0])}
@@ -111,6 +113,7 @@ export default function Projects() {
               <div className="project-archive-card__body">
                 <p>{project.type}</p>
                 <h3>{project.title}</h3>
+                {projectDates[project.slug] && <p title={projectDates[project.slug].basis}>{projectDates[project.slug].period} · {projectDates[project.slug].basis}</p>}
                 <span>{project.subtitle}</span>
                 <strong>자세히 보기 →</strong>
               </div>
