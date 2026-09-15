@@ -37,8 +37,8 @@ export const projectDates: Record<string, { period: string; basis: string }> = {
     "basis": "프로젝트 기간"
   },
   "donghang": {
-    "period": "기간 확인 중",
-    "basis": "JSP 교육 프로젝트와 동일 활동인지 확인 필요"
+    "period": "2022.02 ~ 2022.06",
+    "basis": "프로젝트 기간"
   },
   "phishing-detector": {
     "period": "2024.11 ~ 2025.01",
