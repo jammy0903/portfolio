@@ -15,12 +15,40 @@ import { fileURLToPath } from "node:url";
 
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(DIR, "../..");
-const portArg = process.argv.indexOf("--port");
-const CDP_PORT = portArg > -1 ? Number(process.argv[portArg + 1]) : 9223;
+const arg = (name, fallback) => {
+  const i = process.argv.indexOf(name);
+  return i > -1 ? process.argv[i + 1] : fallback;
+};
 
+const CDP_PORT = Number(arg("--port", 9223));
+
+// --profile 로 어느 이력서를 뽑을지 고른다. 직군별로 강조점이 달라 파일을 나눠 둔다.
+const PROFILES = {
+  dev: {
+    src: "resume.html",
+    // 개발 직군 이력서는 사이트에서 배포된다
+    public: path.join(ROOT, "public/resume/kim-sojeong-resume.pdf"),
+    full: path.join(ROOT, "resume/이력서_김소정_제출용.pdf"),
+  },
+  planning: {
+    src: "resume-planning.html",
+    // 사이트가 아직 개발자 포지셔닝이라 기획 이력서는 배포하지 않고 로컬에만 둔다
+    public: path.join(ROOT, "resume/이력서_김소정_기획_공개용.pdf"),
+    full: path.join(ROOT, "resume/이력서_김소정_기획_제출용.pdf"),
+  },
+};
+
+const profileName = arg("--profile", "dev");
+const profile = PROFILES[profileName];
+if (!profile) {
+  console.error(`알 수 없는 --profile: ${profileName} (가능: ${Object.keys(PROFILES).join(", ")})`);
+  process.exit(1);
+}
+
+const SRC = profile.src;
 const OUTPUTS = [
-  { variant: "public", out: path.join(ROOT, "public/resume/kim-sojeong-resume.pdf") },
-  { variant: "full", out: path.join(ROOT, "이력서_김소정_제출용.pdf") },
+  { variant: "public", out: profile.public },
+  { variant: "full", out: profile.full },
 ];
 
 const cdpGet = (p) =>
@@ -37,7 +65,7 @@ const cdpGet = (p) =>
 // 폰트(Google Fonts)를 쓰므로 file:// 대신 http 로 띄운다
 function serve() {
   const server = http.createServer((req, res) => {
-    const name = (req.url || "/").split("?")[0] === "/" ? "resume.html" : decodeURIComponent(req.url.slice(1));
+    const name = (req.url || "/").split("?")[0] === "/" ? SRC : decodeURIComponent(req.url.slice(1));
     const file = path.join(DIR, path.basename(name));
     fs.readFile(file, (err, buf) => {
       if (err) return res.writeHead(404).end("not found");
