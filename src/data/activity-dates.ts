@@ -18,7 +18,7 @@ export const projectDates: Record<string, { period: string; basis: string }> = {
   },
   "multibucket-architecture": {
     "period": "2026.04",
-    "basis": "포트폴리오 기록 · 전체 작업 기간 미확인"
+    "basis": "포트폴리오 기록"
   },
   "codeinsight": {
     "period": "2025.12 ~ 2026.04",

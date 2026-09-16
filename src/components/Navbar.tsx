@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { profile } from "../data/profile";
 
 const navItems = [
   { path: "/", label: "홈" },
@@ -35,6 +36,15 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+          <a
+            className="site-nav__resume"
+            href={profile.resume.url}
+            rel="noopener"
+            target="_blank"
+          >
+            이력서 PDF
+            <span aria-hidden="true">↓</span>
+          </a>
         </div>
 
         <button
@@ -63,6 +73,16 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+          <a
+            className="site-nav__resume"
+            href={profile.resume.url}
+            onClick={() => setIsOpen(false)}
+            rel="noopener"
+            target="_blank"
+          >
+            이력서 PDF
+            <span aria-hidden="true">↓</span>
+          </a>
         </div>
       )}
     </nav>

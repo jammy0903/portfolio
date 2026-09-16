@@ -3,24 +3,28 @@ import { Link } from "react-router-dom";
 import { projects } from "../data/profile";
 import "../project-media.css";
 
+// 상위 3개가 '주요 프로젝트'로 올라간다.
+// 지금 설치해서 써볼 수 있는 배포 제품을 맨 앞에 둔다 — 채용 담당자가 직접 확인할 수 있는
+// 실물이 종료된 프로젝트의 서술보다 강한 근거다.
 const priority = [
+  "dog-walk",
   "multibucket-architecture",
-  "memedics",
   "codeinsight",
+  "memedics",
   "plush-club",
   "cve-matcher",
   "messenger-forensics",
   "malware-analysis",
   "phishing-detector",
-  "dog-walk",
   "aingan",
   "donghang",
 ];
 
 const featuredLabels: Record<string, string> = {
+  "dog-walk": "배포 제품 · Chrome 웹스토어",
   "multibucket-architecture": "산업 IoT · 운영 아키텍처",
-  memedics: "데이터 자동화 · Human-in-the-loop",
   codeinsight: "복잡한 시스템 설계 · 오픈소스",
+  memedics: "데이터 자동화 · Human-in-the-loop",
 };
 
 const orderedProjects = [...projects].sort((a, b) => {
@@ -61,17 +65,29 @@ export default function Projects() {
         <div className="projects-featured__grid">
           {featuredProjects.map((project, index) => (
             <Link className="project-feature-card" key={project.slug} to={`/projects/${project.slug}`}>
-              <div
-                className="project-feature-card__visual"
-                style={{ background: project.thumbnail.gradient }}
-              >
+              <div className="project-feature-card__visual" data-tone={index % 3}>
                 <span className="project-feature-card__index">0{index + 1}</span>
-                <span aria-label={project.title} className="project-feature-card__emoji" role="img">
-                  {project.thumbnail.emoji}
-                </span>
+                {"cover" in project && project.cover ? (
+                  <img
+                    alt={project.cover.alt}
+                    className="project-card-cover"
+                    height={720}
+                    /* 대표 카드는 첫 화면 안쪽이라 lazy를 걸면 늦게 뜬다 */
+                    loading="eager"
+                    src={project.cover.src}
+                    width={1280}
+                  />
+                ) : (
+                  <span aria-label={project.title} className="project-feature-card__emoji" role="img">
+                    {project.thumbnail.emoji}
+                  </span>
+                )}
               </div>
               <div className="project-feature-card__body">
                 <p>{featuredLabels[project.slug]}</p>
+                {"badge" in project && project.badge ? (
+                  <span className="project-badge">{project.badge}</span>
+                ) : null}
                 <h3>{project.title}</h3>
                 {projectDates[project.slug] && <p title={projectDates[project.slug].basis}>{projectDates[project.slug].period} · {projectDates[project.slug].basis}</p>}
                 <span className="project-feature-card__subtitle">{project.subtitle}</span>
@@ -100,14 +116,13 @@ export default function Projects() {
         </div>
 
         <div className="projects-archive__grid">
-          {otherProjects.map((project) => (
+          {otherProjects.map((project, index) => (
             <Link className="project-archive-card" key={project.slug} to={`/projects/${project.slug}`}>
-              <div
-                className="project-archive-card__visual"
-                style={{ background: project.thumbnail.gradient }}
-              >
+              <div className="project-archive-card__visual" data-tone={index % 3}>
                 {"cover" in project && project.cover ? (
-                  <img className="project-card-cover" src={project.cover.src} alt="" loading="lazy" width={1280} height={720} />
+                  /* 커버가 달린 아카이브 카드는 두어 장뿐이라 lazy로 얻는 이득보다
+                     "안 뜨는 그림"의 위험이 크다 — 즉시 로드한다 */
+                  <img className="project-card-cover" src={project.cover.src} alt="" loading="eager" width={1280} height={720} />
                 ) : <span aria-hidden="true">{project.thumbnail.emoji}</span>}
               </div>
               <div className="project-archive-card__body">

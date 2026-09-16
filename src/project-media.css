@@ -8,3 +8,12 @@
 .project-video-download { display: inline-block; margin-top: 1rem; color: var(--ink); text-underline-offset: 4px; }
 .project-video-download:focus-visible { outline: 3px solid currentColor; outline-offset: 4px; }
 @media (max-width: 720px) { .project-detail-page:has(.project-demo) .project-detail-gallery__screens { grid-template-columns: 1fr; } }
+/* 대표 카드도 실제 화면 캡처를 쓸 수 있게 — 이모지 자리표시자보다 스크린샷이 증거가 된다 */
+.project-feature-card__visual:has(.project-card-cover) { position: relative; overflow: hidden; background: #17161f; }
+.project-feature-card__visual:has(.project-card-cover) > .project-card-cover { position: absolute; inset: 0; }
+.project-feature-card__visual:has(.project-card-cover) > .project-card-cover { object-position: top center; }
+/* 커버가 있으면 번호 배지를 좌상단에 고정한다 — 기본 가운데 정렬은 그림 위에서 떠 보인다 */
+.project-feature-card__visual:has(.project-card-cover) > .project-feature-card__index { position: absolute; z-index: 1; top: 0.75rem; left: 0.75rem; }
+/* 픽셀 디더(체커) 오버레이는 실제 스크린샷 위에서는 화면을 가린다 — 커버가 있으면 끈다 */
+.project-feature-card__visual:has(.project-card-cover)::after,
+.project-archive-card__visual:has(.project-card-cover)::after { display: none; }

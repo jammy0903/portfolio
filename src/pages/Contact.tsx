@@ -19,8 +19,20 @@ export default function Contact() {
           </p>
           <a className="contact-email" href={`mailto:${profile.email}`}>
             <span>EMAIL</span>
-            <strong>{profile.email}</strong>
+            <strong className="contact-email__address">{profile.email}</strong>
             <i aria-hidden="true">→</i>
+          </a>
+
+          <a
+            className="contact-resume"
+            href={profile.resume.url}
+            rel="noopener"
+            target="_blank"
+          >
+            <span>RESUME</span>
+            <strong>이력서 · 경력기술서 PDF</strong>
+            <em>{profile.resume.updated} 기준</em>
+            <i aria-hidden="true">↓</i>
           </a>
         </div>
 

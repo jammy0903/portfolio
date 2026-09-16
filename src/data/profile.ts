@@ -8,10 +8,33 @@ export const profile = {
   blog: "https://jammy0903.github.io",
   location: "서울",
 
+  // 채용 담당자가 가장 먼저 찾는 파일. public/resume/ 의 PDF를 교체하면 링크는 그대로 유지된다.
+  // 파일을 갱신하면 updated 도 함께 고칠 것 — 날짜가 낡으면 없느니만 못하다.
+  resume: {
+    url: "/resume/kim-sojeong-resume.pdf",
+    updated: "2026.09",
+  },
+
   summary: `470대 IoT 디바이스의 실시간 데이터를 처리하는 B2B 모니터링 대시보드를 1인 개발·운영한 풀스택 개발자입니다.
 WebSocket 배치 처리로 렌더링 부하를 80% 줄이고, 빌드 시간을 2분에서 10초로 단축(12배 개선)한 경험이 있습니다.
 복잡한 현장 데이터와 업무 흐름을 안정적인 제품으로 바꾸는 데 강점이 있습니다. 최근에는 이 경험을 기업용 AI 업무자동화 개발로 넓히고 있습니다.`,
 };
+
+/** 재직 기간을 오늘 기준으로 계산한다 — 하드코딩하면 시간이 지나며 틀린 값이 남는다. */
+export function formatCareerDuration(startDate: string) {
+  const start = new Date(`${startDate}-01T00:00:00`);
+  const now = new Date();
+  const totalMonths = Math.max(
+    0,
+    (now.getFullYear() - start.getFullYear()) * 12 + now.getMonth() - start.getMonth(),
+  );
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+
+  if (years === 0) return `${months}개월`;
+  if (months === 0) return `${years}년`;
+  return `${years}년 ${months}개월`;
+}
 
 export const skills = {
   frontend: ["React", "TypeScript", "Vite", "Zustand", "MUI", "Tailwind CSS", "HTML/CSS", "JavaScript"],
@@ -196,6 +219,10 @@ export const projects = [
     subtitle: "Chrome 웹스토어 게시 · 타이핑하면 강아지가 걷는 확장프로그램",
     type: "개인 프로젝트 (Chrome 웹스토어 출시)",
     thumbnail: { emoji: "🐕", gradient: "linear-gradient(135deg, #F9A826 0%, #E8915B 100%)" },
+    cover: {
+      src: "/images/dog-walk/1.png",
+      alt: "타이핑하면 웹페이지 위를 걸어 다니는 강아지 — 확장프로그램 실행 화면",
+    },
     description: "키보드 한 글자가 강아지의 한 걸음. 타이핑할 때마다 화면 속 강아지가 한 걸음씩 움직이고, 쌓인 걸음을 뼈 모양 코인으로 환전해 11가지 견종(Shiba·Corgi·Chihuahua·Poodle 등)을 수집하는 Manifest V3 크롬 확장프로그램. 사이드 패널에서 반려견 관리·상점을 이용하고, 스프레드시트/브라우저 배경 위장 기능과 한/영 언어 전환을 지원한다. 프라이버시 보호를 위해 키 입력 '내용'은 일절 기록하지 않고 '입력 횟수'만 추적하도록 설계. Chrome 웹스토어에 정식 게시되어 누구나 설치 가능.",
     techStack: ["JavaScript", "Chrome Extension API (Manifest V3)", "Side Panel API", "HTML", "CSS"],
     highlights: [
@@ -244,19 +271,24 @@ export const projects = [
       "Cowen & Keltner(2017) 학술 감정 27 + 몸 11 수집 → 반전 엔딩('넌 이미 사람이었어')",
       "Supabase 구글 로그인·클라우드 세이브·PWA 오프라인·감정 27곡 BGM까지 완성해 배포",
     ],
+    // github 링크 보류 — jammy0903/ai-ingan 은 비공개라 방문자에게 404다.
+    // 공개로 바꾸면 다시 추가할 것. 서비스는 정상 동작하므로 live 는 유지한다.
     links: {
       live: "https://aingan.click",
-      github: "https://github.com/jammy0903/ai-ingan",
     },
   },
   {
     slug: "memedics",
     title: "memedics",
-    subtitle: "한국 밈 트렌드 사전 (memedics.space 운영 중)",
+    subtitle: "한국 밈 트렌드 사전 — 승인형 데이터 파이프라인 (Case Study · 운영 종료)",
     type: "개인 프로젝트 · 1인 개발",
     thumbnail: { emoji: "🗂️", gradient: "linear-gradient(135deg, #1f7a4d 0%, #8fd6a8 100%)" },
+    cover: {
+      src: "/images/memedics/jjal-search.jpg",
+      alt: "memedics의 짤 벡터 검색 화면 — '퇴근'으로 검색해 의미가 비슷한 짤을 찾아낸 결과",
+    },
     description:
-      "여러 소스에서 밈의 활성도를 매일 측정하고, 자동 수집은 후보만 제안하며 최종 등록은 사람이 승인하는 밈 사전입니다. 정적 MVP를 SvelteKit SSR과 서버 API 경계 구조로 점진적으로 이전하고, 키워드·부분일치·벡터 유사도 3단 검색을 구현했습니다. memedics.space에서 실서비스로 운영 중입니다.",
+      "여러 소스에서 밈의 활성도를 매일 측정하고, 자동 수집은 후보만 제안하며 최종 등록은 사람이 승인하는 밈 사전입니다. 정적 MVP를 SvelteKit SSR과 서버 API 경계 구조로 점진적으로 이전하고, 키워드·부분일치·벡터 유사도 3단 검색을 구현했습니다. 서비스 운영은 종료했고, 승인형 자동화 흐름과 성능·검색 설계를 정리한 케이스 스터디로 남깁니다.",
     techStack: ["SvelteKit 2", "Svelte 5", "TypeScript", "SSR", "Supabase / PostgreSQL", "pgvector", "HuggingFace Inference (e5-large)", "Vercel (adapter-vercel)", "GitHub Actions (cron)", "Node.js", "Python (Playwright 크롤러)", "Paraglide i18n"],
     highlights: [
       "**홈 SSR 응답 1995ms → 1053ms.** 총량 조회(count=exact)가 집계 뷰를 전부 구체화해 되레 느린 걸 실측으로 확인하고, 앞 2페이지를 그냥 병렬로 쏴 2왕복을 1왕복으로 줄였다.",
@@ -274,10 +306,11 @@ export const projects = [
       { src: "/images/memedics/jjal-search.jpg", caption: "짤 벡터 검색. '퇴근'으로 검색하면 그 단어가 없는 '집에 가고싶다'·'너무힘들어서 죽으련다' 짤까지 의미로 찾아낸다" },
       { src: "/images/memedics/detail.jpg", caption: "밈 상세. 연도 추측·결과카드 공유(캔버스 렌더는 /img 프록시 경유)·댓글" },
     ],
-    links: {
-      live: "https://memedics.space",
-      github: "https://github.com/jammy0903/making",
-    },
+    // 링크 없음 — memedics.space는 운영 종료(404), jammy0903/making 저장소는 비공개라
+    // 방문자에게 404로 보인다. 죽은 링크는 프로젝트 하나가 아니라 사이트 전체 주장의
+    // 신뢰를 깎으므로 걸지 않는다. 화면은 아래 images 스크린샷으로 대신 보여준다.
+    // 저장소를 공개로 바꾸면 github 링크를 다시 살릴 것.
+    links: {},
   },
   {
     slug: "multibucket-architecture",
@@ -303,10 +336,10 @@ export const projects = [
   {
     slug: "codeinsight",
     title: "CodeInsight",
-    subtitle: "코드 실행 시각화 학습 플랫폼",
+    subtitle: "코드 실행 시각화 학습 플랫폼 — 오픈소스 (Case Study · 운영 종료)",
     type: "오픈소스 사이드 프로젝트",
     thumbnail: { emoji: "🖥️", gradient: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)" },
-    description: "C/Python/JavaScript/Java 4개 언어의 코드 실행 과정을 메모리 레벨에서 단계별 시각화하는 인터랙티브 학습 플랫폼. 각 언어의 디버거를 직접 구현(GDB/Python tracer/AST 기반/JDI)하고 서로 다른 메모리 모델을 단일 시각화 스키마로 통합 설계. 2개월, 74,700줄, 커밋 386회. Web + PWA + Android(테스트) 배포.",
+    description: "C/Python/JavaScript/Java 4개 언어의 코드 실행 과정을 메모리 레벨에서 단계별 시각화하는 인터랙티브 학습 플랫폼. 각 언어의 디버거를 직접 구현(GDB/Python tracer/AST 기반/JDI)하고 서로 다른 메모리 모델을 단일 시각화 스키마로 통합 설계. 2개월, 74,700줄, 커밋 386회. Web + PWA + Android(테스트)로 배포했습니다. 서비스 운영은 종료했고, 소스는 MIT 라이선스로 공개해 두었습니다.",
     techStack: ["React 19", "TypeScript", "Vite", "TailwindCSS", "Zustand", "Node.js", "Fastify", "PostgreSQL", "Prisma", "CodeMirror 6", "Framer Motion", "Capacitor", "Docker", "pnpm monorepo"],
     highlights: [
       "4개 언어 디버거 직접 구현 — C(GDB), Python(커스텀 트레이서), JavaScript(AST 기반 코드 변환), Java(JDI) — 기존 라이브러리 미사용",
@@ -453,10 +486,10 @@ export const certifications = [
     score: "75문항 중 59문항 득점 · 수준 3",
   },
   {
-    name: "한국사능력검정시험 (제78회)",
+    name: "한국사능력검정시험",
     issuer: "교육부 국사편찬위원회",
-    date: "2026.06.05",
-    score: "심화 1급 합격",
+    date: "2026.08.21",
+    score: "심화 1급 합격 · 82점",
   },
   {
     name: "TOEIC Speaking Test",

@@ -37,5 +37,7 @@ export_topcit.py
 upload_topcit.py
 portfolio/
 *.pdf
+# 단, 사이트에서 배포·다운로드되는 이력서는 커밋한다 (*.pdf 규칙의 예외)
+!public/resume/*.pdf
 *.docx
 *.docx.md

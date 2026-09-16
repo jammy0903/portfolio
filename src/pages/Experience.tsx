@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { experience } from "../data/profile";
+import { experience, formatCareerDuration } from "../data/profile";
 
 const careerCases = [
   {
@@ -52,21 +52,6 @@ const engineeringScope = [
   "Docker·Nginx 기반 배포와 TLS 운영",
   "CRA → Vite 전환 및 프론트엔드 리팩토링",
 ];
-
-function formatCareerDuration(startDate: string) {
-  const start = new Date(`${startDate}-01T00:00:00`);
-  const now = new Date();
-  const totalMonths = Math.max(
-    0,
-    (now.getFullYear() - start.getFullYear()) * 12 + now.getMonth() - start.getMonth(),
-  );
-  const years = Math.floor(totalMonths / 12);
-  const months = totalMonths % 12;
-
-  if (years === 0) return `${months}개월`;
-  if (months === 0) return `${years}년`;
-  return `${years}년 ${months}개월`;
-}
 
 export default function Experience() {
   return (

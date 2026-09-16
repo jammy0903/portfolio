@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
-import { profile } from "../data/profile";
+import { experience, formatCareerDuration, profile } from "../data/profile";
 
+// 수치는 기준이 없으면 할인되어 읽힌다 — 무엇 대비인지 한 줄씩 붙인다.
 const metrics = [
-  { value: "470대", label: "IoT 장비 실시간 운영" },
-  { value: "80%", label: "불필요한 렌더링 감소" },
-  { value: "12배", label: "빌드 속도 개선" },
-  { value: "1인", label: "분석부터 배포까지 담당" },
+  { value: "470대", label: "IoT 장비 실시간 운영", basis: "B2B 다수 고객사" },
+  { value: "80%", label: "불필요한 렌더링 감소", basis: "배치 처리 도입 전 대비" },
+  { value: "12배", label: "빌드 속도 개선", basis: "CRA 2분 → Vite 10초" },
+  { value: "1인", label: "분석부터 배포까지 담당", basis: "사내 유일 웹 개발자" },
 ];
 
 const featuredWork = [
@@ -61,6 +62,23 @@ export default function Home() {
             <span>운영 가능한 제품으로.</span>
           </h1>
           <p className="home-hero__role">{profile.title}</p>
+
+          {/* 채용 스크리닝에서 시선이 가장 먼저 닿는 정보 — 회사·기간·역할 */}
+          <dl className="home-hero__facts">
+            <div>
+              <dt>현재</dt>
+              <dd>{experience.company} · {experience.position}</dd>
+            </div>
+            <div>
+              <dt>기간</dt>
+              <dd>{experience.period} · {formatCareerDuration(experience.startDate)}</dd>
+            </div>
+            <div>
+              <dt>담당</dt>
+              <dd>사내 유일 웹 개발자 · 분석부터 배포까지 1인</dd>
+            </div>
+          </dl>
+
           <p className="home-hero__summary">{profile.tagline}</p>
 
           <div className="home-actions">
@@ -117,10 +135,14 @@ export default function Home() {
         {metrics.map((metric) => (
           <div className="metric" key={metric.label}>
             <strong>{metric.value}</strong>
-            <span>{metric.label}</span>
+            <span>
+              {metric.label}
+              <small className="metric__basis">{metric.basis}</small>
+            </span>
           </div>
         ))}
       </section>
+      <p className="metric-strip__note">회사 내부 개발·운영 측정 기준</p>
 
       <section className="home-section" aria-labelledby="featured-title">
         <div className="section-heading">
