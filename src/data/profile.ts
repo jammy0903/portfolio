@@ -271,10 +271,9 @@ export const projects = [
       "Cowen & Keltner(2017) 학술 감정 27 + 몸 11 수집 → 반전 엔딩('넌 이미 사람이었어')",
       "Supabase 구글 로그인·클라우드 세이브·PWA 오프라인·감정 27곡 BGM까지 완성해 배포",
     ],
-    // github 링크 보류 — jammy0903/ai-ingan 은 비공개라 방문자에게 404다.
-    // 공개로 바꾸면 다시 추가할 것. 서비스는 정상 동작하므로 live 는 유지한다.
     links: {
       live: "https://aingan.click",
+      github: "https://github.com/jammy0903/ai-ingan",
     },
   },
   {
@@ -306,11 +305,10 @@ export const projects = [
       { src: "/images/memedics/jjal-search.jpg", caption: "짤 벡터 검색. '퇴근'으로 검색하면 그 단어가 없는 '집에 가고싶다'·'너무힘들어서 죽으련다' 짤까지 의미로 찾아낸다" },
       { src: "/images/memedics/detail.jpg", caption: "밈 상세. 연도 추측·결과카드 공유(캔버스 렌더는 /img 프록시 경유)·댓글" },
     ],
-    // 링크 없음 — memedics.space는 운영 종료(404), jammy0903/making 저장소는 비공개라
-    // 방문자에게 404로 보인다. 죽은 링크는 프로젝트 하나가 아니라 사이트 전체 주장의
-    // 신뢰를 깎으므로 걸지 않는다. 화면은 아래 images 스크린샷으로 대신 보여준다.
-    // 저장소를 공개로 바꾸면 github 링크를 다시 살릴 것.
-    links: {},
+    // memedics.space는 운영 종료(404)라 live 링크는 걸지 않는다. 화면은 아래 images로 대신한다.
+    links: {
+      github: "https://github.com/jammy0903/making",
+    },
   },
   {
     slug: "multibucket-architecture",
