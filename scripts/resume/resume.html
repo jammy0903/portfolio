@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>이력서 · 경력기술서 — 김소정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* 이력서는 '읽기 쉬움'이 곧 신뢰다 — 픽셀 폰트 금지, 본문은 산세리프 */
+  @page { size: A4; margin: 12mm 13mm 10mm; }
+
+  :root {
+    --ink: #14213d;
+    --soft: #3a4a63;
+    --muted: #64748b;
+    --line: #cbd5e1;
+    --accent: #0c7c86;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: #fff;
+    font-family: "IBM Plex Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    font-size: 9.2pt;
+    line-height: 1.48;
+    word-break: keep-all;
+  }
+
+  h1, h2, h3 { margin: 0; font-weight: 700; }
+  p { margin: 0; }
+  ul { margin: 0; padding-left: 0; list-style: none; }
+
+  /* ── 헤더 ───────────────────────────────────────── */
+  .head { border-bottom: 2.5px solid var(--ink); padding-bottom: 7px; }
+  .head__top { display: flex; align-items: baseline; gap: 10px; }
+  .head h1 { font-size: 20pt; letter-spacing: -0.02em; }
+  .head__en { color: var(--muted); font-size: 10pt; font-weight: 500; }
+  .head__role { margin-top: 2px; color: var(--accent); font-size: 11pt; font-weight: 600; }
+  .head__sum { margin-top: 6px; max-width: 128mm; color: var(--soft); font-size: 9.3pt; }
+
+  .head__grid { display: flex; justify-content: space-between; gap: 12px; }
+  .contact { text-align: right; font-size: 8.9pt; line-height: 1.75; white-space: nowrap; }
+  .contact b { display: inline-block; width: 52px; color: var(--muted); font-weight: 600; text-align: left; }
+
+  /* ── 섹션 ───────────────────────────────────────── */
+  /* 섹션 통째로 페이지를 넘기면 앞 페이지에 큰 여백이 남는다 — 항목 단위로만 쪼개지지 않게 한다 */
+  section { margin-top: 10px; }
+  .sec-title + *, .sec-title { break-after: avoid; }
+  .sec-title {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 7px; padding-bottom: 3px;
+    border-bottom: 1px solid var(--line);
+    font-size: 10.5pt; color: var(--ink);
+  }
+  .sec-title span { color: var(--muted); font-size: 8pt; font-weight: 600; letter-spacing: 0.08em; }
+
+  /* ── 항목 ───────────────────────────────────────── */
+  .item { margin-bottom: 7px; break-inside: avoid; }
+  .item:last-child { margin-bottom: 0; }
+  .item__head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .item__title { font-size: 10pt; font-weight: 700; }
+  .item__meta { color: var(--muted); font-size: 8.8pt; font-weight: 500; white-space: nowrap; }
+  .item__sub { margin-top: 1px; color: var(--soft); font-size: 9pt; font-weight: 500; }
+
+  /* 성과 불릿 — 숫자를 앞세워 스캔되게 */
+  .bul { margin-top: 5px; }
+  .bul li { position: relative; padding-left: 10px; margin-bottom: 2px; }
+  .bul li::before {
+    content: ""; position: absolute; left: 0; top: 0.52em;
+    width: 3px; height: 3px; background: var(--accent);
+  }
+  .bul b { font-weight: 700; }
+
+  .stack { margin-top: 4px; color: var(--muted); font-size: 8.7pt; }
+
+  /* ── 핵심 역량 ──────────────────────────────────── */
+  .key { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+  .key div { padding: 6px 8px; border: 1px solid var(--line); border-left: 2.5px solid var(--accent); }
+  .key strong { display: block; font-size: 9.2pt; }
+  .key span { color: var(--soft); font-size: 8.6pt; }
+
+  /* ── 표형 목록 (학력·자격) ──────────────────────── */
+  table { width: 100%; border-collapse: collapse; font-size: 9.1pt; }
+  td { padding: 2.5px 0; vertical-align: top; }
+  td.date { width: 38mm; color: var(--muted); font-size: 8.8pt; white-space: nowrap; }
+  td.org { width: 46mm; color: var(--soft); text-align: right; }
+
+  /* ── 기술 스택 ──────────────────────────────────── */
+  .skills td.cat { width: 26mm; color: var(--muted); font-weight: 600; font-size: 8.8pt; }
+
+  .note { margin-top: 10px; color: var(--muted); font-size: 8pt; }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <div class="head__grid">
+    <div>
+      <div class="head__top">
+        <h1>김소정</h1>
+        <span class="head__en">Kim So Jeong</span>
+      </div>
+      <p class="head__role">산업 IoT 풀스택 개발자</p>
+      <p class="head__sum">
+        470대 IoT 장비의 실시간 데이터를 처리하는 B2B 모니터링 대시보드를 1인으로 개발·운영했습니다.
+        레거시 분석부터 실시간 파이프라인, 화면, 보안, 배포, 장애 대응까지 웹 서비스 전 과정을 맡고 있습니다.
+      </p>
+    </div>
+    <div class="contact">
+      <p><b>이메일</b> l89192164@gmail.com</p>
+      <p data-private><b>연락처</b> 010-5130-2164</p>
+      <p><b>GitHub</b> github.com/jammy0903</p>
+      <p><b>포트폴리오</b> jammyis.fit</p>
+      <p><b>블로그</b> jammy0903.github.io</p>
+      <p data-private><b>생년월일</b> 2000.09.03</p>
+      <p><b>거주지</b> <span data-private-inline>서울시 서대문구</span><span data-public-inline hidden>서울</span></p>
+    </div>
+  </div>
+</header>
+
+<section>
+  <h2 class="sec-title">핵심 역량 <span>CORE STRENGTHS</span></h2>
+  <div class="key">
+    <div>
+      <strong>실시간 데이터 파이프라인</strong>
+      <span>MQTT → FastAPI → WebSocket 구간을 직접 설계·운영</span>
+    </div>
+    <div>
+      <strong>운영까지 책임지는 풀스택</strong>
+      <span>권한·보안·배포·장애 대응을 제품 안에 포함</span>
+    </div>
+    <div>
+      <strong>점진적 전환 설계</strong>
+      <span>중단 없이 단계별 롤백 가능한 마이그레이션</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec-title">경력 <span>WORK EXPERIENCE</span></h2>
+
+  <div class="item">
+    <div class="item__head">
+      <div>
+        <span class="item__title">(주)아이앤씨테크놀로지</span>
+        <span class="item__sub" style="display:inline">— 연구원 (웹 개발) · 사내 유일 웹 개발자</span>
+      </div>
+      <span class="item__meta">2025.04 ~ 재직 중 (1년 5개월)</span>
+    </div>
+    <p class="item__sub">IoT 아크차단기 및 통신 반도체 팹리스 기업 · 아크차단기 IoT 모니터링 대시보드 (470대, 다수 고객사 B2B)</p>
+    <ul class="bul">
+      <li><b>고객사 재계약에 기여.</b> 아크 이벤트 중심의 5탭 구조를 현황·문제장비·장비상세 3단계로 재설계하고 1,700줄 단일 화면을 컨테이너 + 8개 컴포넌트로 분리. 영업팀으로부터 대시보드가 계약의 핵심이라는 평가를 받음.</li>
+      <li><b>불필요한 렌더링 80% 감소, 장애 알림 지연 0ms.</b> 초당 수십 건 WebSocket 데이터를 50건·50ms 배치 매니저와 우선순위 큐(Fault &gt; 상태변화 &gt; 수치변경)로 분리 처리.</li>
+      <li><b>빌드 시간 2분 → 10초 (12배).</b> CRA → Vite 전환 및 프론트엔드 리팩토링.</li>
+      <li><b>IoT 구간 평문 통신을 기기 인증 기반으로 전환, DB 락 오류 0건.</b> MQTT 브로커에 TLS 포트와 자체 서명 CA 기반 양방향 mTLS를 구성해 미인증 기기의 브로커 연결을 차단. Nginx+TLS, Pydantic 설정 관리, SQLite WAL 모드 도입.</li>
+      <li><b>게이트웨이 55대 100% 자동 분류.</b> 펌웨어 문서에 식별 필드가 없어 운영 InfluxDB의 raw payload를 직접 분석해 <code>devType</code>을 식별 키로 확정하고, MQTT payload + 게이트웨이 prefix 조합의 자동 분류 로직을 신설.</li>
+      <li><b>V3 하드웨어 도입 대비 InfluxDB 멀티버킷 라우팅 전환.</b> 조회 경로 25곳을 단일 진입점으로 통합하고 컬럼 추가 → read 통합 → 미등록 보존 → 관리 UI → 쓰기 라우팅 5단계로 분해해 각 단계를 독립 롤백 가능하게 유지.</li>
+      <li><b>장애 인지를 수동 모니터링에서 이벤트 기반 알림으로 전환.</b> Fault 이벤트 감지부터 고객사별 수신자 관리, 카카오톡 알림 발송까지 하나의 자동 흐름으로 구현.</li>
+      <li>Root·Admin·User·Guest 4단계 RBAC와 소유권 기반 접근 제어로 고객사 간 데이터 격리, SQLite(메타데이터) + InfluxDB(시계열) 이원화, 지수 백오프 재연결과 요청 중복 방지로 24/7 운영 안정화.</li>
+    </ul>
+    <p class="stack">React(Vite) · TypeScript · FastAPI · Python · SQLite · InfluxDB · MQTT · WebSocket · Docker · Nginx · TLS/mTLS</p>
+    <p class="stack">언론 보도 2건 — 전기신문, 소방방재신문</p>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec-title">프로젝트 <span>PROJECTS</span></h2>
+
+  <div class="item">
+    <div class="item__head">
+      <span class="item__title">강아지 산책 — 타자로 걷기 · Chrome 웹스토어 배포 중</span>
+      <span class="item__meta">2026.06 ~ 2026.07 · 개인 프로젝트</span>
+    </div>
+    <p class="item__sub">타이핑할 때마다 강아지가 한 걸음씩 걷고, 쌓인 걸음으로 견종을 수집하는 Manifest V3 크롬 확장프로그램.</p>
+    <ul class="bul">
+      <li><b>Chrome 웹스토어 심사 통과·정식 게시.</b> 누구나 설치해 실제로 사용 중인 배포 제품.</li>
+      <li><b>프라이버시 우선 설계.</b> 키 입력 '내용'은 일절 기록하지 않고 '횟수'만 카운트해, 확장프로그램에 대한 키로깅 우려를 구조적으로 차단.</li>
+      <li>Side Panel API 기반 반려견 관리·상점 UI, 11종 견종 수집 게임화, 한국어/영어 i18n 구현.</li>
+    </ul>
+    <p class="stack">JavaScript · Chrome Extension API (Manifest V3) · Side Panel API</p>
+  </div>
+
+  <div class="item">
+    <div class="item__head">
+      <span class="item__title">CodeInsight — 코드 실행 시각화 학습 플랫폼</span>
+      <span class="item__meta">2025.12 ~ 2026.04 · 오픈소스 (운영 종료)</span>
+    </div>
+    <p class="item__sub">C/Python/JavaScript/Java 4개 언어의 실행 과정을 메모리 레벨에서 단계별 시각화.</p>
+    <ul class="bul">
+      <li>언어별 디버거를 직접 구현(C는 GDB, Python은 커스텀 트레이서, JavaScript는 AST 기반 코드 변환, Java는 JDI)하고, 서로 다른 메모리 모델을 단일 시각화 스키마로 통합 설계.</li>
+      <li>2개월 1인 풀스택 개발 — TypeScript 517개 파일 74,700줄, 커밋 386회. Web + PWA + Android(테스트)로 배포했고, 소스는 MIT 라이선스로 공개.</li>
+    </ul>
+    <p class="stack">React 19 · TypeScript · Vite · TailwindCSS · Zustand</p>
+  </div>
+
+  <div class="item">
+    <div class="item__head">
+      <span class="item__title">PLUSH CLUB — 3D 웹게임</span>
+      <span class="item__meta">2026.09 · 개인 프로젝트</span>
+    </div>
+    <p class="item__sub">브라우저에서 인형을 뽑고 탐험·수집으로 이어지는 3D 웹게임. 3D 렌더링과 물리 상호작용부터 서버 판정, 데이터 저장, 실시간 관전, 배포까지 1인 구현.</p>
+    <p class="stack">JavaScript · Three.js · Rapier · Node.js · Express · SQLite · SSE · Docker · Fly.io</p>
+  </div>
+
+  <div class="item">
+    <div class="item__head">
+      <span class="item__title">CVE Matcher · Messenger Forensics</span>
+      <span class="item__meta">2023.11 ~ 2024.11 · KISIA / KITRI</span>
+    </div>
+    <p class="item__sub">웹 취약점 CVE 매칭 프로그램(크롤러 개발·문서 설계 담당), 메신저 아티팩트 분석 도구(삭제 메시지 복구·타임라인 시각화).</p>
+    <p class="stack">Python · SQLite · Burp Suite · Reverse Engineering</p>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec-title">교육 · 활동 <span>TRAINING</span></h2>
+  <table>
+    <tr><td class="date">2024.03 ~ 2024.11</td><td>S-개발자 2기 — 웹 취약점 CVE 매칭 프로그램 개발</td><td class="org">KISIA 한국정보보호산업협회</td></tr>
+    <tr><td class="date">2023.12 ~ 2024.01</td><td>직무 부트캠프 — Linux 기반 IT 운영 실무</td><td class="org">코멘토</td></tr>
+    <tr><td class="date">2023.10 ~ 2023.11</td><td>문서형 악성코드 탐지·분석 연구</td><td class="org">KUCIS 대학정보보호동아리</td></tr>
+    <tr><td class="date">2023.09 ~ 2024.02</td><td>화이트햇스쿨 1기 — 메신저 아티팩트 분석</td><td class="org">KITRI</td></tr>
+    <tr><td class="date">2022.12 ~ 2023.01</td><td>직무 부트캠프 — IT 8개 직무 기초체험</td><td class="org">코멘토</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2 class="sec-title">학력 <span>EDUCATION</span></h2>
+  <table>
+    <tr>
+      <td class="date">2020.02 ~ 2025.02</td>
+      <td>컴퓨터공학과 졸업 <span style="color:var(--muted)">(환경공학부 입학 → 2학년 2학기 전과)</span></td>
+      <td class="org">연세대학교 미래캠퍼스</td>
+    </tr>
+    <tr><td class="date">2016.03 ~ 2019.02</td><td>졸업</td><td class="org">서울 중앙여자고등학교</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2 class="sec-title">자격 · 평가 <span>CERTIFICATIONS</span></h2>
+  <table>
+    <tr><td class="date">2026.05.16</td><td>TOPCIT 정보기술 실무능력 평가 — 수준 3 (75문항 중 59문항)</td><td class="org">과학기술정보통신부 · IITP</td></tr>
+    <tr><td class="date">2026.08.21</td><td>한국사능력검정시험 — 심화 1급 (82점)</td><td class="org">교육부 국사편찬위원회</td></tr>
+    <tr><td class="date">2024.12.29</td><td>TOEIC Speaking — Intermediate High (140점)</td><td class="org">ETS · YBM</td></tr>
+    <tr><td class="date">2024 2학기</td><td>성적우수상 (4학년 2학기)</td><td class="org">연세대학교 미래캠퍼스</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2 class="sec-title">기술 스택 <span>SKILLS</span></h2>
+  <table class="skills">
+    <tr><td class="cat">Frontend</td><td>React · TypeScript · Vite · Zustand · MUI · Tailwind CSS · SvelteKit</td></tr>
+    <tr><td class="cat">Backend</td><td>FastAPI · Python · Node.js · Express · PostgreSQL · pgvector · SQLite · InfluxDB · MQTT · REST API</td></tr>
+    <tr><td class="cat">Infra · 운영</td><td>Docker · Nginx · TLS/HTTPS · mTLS · WebSocket · Linux · Shell Script · Vercel · Fly.io</td></tr>
+    <tr><td class="cat">Security</td><td>Reverse Engineering · x86/x64 Assembly · Ghidra · IDA · Wireshark · Burp Suite · 웹 취약점 분석</td></tr>
+    <tr><td class="cat">Tools</td><td>Git · SVN · Figma · Notion · Jira</td></tr>
+  </table>
+</section>
+
+<p class="note" data-private>그 외 경력 — 솔데스크IT 종로지점 데스크 업무(2023.05~2024.11), 연세대학교 미래캠퍼스 학사지도교수 조교(2022.06~2023.12), 중앙도서관 사서보조(2022.05~2022.08)</p>
+
+</body>
+</html>
