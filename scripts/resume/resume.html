@@ -93,6 +93,13 @@
   .skills td.cat { width: 26mm; color: var(--muted); font-weight: 600; font-size: 8.8pt; }
 
   .note { margin-top: 10px; color: var(--muted); font-size: 8pt; }
+
+  /* 링크는 PDF에서 실제로 눌린다 — 흑백 인쇄를 고려해 밑줄 대신 색만 쓴다 */
+  a { color: inherit; text-decoration: none; }
+  .contact a { color: var(--ink); }
+  .item__links { margin-top: 3px; font-size: 8.6pt; }
+  .item__links a { color: var(--accent); font-weight: 600; }
+  .item__links a + a { margin-left: 10px; }
 </style>
 </head>
 <body>
@@ -111,11 +118,11 @@
       </p>
     </div>
     <div class="contact">
-      <p><b>이메일</b> l89192164@gmail.com</p>
+      <p><b>이메일</b> <a href="mailto:l89192164@gmail.com">l89192164@gmail.com</a></p>
       <p data-private><b>연락처</b> 010-5130-2164</p>
-      <p><b>GitHub</b> github.com/jammy0903</p>
-      <p><b>포트폴리오</b> jammyis.fit</p>
-      <p><b>블로그</b> jammy0903.github.io</p>
+      <p><b>GitHub</b> <a href="https://github.com/jammy0903">github.com/jammy0903</a></p>
+      <p><b>포트폴리오</b> <a href="https://jammyis.fit">jammyis.fit</a></p>
+      <p><b>블로그</b> <a href="https://jammy0903.github.io">jammy0903.github.io</a></p>
       <p data-private><b>생년월일</b> 2000.09.03</p>
       <p><b>거주지</b> <span data-private-inline>서울시 서대문구</span><span data-public-inline hidden>서울</span></p>
     </div>
@@ -182,6 +189,7 @@
       <li>Side Panel API 기반 반려견 관리·상점 UI, 11종 견종 수집 게임화, 한국어/영어 i18n 구현.</li>
     </ul>
     <p class="stack">JavaScript · Chrome Extension API (Manifest V3) · Side Panel API</p>
+    <p class="item__links"><a href="https://chromewebstore.google.com/detail/glciecgcibkmbkkllmhagignmmjghkmj">Chrome 웹스토어에서 설치 ↗</a><a href="https://github.com/jammy0903/dog-walk">소스 ↗</a></p>
   </div>
 
   <div class="item">
@@ -195,6 +203,7 @@
       <li>2개월 1인 풀스택 개발 — TypeScript 517개 파일 74,700줄, 커밋 386회. Web + PWA + Android(테스트)로 배포했고, 소스는 MIT 라이선스로 공개.</li>
     </ul>
     <p class="stack">React 19 · TypeScript · Vite · TailwindCSS · Zustand</p>
+    <p class="item__links"><a href="https://github.com/jammy0903/CodeInsight">소스 ↗</a></p>
   </div>
 
   <div class="item">
@@ -204,6 +213,7 @@
     </div>
     <p class="item__sub">브라우저에서 인형을 뽑고 탐험·수집으로 이어지는 3D 웹게임. 3D 렌더링과 물리 상호작용부터 서버 판정, 데이터 저장, 실시간 관전, 배포까지 1인 구현.</p>
     <p class="stack">JavaScript · Three.js · Rapier · Node.js · Express · SQLite · SSE · Docker · Fly.io</p>
+    <p class="item__links"><a href="https://plush-club.fly.dev/?lang=ko">플레이 ↗</a></p>
   </div>
 
   <div class="item">
