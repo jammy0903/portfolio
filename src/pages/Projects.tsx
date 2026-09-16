@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import { projects } from "../data/profile";
 import "../project-media.css";
 
+// 회사 업무는 이 목록에 넣지 않는다 — 경력 페이지에서 다루고,
+// 상세 사례는 거기서 '아키텍처 사례' 링크로 연결된다.
+const workCaseStudies = ["multibucket-architecture"];
+
 // 상위 3개가 '주요 프로젝트'로 올라간다.
 // 지금 설치해서 써볼 수 있는 배포 제품을 맨 앞에 둔다 — 채용 담당자가 직접 확인할 수 있는
 // 실물이 종료된 프로젝트의 서술보다 강한 근거다.
 const priority = [
   "dog-walk",
-  "multibucket-architecture",
   "codeinsight",
   "memedics",
   "plush-club",
@@ -22,17 +25,19 @@ const priority = [
 
 const featuredLabels: Record<string, string> = {
   "dog-walk": "배포 제품 · Chrome 웹스토어",
-  "multibucket-architecture": "산업 IoT · 운영 아키텍처",
   codeinsight: "복잡한 시스템 설계 · 오픈소스",
   memedics: "데이터 자동화 · Human-in-the-loop",
+  "plush-club": "웹게임 · 3D 렌더링과 물리",
 };
 
-const orderedProjects = [...projects].sort((a, b) => {
-  const aIndex = priority.indexOf(a.slug);
-  const bIndex = priority.indexOf(b.slug);
-  return (aIndex === -1 ? priority.length : aIndex) -
-    (bIndex === -1 ? priority.length : bIndex);
-});
+const orderedProjects = [...projects]
+  .filter((project) => !workCaseStudies.includes(project.slug))
+  .sort((a, b) => {
+    const aIndex = priority.indexOf(a.slug);
+    const bIndex = priority.indexOf(b.slug);
+    return (aIndex === -1 ? priority.length : aIndex) -
+      (bIndex === -1 ? priority.length : bIndex);
+  });
 
 const featuredProjects = orderedProjects.slice(0, 3);
 const otherProjects = orderedProjects.slice(3);

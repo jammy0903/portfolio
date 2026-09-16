@@ -19,20 +19,20 @@ const featuredWork = [
     to: "/experience",
   },
   {
-    eyebrow: "데이터 아키텍처",
-    title: "멀티버킷 라우팅 전환",
+    eyebrow: "배포 제품",
+    title: "강아지 산책 — 타자로 걷기",
     description:
-      "운영 중인 시계열 데이터 구조를 5단계로 분해해, 중단과 롤백 위험을 통제한 점진적 마이그레이션입니다.",
-    proof: "55대 백필 · 조회 경로 25곳 통합 · 단계별 롤백",
-    to: "/projects/multibucket-architecture",
+      "타이핑을 걸음으로 바꿔 강아지를 키우는 크롬 확장프로그램입니다. 키 입력 내용은 기록하지 않고 횟수만 세도록 설계했습니다.",
+    proof: "Chrome 웹스토어 정식 게시 · 지금 설치 가능",
+    to: "/projects/dog-walk",
   },
   {
     eyebrow: "개인 프로젝트",
-    title: "memedics 데이터 파이프라인",
+    title: "CodeInsight 코드 실행 시각화",
     description:
-      "자동 수집은 후보만 제안하고 사람의 승인을 거치게 설계했습니다. 벡터 검색과 서버 API 경계도 함께 구현했습니다.",
-    proof: "Human-in-the-loop · pgvector · 자동 수집",
-    to: "/projects/memedics",
+      "4개 언어의 디버거를 직접 구현해, 서로 다른 메모리 모델을 하나의 시각화 스키마로 통합했습니다.",
+    proof: "74,700줄 · 커밋 386회 · 오픈소스",
+    to: "/projects/codeinsight",
   },
 ];
 
