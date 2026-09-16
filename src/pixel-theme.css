@@ -833,3 +833,16 @@ h6,
   letter-spacing: 0;
   -webkit-font-smoothing: none;
 }
+
+/* 버전 전환 링크 — 픽셀 라벨 규격, 점선 테두리로 보조 동선임을 표시 */
+.site-nav__switch {
+  border: 2px dashed var(--line-soft);
+  font-family: var(--pixel);
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.site-nav__switch:hover {
+  border-color: var(--accent);
+  border-style: solid;
+}

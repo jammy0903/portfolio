@@ -1,28 +1,6 @@
 import { blogActivityPeriod } from "../data/activity-dates";
 import { certifications, education, profile, skills } from "../data/profile";
-
-const strengths = [
-  {
-    number: "01",
-    title: "시스템 전체를 책임집니다",
-    description: "프론트엔드 한 영역에 머무르지 않고 장비 데이터 수집부터 API, 화면, 배포와 운영까지 연결합니다.",
-  },
-  {
-    number: "02",
-    title: "운영 데이터로 판단합니다",
-    description: "감이 아니라 raw payload, 응답시간, 렌더링 횟수와 장애 기록을 확인해 구조와 우선순위를 결정합니다.",
-  },
-  {
-    number: "03",
-    title: "기술을 업무 가치로 번역합니다",
-    description: "엔지니어 중심 화면을 고객의 의사결정 흐름으로 다시 설계해 실제 재계약과 운영 개선에 연결했습니다.",
-  },
-  {
-    number: "04",
-    title: "보안과 복구 경로를 함께 봅니다",
-    description: "mTLS, RBAC, 단계별 마이그레이션과 롤백처럼 실서비스가 지속되기 위한 조건을 구현에 포함합니다.",
-  },
-];
+import { useTrackContent } from "../data/track";
 
 const skillGroups = [
   { label: "PRODUCT WEB", items: skills.frontend },
@@ -44,6 +22,9 @@ const learningNow = [
 ];
 
 export default function About() {
+  const content = useTrackContent();
+  const strengths = content.strengths;
+
   return (
     <div className="about-page">
       <header className="about-hero">
@@ -54,7 +35,7 @@ export default function About() {
         <div className="about-hero__profile">
           <span>산업 IoT 풀스택 개발자</span>
           <h2>{profile.name} <small>{profile.nameEn}</small></h2>
-          <p>{profile.summary}</p>
+          <p>{content.aboutSummary}</p>
           <div>
             <span>{profile.location}</span>
             <a href={profile.blog} rel="noopener noreferrer" target="_blank">기술 블로그 · {blogActivityPeriod}</a>

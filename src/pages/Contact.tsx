@@ -1,22 +1,17 @@
 import { profile } from "../data/profile";
-
-const targetRoles = [
-  "기업용 AI 업무자동화",
-  "산업 데이터 제품",
-  "B2B 풀스택 개발",
-];
+import { useTrackContent } from "../data/track";
 
 export default function Contact() {
+  const content = useTrackContent();
+  const targetRoles = content.targetRoles;
+
   return (
     <div className="contact-page">
       <section className="contact-hero" aria-labelledby="contact-page-title">
         <div className="contact-hero__copy">
           <p className="section-kicker">CONTACT</p>
-          <h1 id="contact-page-title">운영 현장의 문제를<br />{" "}제품으로 해결하는 팀에서 일하고 싶습니다.</h1>
-          <p>
-            산업 IoT 실서비스를 혼자 책임진 경험을 바탕으로, 기업의 데이터와
-            반복 업무를 안전하게 연결하는 제품을 만들고 싶습니다.
-          </p>
+          <h1 id="contact-page-title">{content.contactTitle}</h1>
+          <p>{content.contactLead}</p>
           <a className="contact-email" href={`mailto:${profile.email}`}>
             <span>EMAIL</span>
             <strong className="contact-email__address">{profile.email}</strong>
@@ -25,13 +20,13 @@ export default function Contact() {
 
           <a
             className="contact-resume"
-            href={profile.resume.url}
+            href={content.resume.url}
             rel="noopener"
             target="_blank"
           >
             <span>RESUME</span>
             <strong>이력서 · 경력기술서 PDF</strong>
-            <em>{profile.resume.updated} 기준</em>
+            <em>{content.resume.updated} 기준</em>
             <i aria-hidden="true">↓</i>
           </a>
         </div>

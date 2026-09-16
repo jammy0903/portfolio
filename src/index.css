@@ -1223,3 +1223,20 @@ button:focus-visible {
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
+
+/* 직군별 버전 전환 — 같은 경력을 다르게 설명한 페이지로 건너간다 */
+.site-nav__switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.45rem 0.7rem;
+  color: var(--muted, #5b6c84);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-nav__switch:hover {
+  color: var(--accent-dark, #075b63);
+}

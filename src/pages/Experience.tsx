@@ -1,48 +1,6 @@
 import { Link } from "react-router-dom";
 import { experience, formatCareerDuration } from "../data/profile";
-
-const careerCases = [
-  {
-    category: "고객 경험",
-    title: "엔지니어 중심 화면을 고객의 의사결정 화면으로",
-    problem: "아크 이벤트 중심의 복잡한 5탭 구조가 실제 사용 목적과 맞지 않았습니다.",
-    action: "현황·문제장비·장비상세 3단계로 정보 구조를 다시 설계하고, 1,700줄 화면을 컨테이너와 8개 컴포넌트로 분리했습니다.",
-    result: "고객사 재계약에 기여했고, 영업팀으로부터 대시보드가 계약의 핵심이라는 평가를 받았습니다.",
-    metric: "재계약 기여",
-  },
-  {
-    category: "실시간 성능",
-    title: "장애는 즉시, 일반 데이터는 묶어서 처리",
-    problem: "초당 수십 건의 WebSocket 데이터를 도착 즉시 렌더링해 화면 부하가 커졌습니다.",
-    action: "50건·50ms 배치 매니저와 Fault 우선순위 큐를 설계해 이벤트의 중요도에 따라 처리 경로를 분리했습니다.",
-    result: "불필요한 렌더링을 80% 줄이면서 장애 알림은 지연 없이 전달했습니다.",
-    metric: "렌더링 80%↓",
-  },
-  {
-    category: "보안과 안정성",
-    title: "평문 IoT 통신을 기기 인증 기반 구조로",
-    problem: "HTTP와 MQTT 평문 통신, 하드코딩 환경변수, SQLite 락 문제가 함께 존재했습니다.",
-    action: "Nginx·TLS, Pydantic 설정 관리, SQLite WAL을 도입하고 게이트웨이와 백엔드에 상호 인증 mTLS를 적용했습니다.",
-    result: "미인증 기기의 브로커 연결을 차단하고 데이터 구간을 암호화했으며 DB 락 오류를 0건으로 낮췄습니다.",
-    metric: "DB 락 0건",
-  },
-  {
-    category: "운영 자동화",
-    title: "대시보드를 보고 있지 않아도 장애를 알도록",
-    problem: "담당자가 화면에 접속하지 않은 상태에서는 아크 장애를 즉시 인지하기 어려웠습니다.",
-    action: "Fault 이벤트 감지부터 고객사별 수신자 관리, 카카오톡 알림 발송까지 하나의 자동화 흐름으로 구현했습니다.",
-    result: "장애 인지 경로를 수동 모니터링에서 이벤트 기반 알림으로 전환했습니다.",
-    metric: "이벤트 기반 대응",
-  },
-  {
-    category: "데이터 구조",
-    title: "새 하드웨어를 받아들이는 점진적 데이터 전환",
-    problem: "하드웨어 버전이 늘어나며 모델별 데이터 스키마와 저장 위치를 안전하게 분리해야 했습니다.",
-    action: "운영 영향을 통제하는 5단계 라우팅 전환을 설계하고 raw payload를 분석해 devType 기반 자동 분류를 구현했습니다.",
-    result: "55대 게이트웨이를 100% 자동 분류하고, 신규 모델은 설정 추가만으로 확장할 수 있게 했습니다.",
-    metric: "55대 100% 분류",
-  },
-];
+import { useTrackContent, useTrackPath } from "../data/track";
 
 const engineeringScope = [
   "MQTT → FastAPI → WebSocket 실시간 파이프라인",
@@ -54,16 +12,17 @@ const engineeringScope = [
 ];
 
 export default function Experience() {
+  const content = useTrackContent();
+  const withTrack = useTrackPath();
+  const careerCases = content.careerCases;
+
   return (
     <div className="experience-page">
       <header className="career-hero">
         <div className="career-hero__copy">
           <p className="section-kicker">WORK EXPERIENCE</p>
-          <h1>470대의 현장 데이터를<br />{" "}고객이 쓰는 서비스로 운영했습니다.</h1>
-          <p>
-            문서가 부족한 레거시를 분석하는 일부터 실시간 파이프라인, 화면,
-            보안, 배포, 장애 대응까지 웹 서비스 전 과정을 1인으로 맡고 있습니다.
-          </p>
+          <h1>{content.careerTitle[0]}<br />{" "}{content.careerTitle[1]}</h1>
+          <p>{content.careerLead}</p>
         </div>
 
         <aside className="career-summary" aria-label="현재 경력 요약">
@@ -172,7 +131,7 @@ export default function Experience() {
           {experience.notion ? (
             <a href={experience.notion} rel="noopener noreferrer" target="_blank">프로젝트 문서 ↗</a>
           ) : null}
-          <Link to="/projects/multibucket-architecture">아키텍처 사례 →</Link>
+          <Link to={withTrack("/projects/multibucket-architecture")}>아키텍처 사례 →</Link>
           {experience.news.map((news) => (
             <a href={news.url} key={news.title} rel="noopener noreferrer" target="_blank">
               {news.title} 보도 ↗
